@@ -40,8 +40,19 @@ OWindow::OWindow()
 	RECT rc = { 0,0,1024,768 };
 	AdjustWindowRect(&rc, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, false);
 
-	m_handle = CreateWindowEx(NULL, MAKEINTATOM(classId), L"Inter-Terminal", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
-		CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, NULL, NULL);
+	m_handle = CreateWindowEx(
+		NULL,
+		MAKEINTATOM(classId),
+		L"Inter-Terminal",
+		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		rc.right - rc.left,
+		rc.bottom - rc.top,
+		NULL,
+		NULL,
+		NULL,
+		NULL);
 
 	assert(m_handle); // checking that the window creation was successful since m_handle would be null if it failed
 

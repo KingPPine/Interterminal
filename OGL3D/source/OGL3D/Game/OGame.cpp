@@ -181,23 +181,26 @@ void OGame::onCreate()
 void OGame::onUpdateInternal()
 {
 	//computing delta time
-	auto currentTime = std::chrono::system_clock::now();
-	auto elapsedSeconds = std::chrono::duration<double>();
-	if (m_previousTime.time_since_epoch().count())
-		elapsedSeconds = currentTime - m_previousTime;
-	m_previousTime = currentTime;
+	auto currentTime = std::chrono::system_clock::now(); //current point in time
+	auto elapsedSeconds = std::chrono::duration<double>(); //initializing a duration at 0
 
-	auto deltaTime = (f32)elapsedSeconds.count();
+	//m_previousTime is a "chrono::time_point". time_since_epoch() returns the the time point since the start of its clock. 
+	//basically we're checking that we're passed the first frame.
+	if (m_previousTime.time_since_epoch().count()) 
+		elapsedSeconds = currentTime - m_previousTime; //difference in time between frames
+	m_previousTime = currentTime; //setting the previous time for the next frame
 
-	//calling the Entity System Update
-	onUpdate(deltaTime);
-	m_entitySystem->update(deltaTime);
+	auto deltaTime = (f32)elapsedSeconds.count(); //I think this turns it from a time point to a float of seconds
 
-	m_scale += 1.14f * deltaTime;
-	auto currentScale = abs(sin(m_scale));
+	//calling the General Update, and Entity System Update
+	onUpdate(deltaTime); //in OGame and MyGame to help separate regular update instructrions from the matrix stuff in here
+	m_entitySystem->update(deltaTime); //in OEntitySystem, which calls the update method of every entity in the game
 
-	OMat4 world, projection, temp;
-	//due to matric multiplication, we can do each operation (scale, rotate, translate) one at a time and multiply the results.
+	m_scale += 0.3f * deltaTime; //increasing this scale value every frame
+	auto currentScale = abs(sin(m_scale)); //creating a current scale by capping the value with a sine function
+
+	OMat4 world, projection, temp; //instantiating 4x4 matrices
+	//due to matrix multiplication, we can do each operation (scale, rotate, translate) one at a time and multiply the results.
 	//starting with scale
 	temp.setIdentity();
 	temp.setScale(OVec3(1, 1, 1));
@@ -225,21 +228,21 @@ void OGame::onUpdateInternal()
 	auto displaySize = m_display->getInnerSize();
 	projection.setOrthoLH(displaySize.width * 0.004f, displaySize.height * 0.004f, 0.01f, 100.0f);
 
-	UniformData data = { world, projection };
-	m_uniform->setData(&data);
+	UniformData data = { world, projection }; //putting the world matrix and the projection matrix in a struct
+	m_uniform->setData(&data); //passing this data to OpenGL's uniform buffer
 
 
 
-	m_graphicsEngine->clear(OVec4(0, 0, 0, 1));
+	m_graphicsEngine->clear(OVec4(0.26f, 0.75f, 0.58f, 1)); //clears the screen with a specified colour
 
-	m_graphicsEngine->setFaceCulling(OCullType::BackFace);
-	m_graphicsEngine->setWindingOrder(OWindingOrder::ClockWise);
-	m_graphicsEngine->setVertexArrayObject(m_polygonVAO);
-	m_graphicsEngine->setUniformBuffer(m_uniform, 0);
-	m_graphicsEngine->setShaderProgram(m_shader);
-	m_graphicsEngine->drawIndexedTriangles(OTriangleType::TriangleList, 36);
+	m_graphicsEngine->setFaceCulling(OCullType::BackFace); //sets the culling to hide the backfaces as opposed to front faces. It's insane to me that this isn't the default.
+	m_graphicsEngine->setWindingOrder(OWindingOrder::ClockWise); //sets the order in which the triangles get drawn, which influences where the colours end up
+	m_graphicsEngine->setVertexArrayObject(m_polygonVAO); //binds the vertex array in OpenGL with glBindVertexArray
+	m_graphicsEngine->setUniformBuffer(m_uniform, 0); //sets the uniform buffer and the slot in OpenGL with glBindBufferBase
+	m_graphicsEngine->setShaderProgram(m_shader); //sets the shader program in OpenGL with glUseProgram()
+	m_graphicsEngine->drawIndexedTriangles(OTriangleType::TriangleList, 36); //draws the list of triangles based on the type being passed and their indices
 
-	m_display->present(false);
+	m_display->present(false); //this puts everything on our display. false means no vsync.
 }
 
 void OGame::onQuit()
@@ -248,7 +251,7 @@ void OGame::onQuit()
 
 void OGame::quit()
 {
-	m_isRunning = false;
+	m_isRunning = false; //tells CWin32Game.cpp to quit the app
 }
 
 OEntitySystem* OGame::getEntitySystem()

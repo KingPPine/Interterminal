@@ -43,6 +43,6 @@ protected:
 	OShaderProgramPtr m_shader; //The pointer tot he Shader Program, which calls both basic shaders
 
 	std::chrono::system_clock::time_point m_previousTime; //declaration of the previous time. Gets updated in "onUpdateInternal()"
-	f32 m_scale = 1; //a default scale value. used in onUpdateInternal() for messing with the matrix
+	f32 m_scale = 0; //a default value, not really used for scale anymore. used in onUpdateInternal() for messing with the matrix
 };
 
