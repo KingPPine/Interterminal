@@ -147,33 +147,35 @@ void OGame::onCreate()
 		sizeof(OVec3) / sizeof(f32)	//texcoord
 	};
 
-	//
+	//create the vertex array with all the components we've set up so far
 	m_polygonVAO = m_graphicsEngine->createVertexArrayObject(
-		{ 
-			(void*)verticesList,
-			sizeof(Vertex), 
-			sizeof(verticesList) /sizeof(Vertex),
+		{ //this first part creates the Vertex Buffer Description (OVertexBufferDesc)
+			(void*)verticesList, //cube vertices (points + colour)
+			sizeof(Vertex), //size of each vertex
+			sizeof(verticesList) /sizeof(Vertex), //number of elements
 
-			attribsList,
-			sizeof(attribsList) / sizeof(OVertexAttribute)
+			attribsList, //amount of position and texcoord elements
+			sizeof(attribsList) / sizeof(OVertexAttribute) //OVertexAttribute is just a ui32, so I guess this is saying how many elements are in attribsList
 		},
 
-		{
-			(void*) indicesList,
-			sizeof(indicesList)
+		{ //this second part creates the Index Buffer Description (OIndexBufferDesc)
+			(void*) indicesList, //list of indices
+			sizeof(indicesList) //size of the whole list (imma be real I don't get why this isn't divided by sizeof(ui32) to count the number of elements)
 		}
 	);
 
+	//create the uniform buffer 
 	m_uniform = m_graphicsEngine->createUniformBuffer({
-		sizeof(UniformData)
+		sizeof(UniformData) //contains two OMat4's
 		});
 
+	//create the shader program
 	m_shader = m_graphicsEngine->createShaderProgram(
 		{
-			L"Assets/Shaders/BasicShader.vert",
-			L"Assets/Shaders/BasicShader.frag"
+			L"Assets/Shaders/BasicShader.vert", //basic vertex shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
+			L"Assets/Shaders/BasicShader.frag" //basic fragmentation shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
 		});
-	m_shader->setUniformBufferSlot("UniformData", 0);
+	m_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
 }
 
 void OGame::onUpdateInternal()
