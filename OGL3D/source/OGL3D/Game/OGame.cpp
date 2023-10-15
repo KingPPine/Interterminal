@@ -75,39 +75,39 @@ void OGame::onCreate()
 	{
 		//front
 		{positionsList[0], texcoordsList[0] },
-		{positionsList[1], texcoordsList[1] },
-		{positionsList[2], texcoordsList[2] },
-		{positionsList[3], texcoordsList[3] },
+		{positionsList[1], texcoordsList[2] },
+		{positionsList[2], texcoordsList[5] },
+		{positionsList[3], texcoordsList[7] },
 
 		//back
-		{positionsList[4], texcoordsList[4] },
+		{positionsList[4], texcoordsList[1] },
 		{positionsList[5], texcoordsList[5] },
-		{positionsList[6], texcoordsList[6] },
+		{positionsList[6], texcoordsList[4] },
 		{positionsList[7], texcoordsList[7] },
 
 		//top
-		{positionsList[1], texcoordsList[0] },
-		{positionsList[6], texcoordsList[1] },
-		{positionsList[5], texcoordsList[2] },
-		{positionsList[2], texcoordsList[3] },
+		{positionsList[1], texcoordsList[7] },
+		{positionsList[6], texcoordsList[5] },
+		{positionsList[5], texcoordsList[3] },
+		{positionsList[2], texcoordsList[1] },
 
 		//bottom
-		{positionsList[7], texcoordsList[4] },
-		{positionsList[0], texcoordsList[5] },
-		{positionsList[3], texcoordsList[6] },
-		{positionsList[4], texcoordsList[7] },
+		{positionsList[7], texcoordsList[6] },
+		{positionsList[0], texcoordsList[4] },
+		{positionsList[3], texcoordsList[2] },
+		{positionsList[4], texcoordsList[0] },
 
 		//right
 		{positionsList[3], texcoordsList[0] },
-		{positionsList[2], texcoordsList[1] },
-		{positionsList[5], texcoordsList[2] },
-		{positionsList[4], texcoordsList[3] },
+		{positionsList[2], texcoordsList[5] },
+		{positionsList[5], texcoordsList[6] },
+		{positionsList[4], texcoordsList[2] },
 
 		//left
-		{positionsList[7], texcoordsList[4] },
-		{positionsList[6], texcoordsList[5] },
-		{positionsList[1], texcoordsList[6] },
-		{positionsList[0], texcoordsList[7] }
+		{positionsList[7], texcoordsList[6] },
+		{positionsList[6], texcoordsList[0] },
+		{positionsList[1], texcoordsList[4] },
+		{positionsList[0], texcoordsList[2] }
 	};
 
 	//The index list for the cube. This tells OpenGL in what order to draw each triangle (if I understand correctly)

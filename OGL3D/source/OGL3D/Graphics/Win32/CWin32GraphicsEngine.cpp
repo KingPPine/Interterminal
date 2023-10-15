@@ -40,26 +40,34 @@ OGraphicsEngine::OGraphicsEngine()
 
 	//Initializing OpenGL
 	auto dummyDC = GetDC(dummyWindow); //DC = Device Context. GetDC() retrieves a handle to a DC for the client area of a specified window.
-	PIXELFORMATDESCRIPTOR pixelFormatDesc = {};
-	pixelFormatDesc.nSize = sizeof(pixelFormatDesc);
-	pixelFormatDesc.nVersion = 1;
-	pixelFormatDesc.iPixelType = PFD_TYPE_RGBA;
-	pixelFormatDesc.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-	pixelFormatDesc.cColorBits = 32;
-	pixelFormatDesc.cAlphaBits = 8;
-	pixelFormatDesc.cDepthBits = 24;
-	pixelFormatDesc.cStencilBits = 8;
-	pixelFormatDesc.iLayerType = PFD_MAIN_PLANE;
+	PIXELFORMATDESCRIPTOR pixelFormatDesc = {}; //this decribes the pixel format of a drawing surface
+	pixelFormatDesc.nSize = sizeof(pixelFormatDesc); //size of the data structure. Should be sizeof(PIXELFORMATDESCRIPTOR)
+	pixelFormatDesc.nVersion = 1; //version. Should be set to 1
+	pixelFormatDesc.iPixelType = PFD_TYPE_RGBA; //the type of pixel data. PFD_TYPE_RGBA: RGBA pixels
+	//A set of bit flags that specify properties of the pixel buffer.
+	// PFD_DRAW_TO_WINDOW: The buffer can draw to a window or device surface.
+	// PFD_SUPPORT_OPENGL: The buffer supports OpenGL drawing.
+	// PFD_DOUBLEBUFFER: The buffer is double-buffered.
+	pixelFormatDesc.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER; 
+	pixelFormatDesc.cColorBits = 32; //the number of color bitplanes in each color buffer. For RGBA pixel types, it is the size of the color buffer, excluding the alpha bitplanes.
+	pixelFormatDesc.cAlphaBits = 8; //the  ber of alpha bitplanes in each RGBA color buffer
+	pixelFormatDesc.cDepthBits = 24; //Specifies the depth of the depth (z-axis) buffer.
+	pixelFormatDesc.cStencilBits = 8; //Specifies the depth of the stencil buffer.
+	pixelFormatDesc.iLayerType = PFD_MAIN_PLANE; //Ignored. Earlier implementations of OpenGL used this member, but it is no longer used.
 
-	auto pixelFormat = ChoosePixelFormat(dummyDC, &pixelFormatDesc);
-	SetPixelFormat(dummyDC, pixelFormat, &pixelFormatDesc);
+	auto pixelFormat = ChoosePixelFormat(dummyDC, &pixelFormatDesc); //attempts to match the pixel format to the device context
+	SetPixelFormat(dummyDC, pixelFormat, &pixelFormatDesc); //sets the pixel format of the specified device to the specified format
 
-	auto dummyContext = wglCreateContext(dummyDC);
-	assert(dummyContext);
+	auto dummyContext = wglCreateContext(dummyDC); //creates a new OpenGL rendering context
+	assert(dummyContext); //checks that the dummyContext was created successfully
 
-	bool res = wglMakeCurrent(dummyDC, dummyContext);
-	assert(res);
+	//The wglMakeCurrent function makes a specified OpenGL rendering context the calling thread's current rendering context. 
+	// All subsequent OpenGL calls made by the thread are drawn on the device identified by hdc. 
+	// You can also use wglMakeCurrent to change the calling thread's current rendering context so it's no longer current.
+	bool result = wglMakeCurrent(dummyDC, dummyContext);
+	assert(result); //checks that the rendering context was correctly set
 
+	//This is part of the OpenGL implementation I got off of OpenGL so I'm not sure exactly how it works. Looks like checks to see if everything loaded properly.
 	if (!gladLoadWGL(dummyDC))
 		OGL3D_ERROR("OGraphicsEngine - Error - gladLoadWGL failed");
 
@@ -67,6 +75,8 @@ OGraphicsEngine::OGraphicsEngine()
 		OGL3D_ERROR("OGraphicsEngine - Error - gladLoadGL failed");
 
 	//If everything worked fine, OpenGL is loaded
+	//since we confirmed everything is working, we get rid of it all so that CWin32Window can put in its own implementation
+	//seriously, I don't understand why it's done this way but apparently it's necessary because if I comment everything out, it breaks it
 	wglMakeCurrent(dummyDC, 0);
 	wglDeleteContext(dummyContext);
 	ReleaseDC(dummyWindow, dummyDC);
