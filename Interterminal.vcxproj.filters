@@ -54,10 +54,10 @@
     <ClCompile Include="OGL3D\source\OGL3D\Entity\OEntity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game\MyGame.cpp">
+    <ClCompile Include="Game\source\MyGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Game\MyPlayer.cpp">
+    <ClCompile Include="Game\source\Entities\MyPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,13 +104,13 @@
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\MyGame.h">
+    <ClInclude Include="Game\header\MyGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OGL3D\header\OGL3D\All.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Game\MyPlayer.h">
+    <ClInclude Include="Game\header\Entities\MyPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

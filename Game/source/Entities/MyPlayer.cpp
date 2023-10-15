@@ -1,4 +1,4 @@
-#include "MyPlayer.h"
+#include <Entities/MyPlayer.h>
 
 MyPlayer::MyPlayer()
 {

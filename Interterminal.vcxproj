@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>OGL3D/header;OGL3D/source;OGL3D/vendor/glad/include/;$(IncludePath)</IncludePath>
+    <IncludePath>OGL3D/header;OGL3D/source;OGL3D/vendor/glad/include/;Game/header;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -135,8 +135,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game\main.cpp" />
-    <ClCompile Include="Game\MyGame.cpp" />
-    <ClCompile Include="Game\MyPlayer.cpp" />
+    <ClCompile Include="Game\source\MyGame.cpp" />
+    <ClCompile Include="Game\source\Entities\MyPlayer.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Entity\OEntity.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Entity\OEntitySystem.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Game\Win32\CWin32Game.cpp" />
@@ -151,8 +151,8 @@
     <ClCompile Include="OGL3D\source\OGL3D\Graphics\OUniformBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game\MyGame.h" />
-    <ClInclude Include="Game\MyPlayer.h" />
+    <ClInclude Include="Game\header\MyGame.h" />
+    <ClInclude Include="Game\header\Entities\MyPlayer.h" />
     <ClInclude Include="OGL3D\header\OGL3D\All.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntity.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntitySystem.h" />

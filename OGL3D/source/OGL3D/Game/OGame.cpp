@@ -9,98 +9,108 @@
 #include <OGL3D/Math/OVec2.h>
 #include <OGL3D/Entity/OEntitySystem.h>
 
-struct UniformData
+struct UniformData //data struct to pass to the uniform buffer
 {
-	OMat4 world;
-	OMat4 projection;
+	OMat4 world; //the matrix of world coordinates (scale, rotation, translation)
+	OMat4 projection; //the projection matrix
 };
 
-struct Vertex
+struct Vertex //data struct for a vertex, includes a position and a color
 {
 	OVec3 position;
-	OVec2 texcoord;
+	OVec3 texcoord;
 };
 
-OGame::OGame()
+OGame::OGame() //constructor
 {
-	m_graphicsEngine = std::make_unique<OGraphicsEngine>();
-	m_display = std::make_unique<OWindow>();
-	m_entitySystem = std::make_unique<OEntitySystem>();
+	//make_unique is good for safe memory allocation of new objects. I think...
+	//explanation page here: https://pvs-studio.com/en/docs/warnings/v824/
+	m_graphicsEngine = std::make_unique<OGraphicsEngine>(); //initializes the graphics engine to a unique pointer
+	m_display = std::make_unique<OWindow>(); //initializes the display window to a unique pointer, calling the constructor
+	m_entitySystem = std::make_unique<OEntitySystem>(); //initializes the entity system to a unique pointer
 
-	m_display->makeCurrentContext();
+	m_display->makeCurrentContext(); //calls makeCurrentContext() in CWin32Window.cpp
 
-	m_graphicsEngine->setViewport(m_display->getInnerSize());
+	m_graphicsEngine->setViewport(m_display->getInnerSize()); //sets the viewport to the size defined in m_display within its constructor
 }
 
-OGame::~OGame()
+OGame::~OGame() //destructor
 {
 }
 
 void OGame::onCreate()
 {
+	//list of vertex positions for the cube
 	OVec3 positionsList[] =
 	{
 		//front face
-		OVec3(-0.5f, -0.5f, -0.5f),
-		OVec3(-0.5f, 0.5f, -0.5f),
-		OVec3(0.5f, 0.5f, -0.5f),
-		OVec3(0.5f, -0.5f, -0.5f),
+		OVec3(-0.5f, -0.5f, -0.5f), //0
+		OVec3(-0.5f, 0.5f, -0.5f), //1
+		OVec3(0.5f, 0.5f, -0.5f), //2
+		OVec3(0.5f, -0.5f, -0.5f), //3
 
 		//back face
-		OVec3(0.5f, -0.5f, 0.5f),
-		OVec3(0.5f, 0.5f, 0.5f),
-		OVec3(-0.5f, 0.5f, 0.5f),
-		OVec3(-0.5f, -0.5f, 0.5f)
+		OVec3(0.5f, -0.5f, 0.5f), //4
+		OVec3(0.5f, 0.5f, 0.5f), //5
+		OVec3(-0.5f, 0.5f, 0.5f), //6
+		OVec3(-0.5f, -0.5f, 0.5f) //7
 	};
 
-	OVec2 texcoordsList[] =
+	//list of possible colours for the cube. For some reason the tutorial did a 2-dimensional vertex, but I was able to adapt this to RGB
+	OVec3 texcoordsList[] =
 	{
-		//list of colours, composed of only red and green values
-		OVec2(0,0),
-		OVec2(0,1),
-		OVec2(1,0),
-		OVec2(1,1)
+		//list of colours
+		OVec3(0,0,1),
+		OVec3(0,1,0),
+		OVec3(0,1,1),
+		OVec3(1,0,0),
+		OVec3(1,0,1),
+		OVec3(1,1,0),
+		OVec3(1,1,1),
+		OVec3(0.5f,0.8f,0.2f)
 	};
 
+	//list of each cube position along with the matching colour.
 	Vertex verticesList[] =
 	{
 		//front
-		{positionsList[0], texcoordsList[1] },
-		{positionsList[1], texcoordsList[0] },
+		{positionsList[0], texcoordsList[0] },
+		{positionsList[1], texcoordsList[1] },
 		{positionsList[2], texcoordsList[2] },
 		{positionsList[3], texcoordsList[3] },
 
 		//back
-		{positionsList[4], texcoordsList[1] },
-		{positionsList[5], texcoordsList[0] },
-		{positionsList[6], texcoordsList[2] },
-		{positionsList[7], texcoordsList[3] },
+		{positionsList[4], texcoordsList[4] },
+		{positionsList[5], texcoordsList[5] },
+		{positionsList[6], texcoordsList[6] },
+		{positionsList[7], texcoordsList[7] },
 
 		//top
-		{positionsList[1], texcoordsList[1] },
-		{positionsList[6], texcoordsList[0] },
+		{positionsList[1], texcoordsList[0] },
+		{positionsList[6], texcoordsList[1] },
 		{positionsList[5], texcoordsList[2] },
 		{positionsList[2], texcoordsList[3] },
 
 		//bottom
-		{positionsList[7], texcoordsList[1] },
-		{positionsList[0], texcoordsList[0] },
-		{positionsList[3], texcoordsList[2] },
-		{positionsList[4], texcoordsList[3] },
+		{positionsList[7], texcoordsList[4] },
+		{positionsList[0], texcoordsList[5] },
+		{positionsList[3], texcoordsList[6] },
+		{positionsList[4], texcoordsList[7] },
 
 		//right
-		{positionsList[3], texcoordsList[1] },
-		{positionsList[2], texcoordsList[0] },
+		{positionsList[3], texcoordsList[0] },
+		{positionsList[2], texcoordsList[1] },
 		{positionsList[5], texcoordsList[2] },
 		{positionsList[4], texcoordsList[3] },
 
 		//left
-		{positionsList[7], texcoordsList[1] },
-		{positionsList[6], texcoordsList[0] },
-		{positionsList[1], texcoordsList[2] },
-		{positionsList[0], texcoordsList[3] }
+		{positionsList[7], texcoordsList[4] },
+		{positionsList[6], texcoordsList[5] },
+		{positionsList[1], texcoordsList[6] },
+		{positionsList[0], texcoordsList[7] }
 	};
 
+	//The index list for the cube. This tells OpenGL in what order to draw each triangle (if I understand correctly)
 	ui32 indicesList[] =
 	{
 		//front
@@ -128,11 +138,16 @@ void OGame::onCreate()
 		22,23,20
 	};
 
+	//clarifies the size of the attributes we're passing to OpenGL so that it knows how to parse the list
 	OVertexAttribute attribsList[] = {
+		//sizeof() tells us the actual size of the element.
+		//Since OVec3 is a collection of 3 floats, the resulting size is 3 in each case.
+		//I could change the first evaluation to sizeof(OVec2) if I just want to process 2 elements
 		sizeof(OVec3) / sizeof(f32),//position
-		sizeof(OVec2) / sizeof(f32)	//texcoord
+		sizeof(OVec3) / sizeof(f32)	//texcoord
 	};
 
+	//
 	m_polygonVAO = m_graphicsEngine->createVertexArrayObject(
 		{ 
 			(void*)verticesList,
