@@ -3,6 +3,7 @@
 
 int main()
 {
+	//OpenGL Documentation: https://registry.khronos.org/OpenGL-Refpages/gl4/
 	try
 	{
 		MyGame game; //creates instance of MyGame, which inherits OGame 

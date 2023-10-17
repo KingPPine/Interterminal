@@ -18,7 +18,7 @@ public:
 public:
 	void clear(const OVec4& color); //clears the screen with whatever colour is passed
 	void setFaceCulling(const OCullType& type); //sets the culling type to whatever we pass (FrontFace, BackFace, or Both)
-	void setWindingOrder(const OWindingOrder& order); //sets the order in which the triangles get drawn, which influences where the colours end up
+	void setWindingOrder(const OWindingOrder& order); //sets the order in which the triangles get drawn, which influences what is facing front / back
 	void setViewport(const ORect& size); //sets the viewport for where things draw within the screen. 0,0 is the bottom left, and width/height is as expected (up and to the right)
 	void setVertexArrayObject(const OVertexArrayObjectPtr& vao); //binds the vertex array in OpenGL with glBindVertexArray
 	void setUniformBuffer(const OUniformBufferPtr& buffer, ui32 slot); //sets the uniform buffer and the slot in OpenGL with glBindBufferBase

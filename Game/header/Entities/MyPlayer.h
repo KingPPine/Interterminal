@@ -4,14 +4,14 @@
 class MyPlayer : public OEntity
 {
 public:
-	MyPlayer();
-	~MyPlayer();
+	MyPlayer(); //constructor. Does nothing at the moment
+	~MyPlayer(); //destructor. Does nothing at the moment
 	
-	virtual void onCreate();
-	virtual void onUpdate(f32 deltaTime);
+	virtual void onCreate(); //currently calls the entity system to create an entity and assigns it to m_entity. This resides in the OEntitySystem header file.
+	virtual void onUpdate(f32 deltaTime); //after 3 seconds, deletes the entity
 
 private:
-	f32 m_elapsedSeconds = 0.0f;
-	OEntity* m_entity = nullptr;
+	f32 m_elapsedSeconds = 0.0f; //elapsed seconds since creation
+	OEntity* m_entity = nullptr; //pointer to the entity in the entity manager
 };
 

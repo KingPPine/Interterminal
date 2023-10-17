@@ -2,15 +2,15 @@
 #include <OGL3D/OPrerequisites.h>
 #include <OGL3D/Math/OVec3.h>
 
-class OMat4
+class OMat4 //4x4 matrix class
 {
 public:
-	OMat4()
+	OMat4() //default constructor. Sets it to the identity matrix
 	{
 		setIdentity();
 	}
 
-	void setIdentity()
+	void setIdentity() //sets this matrix to the identity matrix (diagonal 1's from top left to bottom right, 0' otherwise)
 	{
 		::memset(mat, 0, sizeof(mat));
 		mat[0][0] = 1;
@@ -19,21 +19,21 @@ public:
 		mat[3][3] = 1;
 	}
 
-	void setScale(const OVec3& scale)
+	void setScale(const OVec3& scale) //takes in a vector3 and assigns the value to create a scaling matrix. useful in matrix multiplication
 	{
 		mat[0][0] = scale.x;
 		mat[1][1] = scale.y;
 		mat[2][2] = scale.z;
 	}
 
-	void setTranslation(const OVec3& translation)
+	void setTranslation(const OVec3& translation) //takes in a vector3 and assigns the value to create a translation matrix. useful in matrix multiplication
 	{
 		mat[3][0] = translation.x;
 		mat[3][1] = translation.y;
 		mat[3][2] = translation.z;
 	}
 
-	void setRotationX(f32 x)
+	void setRotationX(f32 x) //takes in a float and assigns the value to create a rotation matrix along the x axis. useful in matrix multiplication
 	{
 		mat[1][1] = cos(x);
 		mat[1][2] = sin(x);
@@ -41,7 +41,7 @@ public:
 		mat[2][2] = cos(x);
 	}
 
-	void setRotationY(f32 y)
+	void setRotationY(f32 y) //takes in a float and assigns the value to create a rotation matrix along the y axis. useful in matrix multiplication
 	{
 		mat[0][0] = cos(y);
 		mat[0][2] = -sin(y);
@@ -49,7 +49,7 @@ public:
 		mat[2][2] = cos(y);
 	}
 
-	void setRotationZ(f32 z)
+	void setRotationZ(f32 z) //takes in a float and assigns the value to create a rotation matrix along the z axis. useful in matrix multiplication
 	{
 		mat[0][0] = cos(z);
 		mat[0][1] = sin(z);
@@ -57,7 +57,7 @@ public:
 		mat[1][1] = cos(z);
 	}
 
-	void operator *=(const OMat4& matrix)
+	void operator *=(const OMat4& matrix) //allows for matrix multiplication
 	{
 		OMat4 out;
 
@@ -75,7 +75,7 @@ public:
 		*this = out;
 	}
 
-	void setOrthoLH(f32 width, f32 height, f32 nearPlane, f32 farPlane)
+	void setOrthoLH(f32 width, f32 height, f32 nearPlane, f32 farPlane) //this is to generate a perspective matrix based on the values provided. Useful in matrix multiplication
 	{
 		//orthogonal matrix
 		mat[0][0] = 2.0f / width;

@@ -1,13 +1,13 @@
 #pragma once
 #include <OGL3D/OPrerequisites.h>
 
-class OVec4
+class OVec4 //vector4 class
 {
 public:
-	OVec4()
+	OVec4() //empty constructor. leaves all the values as 0
 	{
 	}
-	OVec4(f32 x, f32 y, f32 z, f32 w): x(x),y(y),z(z),w(w)
+	OVec4(f32 x, f32 y, f32 z, f32 w): x(x),y(y),z(z),w(w) //regular constructor, assigns each value
 	{
 	}
 
