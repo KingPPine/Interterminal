@@ -29,7 +29,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return NULL;
 }
 
-OWindow::OWindow() //
+OWindow::OWindow() //constructor
 {
 	//this is the process to register a local window and use it to create a main window
 	WNDCLASSEX wc = {}; //WNDCLASSEX is similar to WNDCLASS, except it includes cbSize (which specifies the size of the structure)
