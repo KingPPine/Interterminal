@@ -6,6 +6,7 @@
 class OEntity; //forward declaration for Entity
 class OGame;
 class OGraphicsEngine;
+class OWindow;
 class OEntitySystem
 {
 public:
@@ -46,7 +47,7 @@ private:
 	std::set<OEntity*> m_entitiesToDestroy; //set of entities to destroy in the next frame
 
 private:
-	OGame* m_game;
+	OGame* m_game = nullptr;
 
 	//allows protected / private values to be accessed by OEntity and OGame
 	friend class OEntity;

@@ -3,9 +3,6 @@
 #include <OGL3D/Entity/OEntitySystem.h>
 
 class OEntitySystem; //forward declaration of the entity system
-class OShaderProgram;
-class OWindow;
-class OUniformBuffer;
 class OEntity
 {
 public:

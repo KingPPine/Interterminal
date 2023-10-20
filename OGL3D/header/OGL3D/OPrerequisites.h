@@ -20,18 +20,6 @@ typedef float f32; //type definition for a float, written as f32. Really seems p
 typedef int i32; //type definition for an int, written at i32. Also seems super useless
 typedef unsigned int ui32; //type definition an unsigned int, written as ui32. This is nice shorthand.
 
-struct Vertex //data struct for a vertex, includes a position and a color
-{
-	OVec3 position;
-	OVec3 texcoord;
-};
-
-struct UniformData //data struct to pass to the uniform buffer
-{
-	OMat4 world; //the matrix of world coordinates (scale, rotation, translation)
-	OMat4 projection; //the projection matrix
-};
-
 struct OVertexAttribute //Vertex Attribute. Only houses the number of elements
 {
 	ui32 numElements = 0; //Number of elements. In this code, it's used to represent the number of vertices and texcoords
