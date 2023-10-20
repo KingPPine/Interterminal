@@ -21,6 +21,8 @@ public:
 	void quit(); //sets m_isRunning to false, triggering the end of the app in CWin32Game.cpp
 
 	OEntitySystem* getEntitySystem(); //returns m_entitySystem.get(). "get()" extracts characters from the stream, as unformatted input
+	OGraphicsEngine* getGraphicsEngine();
+	OWindow* getWindowDisplay();
 
 protected:
 	virtual void onCreate(); //currently initializing everything for the spinning cube (vertices, texcoords, shaders, uniform data being put into the buffer)
@@ -38,11 +40,6 @@ protected:
 	std::unique_ptr<OEntitySystem> m_entitySystem; //this declares m_entitySystem as a unique pointer. Gets assigned in the constructor with std::make_unique
 
 
-	OVertexArrayObjectPtr m_polygonVAO; //The Pointer to the vertex array object. This stuff should probably be in an entity class
-	OUniformBufferPtr m_uniform; //The Pointer to the uniform buffer.
-	OShaderProgramPtr m_shader; //The pointer tot he Shader Program, which calls both basic shaders
-
 	std::chrono::system_clock::time_point m_previousTime; //declaration of the previous time. Gets updated in "onUpdateInternal()"
-	f32 m_scale = 0; //a default value, not really used for scale anymore. used in onUpdateInternal() for messing with the matrix
 };
 

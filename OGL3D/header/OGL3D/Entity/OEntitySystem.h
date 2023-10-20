@@ -4,10 +4,13 @@
 #include <set>
 
 class OEntity; //forward declaration for Entity
+class OGame;
+class OGraphicsEngine;
 class OEntitySystem
 {
 public:
 	OEntitySystem(); //constructor. Does nothing at this time
+	OEntitySystem(OGame* game); //constructor. sets the game pointer
 	~OEntitySystem(); //destructor. Does nothing at this time
 	
 public:
@@ -27,6 +30,11 @@ public:
 			return e;
 		return nullptr;
 	}
+
+public:
+	OGraphicsEngine* getGraphicsEngine();
+	OWindow* getWindowDisplay();
+
 private:
 	bool createEntityInternal(OEntity* entity, size_t id); //place this entity inside our map of entities
 	void removeEntity(OEntity* entity); //remove the entity from our map of entities
@@ -36,6 +44,9 @@ private:
 private:
 	std::map < size_t, std::map< OEntity*, std::unique_ptr<OEntity>>> m_entities; //map of entities. I barely understand how this works
 	std::set<OEntity*> m_entitiesToDestroy; //set of entities to destroy in the next frame
+
+private:
+	OGame* m_game;
 
 	//allows protected / private values to be accessed by OEntity and OGame
 	friend class OEntity;

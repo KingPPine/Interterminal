@@ -9,9 +9,9 @@ OEntity::~OEntity() //destructor
 {
 }
 
-void OEntity::release() //releases the entity from the entity system
+void OEntity::release(OEntity* p_entity) //releases the entity from the entity system
 {
-	m_entitySystem->removeEntity(this);
+	m_entitySystem->removeEntity(p_entity);
 }
 
 OEntitySystem* OEntity::getEntitySystem() //returns the entity system
