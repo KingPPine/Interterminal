@@ -14,4 +14,5 @@ public:
 private:
 	f32 m_elapsedSeconds = 0.0f; //never referenced.
 	MyPlayer* m_player = nullptr; //pointer to player entity
+	MyPlayer* m_player2 = nullptr; //pointer to player entity
 };

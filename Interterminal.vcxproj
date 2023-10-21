@@ -159,6 +159,7 @@
     <ClInclude Include="OGL3D\header\OGL3D\Game\OGame.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OShaderProgram.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\OMat4.h" />
+    <ClInclude Include="OGL3D\header\OGL3D\Math\OMathStructs.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\ORect.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\OVec2.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\OVec3.h" />

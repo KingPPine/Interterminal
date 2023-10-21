@@ -1,6 +1,7 @@
 #pragma once
-#include <OGL3D/All.h>
-
+#include <OGL3D/Entity/OEntity.h>
+class OGraphicsEngine;
+class OWindow;
 class MyPlayer : public OEntity
 {
 public:
@@ -11,8 +12,14 @@ public:
 	virtual void onUpdate(f32 deltaTime); //after 3 seconds, deletes the entity
 
 private:
+	OGraphicsEngine* graphicsEngine(); //helps shorten calls to the graphics engine
+	OWindow* display(); //helps shorten calls to the display
+	f32 m_scale = 0;
+
+private:
 	f32 m_elapsedSeconds = 0.0f; //elapsed seconds since creation
 
 protected:
+	
 };
 
