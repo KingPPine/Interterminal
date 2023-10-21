@@ -60,3 +60,14 @@ void OEntitySystem::update(f32 deltaTime) //update method
 		}
 	}
 }
+
+void OEntitySystem::draw()
+{
+	for (auto&& [id, entities] : m_entities) //for the remaining valid entities.
+	{
+		for (auto&& [ptr, entity] : entities) //this is some crazy syntax - I need to look into this
+		{
+			entity->onDraw(); //update the entity
+		}
+	}
+}

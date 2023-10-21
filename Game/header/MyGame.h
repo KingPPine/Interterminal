@@ -1,6 +1,8 @@
 #pragma once
 #include <OGL3D/All.h> //a collection of other header files
 #include <Entities/MyPlayer.h> //player header since it creates a player
+#include <Entities/Cube1.h>
+#include <Entities/Cube2.h>
 
 class MyGame : public OGame
 {
@@ -14,5 +16,6 @@ public:
 private:
 	f32 m_elapsedSeconds = 0.0f; //never referenced.
 	MyPlayer* m_player = nullptr; //pointer to player entity
-	MyPlayer* m_player2 = nullptr; //pointer to player entity
+	Cube1* m_cube1 = nullptr; //pointer to player entity
+	Cube2* m_cube2 = nullptr; //pointer to player entity
 };

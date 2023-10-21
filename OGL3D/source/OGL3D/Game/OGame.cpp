@@ -50,6 +50,7 @@ void OGame::onUpdateInternal()
 	//calling the General Update, and Entity System Update
 	onUpdate(deltaTime); //in OGame and MyGame to help separate regular update instructrions from the matrix stuff in here
 	m_entitySystem->update(deltaTime); //in OEntitySystem, which calls the update method of every entity in the game
+	m_entitySystem->draw(); //in OEntitySystem, which calls the draw method of every entity in the game
 
 	m_display->present(false); //this puts everything on our display. false means no vsync.
 }

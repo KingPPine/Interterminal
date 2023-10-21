@@ -41,6 +41,7 @@ private:
 	void removeEntity(OEntity* entity); //remove the entity from our map of entities
 
 	void update(f32 deltaTime); //update method which deletes unwanted entities and calls the onUpdate of the remaining entities
+	void draw();
 
 private:
 	std::map < size_t, std::map< OEntity*, std::unique_ptr<OEntity>>> m_entities; //map of entities. I barely understand how this works

@@ -1,4 +1,4 @@
-#include <Entities/MyPlayer.h>
+#include <Entities/Cube1.h>
 #include <OGL3D/Math/OVec3.h>
 #include <OGL3D/Math/OMathStructs.h>
 #include <OGL3D/Entity/OEntitySystem.h>
@@ -7,16 +7,16 @@
 #include <OGL3D/Graphics/OShaderProgram.h>
 #include <OGL3D/Window/OWindow.h>
 
-MyPlayer::MyPlayer()
+Cube1::Cube1()
 {
-	
+
 }
 
-MyPlayer::~MyPlayer()
+Cube1::~Cube1()
 {
 }
 
-void MyPlayer::onCreate()
+void Cube1::onCreate()
 {
 	//list of vertex positions for the cube
 	OVec3 positionsList[] =
@@ -156,12 +156,12 @@ void MyPlayer::onCreate()
 	m_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
 }
 
-void MyPlayer::onUpdate(f32 deltaTime)
+void Cube1::onUpdate(f32 deltaTime)
 {
 	OEntity::onUpdate(deltaTime);
 	m_elapsedSeconds += deltaTime;
 
-	if (m_elapsedSeconds >= 3.0f) //if 3 seconds have passed by, release the entity and set the entity to a null pointer
+	if (m_elapsedSeconds >= 10.0f) //if 3 seconds have passed by, release the entity and set the entity to a null pointer
 	{
 		release(this); //in OEntity.cpp, calls the entity system's "removeEntity()" method
 		m_entity = nullptr;
@@ -173,7 +173,7 @@ void MyPlayer::onUpdate(f32 deltaTime)
 	}
 }
 
-void MyPlayer::onDraw()
+void Cube1::onDraw()
 {
 	OEntity::onDraw();
 }

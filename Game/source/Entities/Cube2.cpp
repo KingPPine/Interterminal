@@ -1,4 +1,4 @@
-#include <Entities/MyPlayer.h>
+#include <Entities/Cube2.h>
 #include <OGL3D/Math/OVec3.h>
 #include <OGL3D/Math/OMathStructs.h>
 #include <OGL3D/Entity/OEntitySystem.h>
@@ -7,16 +7,16 @@
 #include <OGL3D/Graphics/OShaderProgram.h>
 #include <OGL3D/Window/OWindow.h>
 
-MyPlayer::MyPlayer()
+Cube2::Cube2()
 {
-	
+
 }
 
-MyPlayer::~MyPlayer()
+Cube2::~Cube2()
 {
 }
 
-void MyPlayer::onCreate()
+void Cube2::onCreate()
 {
 	//list of vertex positions for the cube
 	OVec3 positionsList[] =
@@ -38,13 +38,13 @@ void MyPlayer::onCreate()
 	OVec3 texcoordsList[] =
 	{
 		//list of colours
-		OVec3(0,0,1),
-		OVec3(0,1,0),
-		OVec3(0,1,1),
-		OVec3(1,0,0),
-		OVec3(1,0,1),
-		OVec3(1,1,0),
-		OVec3(1,1,1),
+		OVec3(0.35f,0.18f,0.28f),
+		OVec3(0.17f,0.49f,0.70f),
+		OVec3(0.92f,0.11f,0.62f),
+		OVec3(0.41f,0.1f,0.82f),
+		OVec3(0.1f,0.86f,0.91f),
+		OVec3(1,0.22f,0.38f),
+		OVec3(0.57f,0.92f,0.32),
 		OVec3(0.5f,0.8f,0.2f)
 	};
 
@@ -156,12 +156,12 @@ void MyPlayer::onCreate()
 	m_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
 }
 
-void MyPlayer::onUpdate(f32 deltaTime)
+void Cube2::onUpdate(f32 deltaTime)
 {
 	OEntity::onUpdate(deltaTime);
 	m_elapsedSeconds += deltaTime;
 
-	if (m_elapsedSeconds >= 3.0f) //if 3 seconds have passed by, release the entity and set the entity to a null pointer
+	if (m_elapsedSeconds >= 10.0f) //if 3 seconds have passed by, release the entity and set the entity to a null pointer
 	{
 		release(this); //in OEntity.cpp, calls the entity system's "removeEntity()" method
 		m_entity = nullptr;
@@ -173,7 +173,7 @@ void MyPlayer::onUpdate(f32 deltaTime)
 	}
 }
 
-void MyPlayer::onDraw()
+void Cube2::onDraw()
 {
 	OEntity::onDraw();
 }
