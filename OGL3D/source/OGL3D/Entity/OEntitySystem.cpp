@@ -1,12 +1,28 @@
 #include <OGL3D/Entity/OEntitySystem.h>
 #include <OGL3D/Entity/OEntity.h>
+#include <OGL3D/Game/OGame.h>
 
 OEntitySystem::OEntitySystem() //constructor
 {
 }
 
+OEntitySystem::OEntitySystem(OGame* game) : OEntitySystem()
+{
+	m_game = game;
+}
+
 OEntitySystem::~OEntitySystem() //destructor
 {
+}
+
+OGraphicsEngine* OEntitySystem::getGraphicsEngine()
+{
+	return m_game->getGraphicsEngine();
+}
+
+OWindow* OEntitySystem::getWindowDisplay()
+{
+	return m_game->getWindowDisplay();
 }
 
 bool OEntitySystem::createEntityInternal(OEntity* entity, size_t id) //adds the entity to our map
@@ -18,8 +34,6 @@ bool OEntitySystem::createEntityInternal(OEntity* entity, size_t id) //adds the 
 	entity->m_entitySystem = this; //sets a pointer to this system so that it can be easily referenced
 
 	entity->onCreate(); //calls the onCreate of the entity.
-	//TODO: review this. I don't like that the entity needs to "create itself" through the entity system before having its own OnCreate called.
-	//TODO: (cont.) I feel like it's mor intuitive if the process starts in EntitySystem to create the entity object in the first place
 
 	return true; //confirm this was successful
 }
@@ -33,11 +47,12 @@ void OEntitySystem::update(f32 deltaTime) //update method
 {
 	for (auto e : m_entitiesToDestroy) // for each entity to destroy
 	{
-		m_entities[e->m_id].erase(e); //erase it from the m_entities map
+		m_entities[e->m_id].erase(e); //erase it from the m_entities map.
+		//TODO: One thing to note is that this erases the entity, but keeps the id entry in the map. So the map size will never reduce. Could this be optimized?
 	}
 	m_entitiesToDestroy.clear(); //clear out the set of entities to destroy
 
-	for (auto&& [id, entities] : m_entities) //for the remaining valid entities
+	for (auto&& [id, entities] : m_entities) //for the remaining valid entities.
 	{
 		for (auto&& [ptr, entity] : entities) //this is some crazy syntax - I need to look into this
 		{
