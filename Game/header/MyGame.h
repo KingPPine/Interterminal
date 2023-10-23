@@ -3,6 +3,7 @@
 #include <Entities/MyPlayer.h> //player header since it creates a player
 #include <Entities/Cube1.h>
 #include <Entities/Cube2.h>
+#include <Entities/TestEntity.h>
 
 class MyGame : public OGame
 {
@@ -18,4 +19,5 @@ private:
 	MyPlayer* m_player = nullptr; //pointer to player entity
 	Cube1* m_cube1 = nullptr; //pointer to player entity
 	Cube2* m_cube2 = nullptr; //pointer to player entity
+	TestEntity* m_testEntity = nullptr; //pointer to player entity
 };

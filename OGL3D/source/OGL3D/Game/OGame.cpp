@@ -5,8 +5,8 @@
 #include <OGL3D/Graphics/OUniformBuffer.h>
 #include <OGL3D/Graphics/OGraphicsEngine.h>
 #include <OGL3D/Math/OVec2.h>
-#include <OGL3D/Entity/OEntitySystem.h>
 #include <OGL3D/Math/OMathStructs.h>
+#include <OGL3D/Entity/OEntitySystem.h>
 
 OGame::OGame() //constructor
 {

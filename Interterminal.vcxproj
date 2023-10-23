@@ -71,7 +71,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>OGL3D/header;OGL3D/source;OGL3D/vendor/glad/include/;OGL3D/glm/;Game/header;$(IncludePath)</IncludePath>
+    <IncludePath>OGL3D/header;OGL3D/source;OGL3D/vendor/glad/include/;OGL3D/glm/;OGL3D/random;Game/header;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -175,10 +175,13 @@
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OGraphicsEngine.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OVertexArrayObject.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OUniformBuffer.h" />
+    <ClInclude Include="OGL3D\random\stb_image_compiler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\BasicShader.frag" />
     <None Include="Assets\Shaders\BasicShader.vert" />
+    <None Include="Assets\Shaders\TestShader.frag" />
+    <None Include="Assets\Shaders\TestShader.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
