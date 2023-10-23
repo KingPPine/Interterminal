@@ -44,7 +44,7 @@ void Cube2::onCreate()
 		OVec3(0.41f,0.1f,0.82f),
 		OVec3(0.1f,0.86f,0.91f),
 		OVec3(1,0.22f,0.38f),
-		OVec3(0.57f,0.92f,0.32),
+		OVec3(0.57f,0.92f,0.32f),
 		OVec3(0.5f,0.8f,0.2f)
 	};
 
@@ -161,16 +161,9 @@ void Cube2::onUpdate(f32 deltaTime)
 	OEntity::onUpdate(deltaTime);
 	m_elapsedSeconds += deltaTime;
 
-	if (m_elapsedSeconds >= 10.0f) //if 3 seconds have passed by, release the entity and set the entity to a null pointer
-	{
-		release(this); //in OEntity.cpp, calls the entity system's "removeEntity()" method
-		m_entity = nullptr;
-	}
-	else
-	{
-		m_scale += 0.3f * deltaTime; //increasing this scale value every frame
-		auto currentScale = abs(sin(m_scale)); //creating a current scale by capping the value with a sine function
-	}
+	rotation.x += 0.3f * deltaTime; //increasing the rotation every frame
+	rotation.y += 0.3f * deltaTime; //increasing the rotation every frame
+	rotation.z += 0.3f * deltaTime; //increasing the rotation every frame
 }
 
 void Cube2::onDraw()

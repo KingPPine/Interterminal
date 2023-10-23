@@ -168,8 +168,9 @@ void MyPlayer::onUpdate(f32 deltaTime)
 	}
 	else
 	{
-		m_scale += 0.3f * deltaTime; //increasing this scale value every frame
-		auto currentScale = abs(sin(m_scale)); //creating a current scale by capping the value with a sine function
+		rotation.x += 0.3f * deltaTime; //increasing the rotation every frame
+		rotation.y += 0.3f * deltaTime; //increasing the rotation every frame
+		rotation.z += 0.3f * deltaTime; //increasing the rotation every frame
 	}
 }
 

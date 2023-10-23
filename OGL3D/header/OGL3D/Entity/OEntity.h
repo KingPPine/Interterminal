@@ -16,6 +16,8 @@ public:
 	OEntitySystem* getEntitySystem(); //returns the entity system
 	
 	void setPosition(OVec3 newPosition);
+	void setRotation(OVec3 newRotation);
+	void setScale(OVec3 newScale);
 
 protected:
 	virtual void onCreate() {} //create the entity
@@ -31,7 +33,8 @@ protected:
 	OEntity* m_entity = nullptr; //pointer to the entity in the entity manager
 
 	OVec3 position; //the position of the entity
-	f32 m_scale = 0; //the scale of the entity
+	OVec3 rotation;
+	OVec3 scale = OVec3(1.0f,1.0f,1.0f); //the scale of the entity
 
 	OVertexArrayObjectPtr m_polygonVAO; //The Pointer to the vertex array object. This stuff should probably be in an entity class
 	OUniformBufferPtr m_uniform; //The Pointer to the uniform buffer.

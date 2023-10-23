@@ -75,13 +75,24 @@ public:
 		*this = out;
 	}
 
-	void setOrthoLH(f32 width, f32 height, f32 nearPlane, f32 farPlane) //this is to generate a perspective matrix based on the values provided. Useful in matrix multiplication
+	void setOrthoLH(f32 width, f32 height, f32 nearPlane, f32 farPlane) //this is to generate an orthogonal matrix based on the values provided. Useful in matrix multiplication
 	{
 		//orthogonal matrix
 		mat[0][0] = 2.0f / width;
 		mat[1][1] = 2.0f / height;
 		mat[2][2] = 1.0f / (farPlane - nearPlane);
 		mat[3][2] = -(nearPlane / (farPlane - nearPlane));
+	}
+
+	void setPerspectiveLH(f32 width, f32 height, f32 nearPlane, f32 farPlane) //this is to generate a perspective matrix based on the values provided
+	{
+		//perspective matrix. https://www.songho.ca/opengl/gl_projectionmatrix.html
+		mat[0][0] = (2.0f * nearPlane) / width;
+		mat[1][1] = (2.0f * nearPlane) / height;
+		mat[2][2] = -(farPlane + nearPlane) / (farPlane - nearPlane);
+		mat[2][3] = -1;
+		mat[3][2] = (-2.0f * farPlane * nearPlane) / (farPlane - nearPlane);
+		mat[3][3] = 0;
 	}
 
 	public:

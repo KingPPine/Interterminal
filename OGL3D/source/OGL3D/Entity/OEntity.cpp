@@ -25,20 +25,20 @@ void OEntity::onDraw()
 	//due to matrix multiplication, we can do each operation (scale, rotate, translate) one at a time and multiply the results.
 	//starting with scale
 	temp.setIdentity();
-	temp.setScale(OVec3(1, 1, 1));
+	temp.setScale(scale);
 	world *= temp;
 
 	//then doing rotation
 	temp.setIdentity();
-	temp.setRotationZ(m_scale);
+	temp.setRotationZ(rotation.z);
 	world *= temp;
 
 	temp.setIdentity();
-	temp.setRotationY(m_scale);
+	temp.setRotationY(rotation.y);
 	world *= temp;
 
 	temp.setIdentity();
-	temp.setRotationX(m_scale);
+	temp.setRotationX(rotation.x);
 	world *= temp;
 
 	//then doing translation
@@ -48,7 +48,8 @@ void OEntity::onDraw()
 
 	//multiplying it all by the projection matrix
 	auto displaySize = display()->getInnerSize();
-	projection.setOrthoLH(displaySize.width * 0.004f, displaySize.height * 0.004f, 0.01f, 100.0f);
+	float projectionMultiplier = 0.004f;
+	projection.setOrthoLH(displaySize.width * projectionMultiplier, displaySize.height * projectionMultiplier, 0.0f, 1000.0f);
 
 	UniformData data = { world, projection }; //putting the world matrix and the projection matrix in a struct
 	m_uniform->setData(&data); //passing this data to OpenGL's uniform buffer
@@ -79,6 +80,16 @@ OEntitySystem* OEntity::getEntitySystem() //returns the entity system
 void OEntity::setPosition(OVec3 newPosition)
 {
 	position = newPosition;
+}
+
+void OEntity::setRotation(OVec3 newRotation)
+{
+	rotation = newRotation;
+}
+
+void OEntity::setScale(OVec3 newScale)
+{
+	scale = newScale;
 }
 
 OGraphicsEngine* OEntity::graphicsEngine()
