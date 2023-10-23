@@ -2,7 +2,9 @@
 #include <OGL3D/OPrerequisites.h>
 #include <OGL3D/Math/OVec4.h>
 #include <OGL3D/Math/ORect.h>
+#include <glad/glad.h>
 
+class Camera;
 class OGraphicsEngine
 {
 public:
@@ -17,13 +19,31 @@ public:
 
 public:
 	void clear(const OVec4& color); //clears the screen with whatever colour is passed
+	void clearDepthBuffer();
+
+	void setTextureVerticallyFlip(bool flip);
+	void loadTexture(const char* filePath, GLuint* p_texture, bool includeAlphaChannel);
+	void setTextureUniform(GLuint program, const GLchar* name, int index);
+	void activate2DTexture(int uniformIndex, GLuint texture);
+
+	Camera* getCamera();
+	void setCameraPosition(float x, float y, float z);
+	void setCameraTarget(float x, float y, float z);
+
+	void EnableDepthTest();
 	void setFaceCulling(const OCullType& type); //sets the culling type to whatever we pass (FrontFace, BackFace, or Both)
 	void setWindingOrder(const OWindingOrder& order); //sets the order in which the triangles get drawn, which influences what is facing front / back
 	void setViewport(const ORect& size); //sets the viewport for where things draw within the screen. 0,0 is the bottom left, and width/height is as expected (up and to the right)
-	void setVertexArrayObject(const OVertexArrayObjectPtr& vao); //binds the vertex array in OpenGL with glBindVertexArray
+	void createArrayBuffer(GLuint* p_buffer, GLsizeiptr size, const void* data); //generates and sets up an array buffer
+	void setVertexAttributeArray(GLuint index, GLint size, GLsizei stride, const void* offset);
+	void generateVertexArrayObject(GLuint* p_VAO); //creates the vertex array in OpenGL with glBindVertexArray
+	void bindVertexArrayObject(GLuint p_VAO); //binds the vertex array in OpenGL with glBindVertexArray
 	void setUniformBuffer(const OUniformBufferPtr& buffer, ui32 slot); //sets the uniform buffer and the slot in OpenGL with glBindBufferBase
 	void setShaderProgram(const OShaderProgramPtr& program); //sets the shader program in OpenGL with glUseProgram()
 	void drawTriangles(const OTriangleType& triangleType, ui32 vertexCount, ui32 offset); //draws the list of triangles based on the type being passed, using glDrawArrays
 	void drawIndexedTriangles(const OTriangleType& triangleType, ui32 indicesCount); //draws the list of triangles based on the type being passed and their indices, using glDrawElements
+
+private:
+	Camera* camera;
 };
 

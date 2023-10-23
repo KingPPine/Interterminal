@@ -137,6 +137,9 @@
     <ClInclude Include="OGL3D\random\stb_image_compiler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game\header\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\BasicShader.vert" />

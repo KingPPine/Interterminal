@@ -19,6 +19,8 @@ OGame::OGame() //constructor
 	m_display->makeCurrentContext(); //calls makeCurrentContext() in CWin32Window.cpp
 
 	m_graphicsEngine->setViewport(m_display->getInnerSize()); //sets the viewport to the size defined in m_display within its constructor
+	m_graphicsEngine->EnableDepthTest();
+	m_graphicsEngine->setTextureVerticallyFlip(true);//makes sure that textures are loaded in with the correct vertical orientation.
 }
 
 OGame::~OGame() //destructor

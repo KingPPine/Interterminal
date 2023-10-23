@@ -59,7 +59,7 @@ void OEntity::onDraw()
 
 	graphicsEngine()->setFaceCulling(OCullType::BackFace); //sets the culling to hide the backfaces as opposed to front faces. It's insane to me that this isn't the default.
 	graphicsEngine()->setWindingOrder(OWindingOrder::ClockWise); //sets the order in which the triangles get drawn, which influences where the colours end up
-	graphicsEngine()->setVertexArrayObject(m_polygonVAO); //binds the vertex array in OpenGL with glBindVertexArray
+	//graphicsEngine()->bindVertexArrayObject(m_polygonVAO); //binds the vertex array in OpenGL with glBindVertexArray
 	graphicsEngine()->setUniformBuffer(m_uniform, 0); //sets the uniform buffer and the slot in OpenGL with glBindBufferBase
 	graphicsEngine()->setShaderProgram(m_shader); //sets the shader program in OpenGL with glUseProgram()
 

@@ -3,6 +3,9 @@
 #include <OGL3D/Graphics/OUniformBuffer.h>
 #include <OGL3D/Graphics/OShaderProgram.h>
 #include <glad/glad.h>
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+#include <Camera.h>
 
 
 OVertexArrayObjectPtr OGraphicsEngine::createVertexArrayObject(const OVertexBufferDesc& vbDesc)
@@ -29,6 +32,80 @@ void OGraphicsEngine::clear(const OVec4& color) //clears the screen with whateve
 {
 	glClearColor(color.x, color.y, color.z, color.w); //specify clear values for the color buffers
 	glClear(GL_COLOR_BUFFER_BIT); //clear buffers. GL_COLOR_BUFFER_BIT = Indicates the buffers currently enabled for color writing.
+}
+
+void OGraphicsEngine::clearDepthBuffer()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void OGraphicsEngine::setTextureVerticallyFlip(bool flip)
+{
+	stbi_set_flip_vertically_on_load(flip); // tell stb_image.h to flip loaded texture's on the y-axis.
+}
+
+void OGraphicsEngine::loadTexture(const char* filePath, GLuint* p_texture, bool includeAlphaChannel)
+{
+	GLenum type = (includeAlphaChannel) ? GL_RGBA : GL_RGB;
+
+	//create the texture1
+	glGenTextures(1, p_texture);
+	glBindTexture(GL_TEXTURE_2D, *p_texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int width, height, nrChannels;
+
+	//stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+	//texture1
+	unsigned char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, type, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		OGL3D_ERROR("Failed to load texture");
+	}
+	stbi_image_free(data);
+}
+
+void OGraphicsEngine::setTextureUniform(GLuint program, const GLchar* name, int index)
+{
+	glUniform1i(glGetUniformLocation(program, name), index); //setting the uniform textures for the shaders
+}
+
+void OGraphicsEngine::activate2DTexture(int uniformIndex, GLuint texture)
+{
+	GLenum gl_texture_index = 33984 + uniformIndex; //This is a hacky way to get "GL_TEXTURE0" from '0', and so on
+
+	glActiveTexture(gl_texture_index); // activate the texture unit first before binding texture
+	glBindTexture(GL_TEXTURE_2D, texture);
+}
+
+Camera* OGraphicsEngine::getCamera()
+{
+	return camera;
+}
+
+void OGraphicsEngine::setCameraPosition(float x, float y, float z)
+{
+	camera->setPosition(x, y, z);
+}
+
+void OGraphicsEngine::setCameraTarget(float x, float y, float z)
+{
+	camera->setTarget(x, y, z);
+}
+
+void OGraphicsEngine::EnableDepthTest()
+{
+	glEnable(GL_DEPTH_TEST);
 }
 
 void OGraphicsEngine::setFaceCulling(const OCullType& type) //sets the culling type to whatever we pass (FrontFace, BackFace, or Both)
@@ -58,9 +135,27 @@ void OGraphicsEngine::setViewport(const ORect& size) //sets the viewport for whe
 	glViewport(size.left, size.top, size.width, size.height); //dividing width and height by 2 will reduce the viewport to a quarter of the screen (everything within the viewport will shrink too)
 }
 
-void OGraphicsEngine::setVertexArrayObject(const OVertexArrayObjectPtr& vao) //binds the vertex array in OpenGL with glBindVertexArray
+void OGraphicsEngine::createArrayBuffer(GLuint* p_buffer, GLsizeiptr size, const void* data)
 {
-	glBindVertexArray(vao->getId()); //bind a vertex array object.
+	glGenBuffers(1, p_buffer);
+	glBindBuffer(GL_ARRAY_BUFFER, *p_buffer);
+	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+}
+
+void OGraphicsEngine::setVertexAttributeArray(GLuint index, GLint size, GLsizei stride, const void* offset)
+{
+	glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, (void*)offset);
+	glEnableVertexAttribArray(index);
+}
+
+void OGraphicsEngine::generateVertexArrayObject(GLuint* p_VAO)
+{
+	glGenVertexArrays(1, p_VAO);
+}
+
+void OGraphicsEngine::bindVertexArrayObject(GLuint p_VAO) //binds the vertex array in OpenGL with glBindVertexArray
+{
+	glBindVertexArray(p_VAO); //bind a vertex array object.
 	//array is the name of a vertex array object previously returned from a call to glGenVertexArrays, or zero to break the existing vertex array object binding.
 }
 

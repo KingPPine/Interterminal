@@ -154,6 +154,7 @@
     <ClCompile Include="OGL3D\source\OGL3D\Graphics\OUniformBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Game\header\Camera.h" />
     <ClInclude Include="Game\header\Entities\Cube1.h" />
     <ClInclude Include="Game\header\Entities\Cube2.h" />
     <ClInclude Include="Game\header\Entities\TestEntity.h" />

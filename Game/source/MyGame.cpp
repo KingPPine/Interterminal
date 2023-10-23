@@ -18,6 +18,8 @@ void MyGame::onCreate()
 	//m_cube2->setPosition(OVec3(1, -1, 10));
 
 	m_testEntity = getEntitySystem()->createEntity<TestEntity>();
+
+
 }
 
 void MyGame::onUpdate(f32 deltaTime)

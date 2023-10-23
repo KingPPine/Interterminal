@@ -22,6 +22,18 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 	}
+	case WM_KEYDOWN:
+	{
+		if (wParam == VK_OEM_3) //detecting a tilde
+		{
+			PostQuitMessage(0);
+			break;
+		}
+		if (wParam == VK_UP)
+		{
+			std::cout << "oh shit waddup";
+		}
+	}
 
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);
