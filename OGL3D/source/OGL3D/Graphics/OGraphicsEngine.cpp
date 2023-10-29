@@ -93,16 +93,6 @@ Camera* OGraphicsEngine::getCamera()
 	return camera;
 }
 
-void OGraphicsEngine::setCameraPosition(float x, float y, float z)
-{
-	camera->setPosition(x, y, z);
-}
-
-void OGraphicsEngine::setCameraTarget(float x, float y, float z)
-{
-	camera->setTarget(x, y, z);
-}
-
 void OGraphicsEngine::EnableDepthTest()
 {
 	glEnable(GL_DEPTH_TEST);

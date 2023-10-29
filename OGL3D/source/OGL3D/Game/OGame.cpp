@@ -7,6 +7,7 @@
 #include <OGL3D/Math/OVec2.h>
 #include <OGL3D/Math/OMathStructs.h>
 #include <OGL3D/Entity/OEntitySystem.h>
+#include <GameConstants.h>
 
 OGame::OGame() //constructor
 {
@@ -50,11 +51,15 @@ void OGame::onUpdateInternal()
 	m_graphicsEngine->clear(OVec4(0.26f, 0.75f, 0.58f, 1)); //clears the screen with a specified colour
 
 	//calling the General Update, and Entity System Update
-	onUpdate(deltaTime); //in OGame and MyGame to help separate regular update instructrions from the matrix stuff in here
+	onUpdate(deltaTime); //in OGame and MyGame to help separate regular update instructions from the matrix stuff in here
 	m_entitySystem->update(deltaTime); //in OEntitySystem, which calls the update method of every entity in the game
 	m_entitySystem->draw(); //in OEntitySystem, which calls the draw method of every entity in the game
 
+	m_display->update(); //in CWin32Window.cpp, perform any updates needed for the window
 	m_display->present(false); //this puts everything on our display. false means no vsync.
+
+	//Calling the input manager update at the end of the frame, as it prepares updates for the next frame
+	GameConstants::inputManager->update();
 }
 
 void OGame::onQuit()

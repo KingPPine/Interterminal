@@ -138,6 +138,8 @@
     <ClCompile Include="Game\source\Entities\Cube1.cpp" />
     <ClCompile Include="Game\source\Entities\Cube2.cpp" />
     <ClCompile Include="Game\source\Entities\TestEntity.cpp" />
+    <ClCompile Include="Game\source\GameConstants.cpp" />
+    <ClCompile Include="Game\source\InputManager.cpp" />
     <ClCompile Include="Game\source\MyGame.cpp" />
     <ClCompile Include="Game\source\Entities\MyPlayer.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Entity\OEntity.cpp" />
@@ -158,6 +160,8 @@
     <ClInclude Include="Game\header\Entities\Cube1.h" />
     <ClInclude Include="Game\header\Entities\Cube2.h" />
     <ClInclude Include="Game\header\Entities\TestEntity.h" />
+    <ClInclude Include="Game\header\GameConstants.h" />
+    <ClInclude Include="Game\header\InputManager.h" />
     <ClInclude Include="Game\header\MyGame.h" />
     <ClInclude Include="Game\header\Entities\MyPlayer.h" />
     <ClInclude Include="OGL3D\header\OGL3D\All.h" />

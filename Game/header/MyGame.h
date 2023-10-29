@@ -20,4 +20,5 @@ private:
 	Cube1* m_cube1 = nullptr; //pointer to player entity
 	Cube2* m_cube2 = nullptr; //pointer to player entity
 	TestEntity* m_testEntity = nullptr; //pointer to player entity
+	TestEntity* m_testEntity2 = nullptr; //pointer to player entity
 };

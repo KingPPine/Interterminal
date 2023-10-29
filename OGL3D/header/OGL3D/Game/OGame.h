@@ -10,7 +10,6 @@
 class OGraphicsEngine; 
 class OEntitySystem;
 class OWindow;
-
 class OGame
 {
 public:

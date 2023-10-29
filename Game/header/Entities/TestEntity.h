@@ -11,14 +11,5 @@ public:
 	virtual void onDraw();
 
 private:
-
-private:
-	f32 m_elapsedSeconds = 0.0f; //elapsed seconds since creation
-	unsigned int VAO = 0;
-	unsigned int texture1 = 0;
-	unsigned int texture2 = 0;
 	float timeValue = 0;
-
-protected:
-
 };

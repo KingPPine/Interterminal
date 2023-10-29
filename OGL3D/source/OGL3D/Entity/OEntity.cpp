@@ -4,67 +4,88 @@
 #include <OGL3D/Graphics/OGraphicsEngine.h>
 #include <OGL3D/Graphics/OUniformBuffer.h>
 #include <OGL3D/Math/OMathStructs.h>
+#include <OGL3D/Graphics/OShaderProgram.h>
 #include <OGL3D/Window/OWindow.h>
+#include <glm.hpp>
 
 OEntity::OEntity() //constructor
 {
+	camera = GameConstants::camera;
 }
 
 OEntity::~OEntity() //destructor
 {
 }
 
+void OEntity::onCreate()
+{
+	//unsigned int EBO;
+	graphicsEngine()->generateVertexArrayObject(&VAO);
+	graphicsEngine()->bindVertexArrayObject(VAO);
+	//graphicsEngine()->createArrayBuffer(&EBO, ...);
+
+	//create the shader program
+	m_shader = graphicsEngine()->createShaderProgram(
+		{
+			vertexShaderPath, //basic vertex shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
+			fragmentShaderPath //basic fragmentation shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
+		});
+	m_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
+
+	// position attribute
+	graphicsEngine()->setVertexAttributeArray(0, 3, 5 * sizeof(float), (void*)0);
+	//texcoord attribute
+	graphicsEngine()->setVertexAttributeArray(1, 2, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	
+	if (texturePath1 != nullptr)
+		graphicsEngine()->loadTexture(texturePath1, &texture1, false);
+	if (texturePath2 != nullptr)
+		graphicsEngine()->loadTexture(texturePath2, &texture2, true);
+
+	graphicsEngine()->setShaderProgram(m_shader);
+
+	if (texturePath1 != nullptr)
+		graphicsEngine()->setTextureUniform(m_shader->getId(), "texture1", 0); //setting the uniform textures for the shaders
+	if (texturePath2 != nullptr)
+		graphicsEngine()->setTextureUniform(m_shader->getId(), "texture2", 1); //setting the uniform textures for the shaders
+}
+
 void OEntity::onUpdate(f32 deltaTime)
 {
-	//OGL3D_INFO("test" << std::endl);
+	
 }
 
 void OEntity::onDraw()
 {
-	OMat4 world, projection, temp; //instantiating 4x4 matrices
-	//due to matrix multiplication, we can do each operation (scale, rotate, translate) one at a time and multiply the results.
-	//starting with scale
-	temp.setIdentity();
-	temp.setScale(scale);
-	world *= temp;
+	if (texture1 != 0)
+		graphicsEngine()->activate2DTexture(0, texture1);
+	if (texture2 != 0)
+		graphicsEngine()->activate2DTexture(1, texture2);
 
-	//then doing rotation
-	temp.setIdentity();
-	temp.setRotationZ(rotation.z);
-	world *= temp;
-
-	temp.setIdentity();
-	temp.setRotationY(rotation.y);
-	world *= temp;
-
-	temp.setIdentity();
-	temp.setRotationX(rotation.x);
-	world *= temp;
-
-	//then doing translation
-	temp.setIdentity();
-	temp.setTranslation(OVec3(position.x, position.y, position.z));
-	world *= temp;
-
-	//multiplying it all by the projection matrix
-	auto displaySize = display()->getInnerSize();
-	float projectionMultiplier = 0.004f;
-	projection.setOrthoLH(displaySize.width * projectionMultiplier, displaySize.height * projectionMultiplier, 0.0f, 1000.0f);
-
-	UniformData data = { world, projection }; //putting the world matrix and the projection matrix in a struct
-	m_uniform->setData(&data); //passing this data to OpenGL's uniform buffer
+	//MATRIX OPERATIONS
+	//model operations
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, position);
+	model = glm::rotate(model, glm::length(rotation) * glm::radians(50.0f), rotation);
 
 
+	//camera view
+	glm::mat4 view = glm::lookAt(camera->cameraPosition, camera->cameraPosition + camera->cameraFront, camera->cameraUp);
 
+	//projection
+	glm::mat4 projection = glm::mat4(1.0f);
+	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
-	graphicsEngine()->setFaceCulling(OCullType::BackFace); //sets the culling to hide the backfaces as opposed to front faces. It's insane to me that this isn't the default.
-	graphicsEngine()->setWindingOrder(OWindingOrder::ClockWise); //sets the order in which the triangles get drawn, which influences where the colours end up
-	//graphicsEngine()->bindVertexArrayObject(m_polygonVAO); //binds the vertex array in OpenGL with glBindVertexArray
-	graphicsEngine()->setUniformBuffer(m_uniform, 0); //sets the uniform buffer and the slot in OpenGL with glBindBufferBase
-	graphicsEngine()->setShaderProgram(m_shader); //sets the shader program in OpenGL with glUseProgram()
+	int modelLoc = glGetUniformLocation(m_shader->getId(), "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	int viewLoc = glGetUniformLocation(m_shader->getId(), "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	int projectionLoc = glGetUniformLocation(m_shader->getId(), "projection");
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-
-	graphicsEngine()->drawIndexedTriangles(OTriangleType::TriangleList, 36); //draws the list of triangles based on the type being passed and their indices
+	glBindVertexArray(VAO);
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
 void OEntity::release(OEntity* p_entity) //releases the entity from the entity system
@@ -77,17 +98,17 @@ OEntitySystem* OEntity::getEntitySystem() //returns the entity system
 	return m_entitySystem;
 }
 
-void OEntity::setPosition(OVec3 newPosition)
+void OEntity::setPosition(glm::vec3 newPosition)
 {
 	position = newPosition;
 }
 
-void OEntity::setRotation(OVec3 newRotation)
+void OEntity::setRotation(glm::vec3 newRotation)
 {
 	rotation = newRotation;
 }
 
-void OEntity::setScale(OVec3 newScale)
+void OEntity::setScale(glm::vec3 newScale)
 {
 	scale = newScale;
 }

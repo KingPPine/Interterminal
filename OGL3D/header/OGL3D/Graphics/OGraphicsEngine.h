@@ -27,8 +27,6 @@ public:
 	void activate2DTexture(int uniformIndex, GLuint texture);
 
 	Camera* getCamera();
-	void setCameraPosition(float x, float y, float z);
-	void setCameraTarget(float x, float y, float z);
 
 	void EnableDepthTest();
 	void setFaceCulling(const OCullType& type); //sets the culling type to whatever we pass (FrontFace, BackFace, or Both)

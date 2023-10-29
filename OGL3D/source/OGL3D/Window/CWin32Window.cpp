@@ -2,8 +2,8 @@
 #include <OGL3D/Game/OGame.h>
 #include <glad/glad.h>
 #include <glad/glad_wgl.h>
-#include <Windows.h>
 #include <assert.h>
+#include <GameConstants.h>
 
 //LRESULT is just a typedef for LONG_PTR
 //A callback function is a function that is passed as an argument to another function and is then called within that function.
@@ -22,6 +22,8 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		PostQuitMessage(0);
 		break;
 	}
+
+	//keyboard input
 	case WM_KEYDOWN:
 	{
 		if (wParam == VK_OEM_3) //detecting a tilde
@@ -29,15 +31,56 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 			PostQuitMessage(0);
 			break;
 		}
-		if (wParam == VK_UP)
+		else 
 		{
-			std::cout << "oh shit waddup";
+			bool held = lParam & 0x40000000; //this logic gets the 30th bit of lParam. If non-zero, that means the input was held.
+			GameConstants::inputManager->sendInput(wParam, held);
+			break;
 		}
 	}
+	case WM_KEYUP:
+	{
+		GameConstants::inputManager->removeInput(wParam);
+		break;
+	}
 
+	//mouse input
+	case WM_LBUTTONDOWN:
+	{
+		GameConstants::inputManager->sendInput(wParam, false); //key commands can't be held, so just pass false
+		break;
+	}
+	case WM_RBUTTONDOWN:
+	{
+		GameConstants::inputManager->sendInput(wParam, false); //key commands can't be held, so just pass false
+		break;
+	}
+	case WM_LBUTTONUP:
+	{
+		GameConstants::inputManager->removeInput(wParam);
+		break;
+	}
+	case WM_RBUTTONUP:
+	{
+		GameConstants::inputManager->removeInput(wParam);
+		break;
+	}
+	case WM_MOUSEMOVE:
+	{
+		int xPos = LOWORD(lParam); //this gets the x position of the mouse
+		int yPos = HIWORD(lParam); //this gets the y position of the mouse
+
+		GameConstants::inputManager->sendMousePos(xPos, yPos); //for when the game is paused or a menu is up
+		GameConstants::inputManager->sendMouseVelocity(xPos - GameConstants::relativeScreenCenterX, yPos - GameConstants::relativeScreenCenterY);
+		
+		break;
+	}
+
+	//default
 	default:
 		return DefWindowProc(hwnd, msg, wParam, lParam);
 	}
+
 	return NULL;
 }
 
@@ -54,10 +97,10 @@ OWindow::OWindow() //constructor
 	auto classId = RegisterClassEx(&wc); //registers a window class for subsequent use in calls to the CreateWindow or CreateWindowEx function
 	assert(classId); //asserts the window class was created successfully
 
-	RECT rc = { 0,0,1024,768 }; //rectangle of the window. This should be pulled from a static preferences file or something
+	rc = { 0,0,1024,768 }; //rectangle of the window. This should be pulled from a static preferences file or something
 	AdjustWindowRect(&rc, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, false); //Calculates the required size of the window rectangle, based on the desired client-rectangle size.
 
-	m_handle = CreateWindowEx( //this function creates the window with an extended style (otherwise it's idetical to CreateWindow)
+	m_handle = CreateWindowEx( //this function creates the window with an extended style (otherwise it's identical to CreateWindow)
 		WS_EX_LEFT, //the extended style. Technically this is just an unsigned integer. WS_EX_LEFT = 0, creates a window that has generic left-aligned properties. This is the default
 		MAKEINTATOM(classId), //Long pointer to a null-terminated string or an integer atom. If this parameter is an atom, it must be a global atom created by a previous call to the RegisterClass function.
 		L"Inter-Terminal", //Long pointer to a null-terminated string that specifies the window name.
@@ -76,6 +119,7 @@ OWindow::OWindow() //constructor
 	SetWindowLongPtr((HWND)m_handle, GWLP_USERDATA,(LONG_PTR)this); //sets the pointer to the window so that it can be used in the WndProc function
 
 	ShowWindow((HWND)m_handle, SW_SHOW); //sets the window's specified show state
+	ShowCursor(false);
 	UpdateWindow((HWND)m_handle); //Sends a WM_PAINT to the window, updating the client area
 
 
@@ -123,9 +167,31 @@ OWindow::~OWindow() //destructor. deletes the OpenGL context and destroys the wi
 
 ORect OWindow::getInnerSize() //returns the size of the window, excluding the handle
 {
-	RECT rc = {};
-	GetClientRect((HWND)m_handle, &rc);
-	return ORect(rc.right - rc.left, rc.bottom - rc.top);
+	RECT rect = {};
+	GetClientRect((HWND)m_handle, &rect);
+	return ORect(rect.right - rect.left, rect.bottom - rect.top);
+}
+
+void OWindow::update()
+{
+	//getting the relative position of the window so that we can center the cursor, regardless of window message
+	if (!GameConstants::isGamePaused && GetActiveWindow() == (HWND)m_handle)
+	{
+		GetClientRect((HWND)m_handle, &rc);
+		ClientToScreen((HWND)m_handle, (LPPOINT)&rc.left);
+		ClientToScreen((HWND)m_handle, (LPPOINT)&rc.right);
+
+		int relativeCenterX = (rc.right - rc.left) / 2;
+		int relativeCenterY = (rc.bottom - rc.top) / 2;
+		int centerX = rc.left + relativeCenterX;
+		int centerY = rc.top + relativeCenterY;
+
+		GameConstants::relativeScreenCenterX = relativeCenterX;
+		GameConstants::relativeScreenCenterY = relativeCenterY;
+		GameConstants::screenCenterX = centerX;
+		GameConstants::screenCenterY = centerY;
+		SetCursorPos(centerX, centerY);
+	}
 }
 
 void OWindow::makeCurrentContext() //puts the openGL context we created into the window
