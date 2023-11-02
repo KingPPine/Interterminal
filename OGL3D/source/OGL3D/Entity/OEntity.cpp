@@ -36,10 +36,25 @@ void OEntity::onCreate()
 		});
 	m_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
 
+	short index = 0;
 	// position attribute
-	graphicsEngine()->setVertexAttributeArray(0, 3, 5 * sizeof(float), (void*)0);
-	//texcoord attribute
-	graphicsEngine()->setVertexAttributeArray(1, 2, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	if (vertexRowSize > 0)
+	{
+		graphicsEngine()->setVertexAttributeArray(index, vertexRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)0);
+		index++;
+	}
+	// texcoord attribute
+	if (texCoordRowSize > 0)
+	{
+		graphicsEngine()->setVertexAttributeArray(index, texCoordRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)(vertexRowSize * sizeof(float)));
+		index++;
+	}
+	// normal attribute
+	if (normalsRowSize > 0)
+	{
+		graphicsEngine()->setVertexAttributeArray(index, normalsRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)((vertexRowSize + texCoordRowSize) * sizeof(float)));
+		index++;
+	}
 	
 	if (texturePath1 != nullptr)
 		graphicsEngine()->loadTexture(texturePath1, &texture1, false);

@@ -26,7 +26,7 @@ void MyGame::onCreate()
 	m_cube2->setPosition(glm::vec3(2.0f, 0.0f, 0.0f));
 	m_cube2->setScale(glm::vec3(0.2f));
 	//srand(time(0));
-
+		
 	//for (int i = 0; i < 5; i++)
 	//{
 	//	m_cube1 = getEntitySystem()->createEntity<Cube1>();

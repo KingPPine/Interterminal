@@ -12,6 +12,8 @@ Cube1::~Cube1()
 
 void Cube1::onCreate()
 {
+	vertexRowSize = 3;
+	texCoordRowSize = 2;
 	float vertices[] = {
 		// positions				// texture coords
 		-0.5f, -0.5f, -0.5f,	0.0f, 0.0f,

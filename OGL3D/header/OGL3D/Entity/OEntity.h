@@ -34,6 +34,9 @@ protected:
 
 protected:
 	//shader stuff
+	int vertexRowSize = 0;
+	int texCoordRowSize = 0;
+	int normalsRowSize = 0;
 	unsigned int VAO = 0;
 	unsigned int VBO = 0;
 	unsigned int texture1 = 0;
