@@ -7,6 +7,7 @@
 class OEntitySystem; //forward declaration of the entity system
 class OGraphicsEngine;
 class OWindow;
+class OShaderAttribute;
 class OEntity
 {
 public:
@@ -26,10 +27,13 @@ protected:
 	virtual void onUpdate(f32 deltaTime); //update the entity
 	virtual void onDraw(); //draw the entity (OpenGL calls)
 
+	void processShaderAttributes();
+
 	OGraphicsEngine* graphicsEngine(); //helps shorten calls to the graphics engine
 	OWindow* display(); //helps shorten calls to the display
 
 protected:
+	//shader stuff
 	unsigned int VAO = 0;
 	unsigned int VBO = 0;
 	unsigned int texture1 = 0;
@@ -38,6 +42,7 @@ protected:
 	const wchar_t* fragmentShaderPath = nullptr;
 	const char* texturePath1 = nullptr;
 	const char* texturePath2 = nullptr;
+	std::list<OShaderAttribute*> shaderAttribList;
 
 	size_t m_id = 0; //entity id. used by the entity system
 	OEntitySystem* m_entitySystem = nullptr; //pointer to the entity system.

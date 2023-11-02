@@ -9,4 +9,5 @@ namespace GameConstants
 	int screenCenterY = 0;
 	int relativeScreenCenterX = 0;
 	int relativeScreenCenterY = 0;
+	glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
 }

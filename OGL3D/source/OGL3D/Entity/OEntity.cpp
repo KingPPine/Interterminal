@@ -6,11 +6,15 @@
 #include <OGL3D/Math/OMathStructs.h>
 #include <OGL3D/Graphics/OShaderProgram.h>
 #include <OGL3D/Window/OWindow.h>
+#include <OGL3D/Graphics/OShaderAttribute.h>
 #include <glm.hpp>
+#include <string>
+#include <any>
 
 OEntity::OEntity() //constructor
 {
 	camera = GameConstants::camera;
+	shaderAttribList = {};
 }
 
 OEntity::~OEntity() //destructor
@@ -52,20 +56,26 @@ void OEntity::onCreate()
 
 void OEntity::onUpdate(f32 deltaTime)
 {
-	
+
 }
 
 void OEntity::onDraw()
 {
+	m_shader->use();
+
 	if (texture1 != 0)
 		graphicsEngine()->activate2DTexture(0, texture1);
 	if (texture2 != 0)
 		graphicsEngine()->activate2DTexture(1, texture2);
 
+	//process any shader attributes that were set up on the entity
+	processShaderAttributes();
+
 	//MATRIX OPERATIONS
 	//model operations
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, position);
+	model = glm::scale(model, scale);
 	model = glm::rotate(model, glm::length(rotation) * glm::radians(50.0f), rotation);
 
 
@@ -86,6 +96,24 @@ void OEntity::onDraw()
 	glBindVertexArray(VAO);
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+
+void OEntity::processShaderAttributes()
+{
+	for (auto const& attrib : shaderAttribList) {
+		if (attrib != nullptr && attrib->attribName != nullptr)
+		{
+			std::string type = attrib->data.type().name();
+			int location = glGetUniformLocation(m_shader->getId(), attrib->attribName);
+
+			if (type == std::string("struct glm::vec<3,float,0>")) //if the shader attribute data we stored is a Vector3, pass it to the shader this way
+			{
+				glm::vec3 vector = std::any_cast<glm::vec3>(attrib->data);
+				//pass the uniform data to the fragment shader
+				glUniform3f(location, vector.x, vector.y, vector.z);
+			}
+		}
+	}
 }
 
 void OEntity::release(OEntity* p_entity) //releases the entity from the entity system

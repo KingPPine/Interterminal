@@ -11,10 +11,5 @@ public:
 	virtual void onDraw();
 
 private:
-
-private:
-	f32 m_elapsedSeconds = 0.0f; //elapsed seconds since creation
-
-protected:
-
+	float timeValue = 0;
 };

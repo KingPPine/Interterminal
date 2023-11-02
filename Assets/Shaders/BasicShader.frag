@@ -1,13 +1,13 @@
-#version 410 core
+#version 330 core
+out vec4 FragColor;
+  
+in vec3 ourColor;
+in vec2 TexCoord;
 
-//the colour data being passed from the vertex shader
-layout(location = 0) in vec3 vertOutColor;
-
-//the color being output from the shader
-layout(location = 0) out vec4 outColor;
+uniform sampler2D texture1;
+uniform sampler2D texture2;
 
 void main()
 {
-	//outputting the same colours being given by the vertex shader
-	outColor.rgb = vertOutColor;
+    FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), 0.2);
 }

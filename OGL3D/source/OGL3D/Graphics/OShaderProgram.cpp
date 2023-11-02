@@ -93,3 +93,8 @@ void OShaderProgram::setUniformBufferSlot(const char* name, ui32 slot) //binds o
 	ui32 index = glGetUniformBlockIndex(m_programId, name); //retrieves the index of a named uniform block. The program contains the block, and the name specifies the array of characters to retrieve
 	glUniformBlockBinding(m_programId, index, slot); //honestly I don't understand this piece. https://docs.gl/gl4/glUniformBlockBinding
 }
+
+void OShaderProgram::use()
+{
+	glUseProgram(m_programId);
+}
