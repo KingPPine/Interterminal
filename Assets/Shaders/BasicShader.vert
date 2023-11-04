@@ -1,29 +1,15 @@
-#version 410 core
+#version 330 core
+layout (location = 0) in vec3 aPos;
+layout (location = 1) in vec2 aTexCoord;
 
-//representing the uniform data in this shader
-layout (row_major) uniform UniformData
-{
-	mat4 world;
-	mat4 projection;
-};
+out vec2 TexCoord;
 
-//position and texcoord being sent into this shader
-layout(location = 0) in vec3 position;
-layout(location = 1) in vec3 texcoord;
-
-//the vertex colour being passed into this shader
-layout(location = 0) out vec3 vertOutColor;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 projection;
 
 void main()
 {
-	//regular translation
-	vec4 pos = vec4(position,1) * world;
-	//projection
-	pos = pos * projection;
-
-	//setting the vertex position based on the above calculations
-	gl_Position = pos;
-
-	//passing the colour to the fragment shader without any modification
-	vertOutColor = texcoord; // if needed, can be separated as  vec3(texcoord.x, texcoord.y, texcoord.z)
+    gl_Position = projection * view * model * vec4(aPos, 1.0f);
+    TexCoord = aTexCoord;
 }

@@ -168,6 +168,7 @@
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntity.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntitySystem.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Game\OGame.h" />
+    <ClInclude Include="OGL3D\header\OGL3D\Graphics\OShaderAttribute.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OShaderProgram.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\OMat4.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\OMathStructs.h" />
@@ -185,6 +186,7 @@
   <ItemGroup>
     <None Include="Assets\Shaders\BasicShader.frag" />
     <None Include="Assets\Shaders\BasicShader.vert" />
+    <None Include="Assets\Shaders\LightSourceShader.frag" />
     <None Include="Assets\Shaders\TestShader.frag" />
     <None Include="Assets\Shaders\TestShader.vert" />
   </ItemGroup>

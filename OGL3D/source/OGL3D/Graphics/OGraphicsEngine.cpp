@@ -44,29 +44,32 @@ void OGraphicsEngine::setTextureVerticallyFlip(bool flip)
 	stbi_set_flip_vertically_on_load(flip); // tell stb_image.h to flip loaded texture's on the y-axis.
 }
 
-void OGraphicsEngine::loadTexture(const char* filePath, GLuint* p_texture, bool includeAlphaChannel)
+void OGraphicsEngine::loadTexture(const char* filePath, GLuint* p_texture)
 {
-	GLenum type = (includeAlphaChannel) ? GL_RGBA : GL_RGB;
-
-	//create the texture1
+	//create the texture
 	glGenTextures(1, p_texture);
-	glBindTexture(GL_TEXTURE_2D, *p_texture);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
+	//load in the data for the texture
 	int width, height, nrChannels;
-
-	//stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-	//texture1
 	unsigned char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
 	if (data)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, type, GL_UNSIGNED_BYTE, data);
+		GLenum type;
+		if (nrChannels == 1)
+			type = GL_RED;
+		else if (nrChannels == 3)
+			type = GL_RGB;
+		else if (nrChannels == 4)
+			type = GL_RGBA;
+
+		glBindTexture(GL_TEXTURE_2D, *p_texture);
+		glTexImage2D(GL_TEXTURE_2D, 0, type, width, height, 0, type, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 	else
 	{

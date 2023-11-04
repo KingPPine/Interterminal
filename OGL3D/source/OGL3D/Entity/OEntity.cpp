@@ -6,11 +6,15 @@
 #include <OGL3D/Math/OMathStructs.h>
 #include <OGL3D/Graphics/OShaderProgram.h>
 #include <OGL3D/Window/OWindow.h>
+#include <OGL3D/Graphics/OShaderAttribute.h>
 #include <glm.hpp>
+#include <string>
+#include <any>
 
 OEntity::OEntity() //constructor
 {
 	camera = GameConstants::camera;
+	shaderAttribList = {};
 }
 
 OEntity::~OEntity() //destructor
@@ -32,40 +36,75 @@ void OEntity::onCreate()
 		});
 	m_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
 
+	short index = 0;
 	// position attribute
-	graphicsEngine()->setVertexAttributeArray(0, 3, 5 * sizeof(float), (void*)0);
-	//texcoord attribute
-	graphicsEngine()->setVertexAttributeArray(1, 2, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	if (vertexRowSize > 0)
+	{
+		graphicsEngine()->setVertexAttributeArray(index, vertexRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)0);
+		index++;
+	}
+	// normal attribute
+	if (normalsRowSize > 0)
+	{
+		graphicsEngine()->setVertexAttributeArray(index, normalsRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)(vertexRowSize * sizeof(float)));
+		index++;
+	}
+	// texcoord attribute
+	if (texCoordRowSize > 0)
+	{
+		graphicsEngine()->setVertexAttributeArray(index, texCoordRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)((vertexRowSize + normalsRowSize)* sizeof(float)));
+		index++;
+	}
 	
-	if (texturePath1 != nullptr)
-		graphicsEngine()->loadTexture(texturePath1, &texture1, false);
-	if (texturePath2 != nullptr)
-		graphicsEngine()->loadTexture(texturePath2, &texture2, true);
+	if (baseTexturePath != nullptr)
+		graphicsEngine()->loadTexture(baseTexturePath, &baseTexture);
+	if (overlayTexturePath != nullptr)
+		graphicsEngine()->loadTexture(overlayTexturePath, &overlayTexture);
+	if (specularMapPath != nullptr)
+		graphicsEngine()->loadTexture(specularMapPath, &specularMap);
 
 	graphicsEngine()->setShaderProgram(m_shader);
 
-	if (texturePath1 != nullptr)
-		graphicsEngine()->setTextureUniform(m_shader->getId(), "texture1", 0); //setting the uniform textures for the shaders
-	if (texturePath2 != nullptr)
-		graphicsEngine()->setTextureUniform(m_shader->getId(), "texture2", 1); //setting the uniform textures for the shaders
+	//if (baseTexturePath != nullptr)
+	//	graphicsEngine()->setTextureUniform(m_shader->getId(), "texture1", 0); //setting the uniform textures for the shaders
+	//if (overlayTexturePath != nullptr)
+	//	graphicsEngine()->setTextureUniform(m_shader->getId(), "texture2", 1); //setting the uniform textures for the shaders
 }
 
 void OEntity::onUpdate(f32 deltaTime)
 {
-	
+
 }
 
 void OEntity::onDraw()
 {
-	if (texture1 != 0)
-		graphicsEngine()->activate2DTexture(0, texture1);
-	if (texture2 != 0)
-		graphicsEngine()->activate2DTexture(1, texture2);
+	m_shader->use();
+
+	int index = 0;
+	if (baseTexture != 0)
+	{
+		graphicsEngine()->activate2DTexture(index, baseTexture);
+		index++;
+	}
+	if (overlayTexture != 0)
+	{
+		graphicsEngine()->activate2DTexture(index, overlayTexture);
+		index++;
+	}
+	if (specularMap != 0)
+	{
+		graphicsEngine()->activate2DTexture(index, specularMap);
+		index++;
+	}
+
+	//process any shader attributes that were set up on the entity
+	processShaderAttributes();
 
 	//MATRIX OPERATIONS
 	//model operations
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, position);
+	model = glm::scale(model, scale);
 	model = glm::rotate(model, glm::length(rotation) * glm::radians(50.0f), rotation);
 
 
@@ -86,6 +125,50 @@ void OEntity::onDraw()
 	glBindVertexArray(VAO);
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
+}
+
+void OEntity::processShaderAttributes()
+{
+	for (auto const& attrib : shaderAttribList) {
+		if (attrib != nullptr && attrib->attribName != nullptr)
+		{
+			std::string type = attrib->data.type().name();
+			int location = glGetUniformLocation(m_shader->getId(), attrib->attribName);
+
+			if (type == std::string("struct glm::vec<3,float,0>")) //if the shader attribute data we stored is a Vector3, pass it to the shader this way
+			{
+				glm::vec3 vector = std::any_cast<glm::vec3>(attrib->data);
+				//pass the uniform data to the fragment shader
+				glUniform3f(location, vector.x, vector.y, vector.z);
+			}
+
+			else if (type == std::string("float"))
+			{
+				float value = std::any_cast<float>(attrib->data);
+				//pass the uniform data to the fragment shader
+				glUniform1f(location, value);
+			}
+
+			else if (type == std::string("int"))
+			{
+				float value = std::any_cast<int>(attrib->data);
+				//pass the uniform data to the fragment shader
+				glUniform1i(location, value);
+			}
+		}
+	}
+}
+
+void OEntity::updateShaderAttribute(const char* attribName, std::any data)
+{
+	for (OShaderAttribute* shaderAttribute : shaderAttribList)
+	{
+		if (strcmp(shaderAttribute->attribName, attribName) == 0) //compares the strings of the char pointers
+		{
+			shaderAttribute->data = data;
+			return; //break out of the function since there should only be one attribute of each name
+		}
+	}
 }
 
 void OEntity::release(OEntity* p_entity) //releases the entity from the entity system

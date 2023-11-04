@@ -116,9 +116,6 @@
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntitySystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Game\header\MyGame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -152,11 +149,18 @@
     <ClInclude Include="Game\header\GameConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OGL3D\header\OGL3D\Graphics\OShaderAttribute.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\BasicShader.vert" />
     <None Include="Assets\Shaders\BasicShader.frag" />
     <None Include="Assets\Shaders\TestShader.vert" />
     <None Include="Assets\Shaders\TestShader.frag" />
+    <None Include="Assets\Shaders\LightSourceShader.frag" />
   </ItemGroup>
 </Project>

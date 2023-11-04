@@ -8,6 +8,7 @@ public:
 	~OShaderProgram(); //descructor. detaches and deletes each shader, then deletes the program - all in OpenGL
 	ui32 getId(); //returns m_programId
 	void setUniformBufferSlot(const char* name, ui32 slot); //binds our program to a uniform block
+	void use();
 
 private:
 	void attach(const wchar_t* shaderFilePath, const OShaderType& type); //takes a shader file path and shader type, and attaches the shader to OpenGL

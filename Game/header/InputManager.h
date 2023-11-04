@@ -15,6 +15,8 @@ enum class KeyCode //enum of keycodes we'll process in the game so that it's mor
 	DownArrow = VK_DOWN,
 	LeftArrow = VK_LEFT,
 	RightArrow = VK_RIGHT,
+	Space = VK_SPACE,
+	Ctrl = VK_CONTROL,
 	W = 'W',
 	S = 'S',
 	A = 'A',
