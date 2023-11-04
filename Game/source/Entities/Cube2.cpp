@@ -78,7 +78,7 @@ void Cube2::onUpdate(f32 deltaTime)
 	rotation.y = 1.0f * timeValue;
 	rotation.z = 0.0f;
 
-	position = GameConstants::lightPos;
+	//position = GameConstants::lightPos;
 }
 
 void Cube2::onDraw()

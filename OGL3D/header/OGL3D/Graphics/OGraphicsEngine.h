@@ -22,7 +22,7 @@ public:
 	void clearDepthBuffer();
 
 	void setTextureVerticallyFlip(bool flip);
-	void loadTexture(const char* filePath, GLuint* p_texture, bool includeAlphaChannel);
+	void loadTexture(const char* filePath, GLuint* p_texture);
 	void setTextureUniform(GLuint program, const GLchar* name, int index);
 	void activate2DTexture(int uniformIndex, GLuint texture);
 

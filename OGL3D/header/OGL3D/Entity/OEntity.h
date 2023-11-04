@@ -3,6 +3,7 @@
 #include <GameConstants.h>
 #include <glm.hpp>
 #include <string>
+#include <any>
 
 class OEntitySystem; //forward declaration of the entity system
 class OGraphicsEngine;
@@ -28,6 +29,7 @@ protected:
 	virtual void onDraw(); //draw the entity (OpenGL calls)
 
 	void processShaderAttributes();
+	void updateShaderAttribute(const char* attribName, std::any data);
 
 	OGraphicsEngine* graphicsEngine(); //helps shorten calls to the graphics engine
 	OWindow* display(); //helps shorten calls to the display
@@ -35,16 +37,18 @@ protected:
 protected:
 	//shader stuff
 	int vertexRowSize = 0;
-	int texCoordRowSize = 0;
 	int normalsRowSize = 0;
+	int texCoordRowSize = 0;
 	unsigned int VAO = 0;
 	unsigned int VBO = 0;
-	unsigned int texture1 = 0;
-	unsigned int texture2 = 0;
+	unsigned int baseTexture = 0;
+	unsigned int overlayTexture = 0;
+	unsigned int specularMap = 0;
 	const wchar_t* vertexShaderPath = nullptr;
 	const wchar_t* fragmentShaderPath = nullptr;
-	const char* texturePath1 = nullptr;
-	const char* texturePath2 = nullptr;
+	const char* baseTexturePath = nullptr;
+	const char* overlayTexturePath = nullptr;
+	const char* specularMapPath = nullptr;
 	std::list<OShaderAttribute*> shaderAttribList;
 
 	size_t m_id = 0; //entity id. used by the entity system

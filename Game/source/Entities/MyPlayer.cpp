@@ -23,17 +23,21 @@ void MyPlayer::onUpdate(f32 deltaTime)
 	if (!firstFrame)
 	{
 		//key movement
-		const float cameraSpeed = 2.0f * deltaTime;
-		glm::vec2 moveDirection = glm::vec2();
+		const float cameraSpeed = 4.0f * deltaTime;
+		glm::vec3 moveDirection = glm::vec3();
 
 		if (GameConstants::inputManager->keyDown(KeyCode::W) || GameConstants::inputManager->keyHeld(KeyCode::W))
-			moveDirection.y += 1;
+			moveDirection.z += 1;
 		if (GameConstants::inputManager->keyDown(KeyCode::S) || GameConstants::inputManager->keyHeld(KeyCode::S))
-			moveDirection.y -= 1;
+			moveDirection.z -= 1;
 		if (GameConstants::inputManager->keyDown(KeyCode::D) || GameConstants::inputManager->keyHeld(KeyCode::D))
 			moveDirection.x += 1;
 		if (GameConstants::inputManager->keyDown(KeyCode::A) || GameConstants::inputManager->keyHeld(KeyCode::A))
 			moveDirection.x -= 1;
+		if (GameConstants::inputManager->keyDown(KeyCode::Space) || GameConstants::inputManager->keyHeld(KeyCode::Space))
+			moveDirection.y += 1;
+		if (GameConstants::inputManager->keyDown(KeyCode::Ctrl) || GameConstants::inputManager->keyHeld(KeyCode::Ctrl))
+			moveDirection.y -= 1;
 
 		if (glm::length(moveDirection) != 0) moveDirection = glm::normalize(moveDirection); //normalize the vector as long as it's not a zero vector
 
@@ -55,10 +59,11 @@ void MyPlayer::onUpdate(f32 deltaTime)
 		camera->cameraFront = glm::normalize(camera->cameraFront + (goalFront * 0.015f));
 		
 
-
-		camera->cameraPosition += camera->cameraFront * moveDirection.y * cameraSpeed;
+		float cameraY = camera->cameraPosition.y;
+		camera->cameraPosition += camera->cameraFront * moveDirection.z * cameraSpeed;
 		camera->cameraPosition += glm::normalize(glm::cross(camera->cameraFront, camera->cameraUp)) * moveDirection.x * cameraSpeed;
-		camera->cameraPosition.y = 0.0f; //keeps the user on ground level
+		//camera->cameraPosition.y = 0.0f; //keeps the user on ground level
+		camera->cameraPosition.y = cameraY + (moveDirection.y * cameraSpeed);
 	}
 	else 
 		firstFrame = false;

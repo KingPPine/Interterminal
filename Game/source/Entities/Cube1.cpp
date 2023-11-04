@@ -63,8 +63,8 @@ void Cube1::onCreate()
 
 	vertexShaderPath = L"Assets/Shaders/BasicShader.vert";
 	fragmentShaderPath = L"Assets/Shaders/BasicShader.frag";
-	texturePath1 = "Assets/Textures/container.jpg";
-	texturePath2 = "Assets/Textures/awesomeface.png";
+	baseTexturePath = "Assets/Textures/container.jpg";
+	overlayTexturePath = "Assets/Textures/awesomeface.png";
 
 	OEntity::onCreate();
 }

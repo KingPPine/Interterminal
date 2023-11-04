@@ -43,30 +43,32 @@ void OEntity::onCreate()
 		graphicsEngine()->setVertexAttributeArray(index, vertexRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)0);
 		index++;
 	}
-	// texcoord attribute
-	if (texCoordRowSize > 0)
-	{
-		graphicsEngine()->setVertexAttributeArray(index, texCoordRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)(vertexRowSize * sizeof(float)));
-		index++;
-	}
 	// normal attribute
 	if (normalsRowSize > 0)
 	{
-		graphicsEngine()->setVertexAttributeArray(index, normalsRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)((vertexRowSize + texCoordRowSize) * sizeof(float)));
+		graphicsEngine()->setVertexAttributeArray(index, normalsRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)(vertexRowSize * sizeof(float)));
+		index++;
+	}
+	// texcoord attribute
+	if (texCoordRowSize > 0)
+	{
+		graphicsEngine()->setVertexAttributeArray(index, texCoordRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)((vertexRowSize + normalsRowSize)* sizeof(float)));
 		index++;
 	}
 	
-	if (texturePath1 != nullptr)
-		graphicsEngine()->loadTexture(texturePath1, &texture1, false);
-	if (texturePath2 != nullptr)
-		graphicsEngine()->loadTexture(texturePath2, &texture2, true);
+	if (baseTexturePath != nullptr)
+		graphicsEngine()->loadTexture(baseTexturePath, &baseTexture);
+	if (overlayTexturePath != nullptr)
+		graphicsEngine()->loadTexture(overlayTexturePath, &overlayTexture);
+	if (specularMapPath != nullptr)
+		graphicsEngine()->loadTexture(specularMapPath, &specularMap);
 
 	graphicsEngine()->setShaderProgram(m_shader);
 
-	if (texturePath1 != nullptr)
-		graphicsEngine()->setTextureUniform(m_shader->getId(), "texture1", 0); //setting the uniform textures for the shaders
-	if (texturePath2 != nullptr)
-		graphicsEngine()->setTextureUniform(m_shader->getId(), "texture2", 1); //setting the uniform textures for the shaders
+	//if (baseTexturePath != nullptr)
+	//	graphicsEngine()->setTextureUniform(m_shader->getId(), "texture1", 0); //setting the uniform textures for the shaders
+	//if (overlayTexturePath != nullptr)
+	//	graphicsEngine()->setTextureUniform(m_shader->getId(), "texture2", 1); //setting the uniform textures for the shaders
 }
 
 void OEntity::onUpdate(f32 deltaTime)
@@ -78,10 +80,22 @@ void OEntity::onDraw()
 {
 	m_shader->use();
 
-	if (texture1 != 0)
-		graphicsEngine()->activate2DTexture(0, texture1);
-	if (texture2 != 0)
-		graphicsEngine()->activate2DTexture(1, texture2);
+	int index = 0;
+	if (baseTexture != 0)
+	{
+		graphicsEngine()->activate2DTexture(index, baseTexture);
+		index++;
+	}
+	if (overlayTexture != 0)
+	{
+		graphicsEngine()->activate2DTexture(index, overlayTexture);
+		index++;
+	}
+	if (specularMap != 0)
+	{
+		graphicsEngine()->activate2DTexture(index, specularMap);
+		index++;
+	}
 
 	//process any shader attributes that were set up on the entity
 	processShaderAttributes();
@@ -127,6 +141,32 @@ void OEntity::processShaderAttributes()
 				//pass the uniform data to the fragment shader
 				glUniform3f(location, vector.x, vector.y, vector.z);
 			}
+
+			else if (type == std::string("float"))
+			{
+				float value = std::any_cast<float>(attrib->data);
+				//pass the uniform data to the fragment shader
+				glUniform1f(location, value);
+			}
+
+			else if (type == std::string("int"))
+			{
+				float value = std::any_cast<int>(attrib->data);
+				//pass the uniform data to the fragment shader
+				glUniform1i(location, value);
+			}
+		}
+	}
+}
+
+void OEntity::updateShaderAttribute(const char* attribName, std::any data)
+{
+	for (OShaderAttribute* shaderAttribute : shaderAttribList)
+	{
+		if (strcmp(shaderAttribute->attribName, attribName) == 0) //compares the strings of the char pointers
+		{
+			shaderAttribute->data = data;
+			return; //break out of the function since there should only be one attribute of each name
 		}
 	}
 }
