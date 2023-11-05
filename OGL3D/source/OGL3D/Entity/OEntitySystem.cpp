@@ -139,12 +139,13 @@ void OEntitySystem::update(f32 deltaTime) //update method
 			if (firstFrame)
 			{
 				entity->passLightShaderAtrributes();
-				firstFrame = false;
 			}
 
 			entity->onUpdate(deltaTime); //update the entity
 		}
 	}
+
+	if (firstFrame) firstFrame = false; //after the first frame is over
 }
 
 void OEntitySystem::draw()

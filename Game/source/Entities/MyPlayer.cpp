@@ -14,6 +14,26 @@ void MyPlayer::onCreate()
 {
 	//global shader values
 	addLightShaderAttribute(std::string("viewPos"), GameConstants::camera->cameraPosition);
+
+	//directional light
+	directionalLightIndex = addDirectionalLight();
+	addLightShaderAttribute(std::string("dirLights[" + std::to_string(directionalLightIndex) + std::string("].direction")), glm::vec3(-0.2f, -1.0f, -0.3f));
+	addLightShaderAttribute(std::string("dirLights[" + std::to_string(directionalLightIndex) + std::string("].ambient")), glm::vec3(0.05f, 0.05f, 0.05f));
+	addLightShaderAttribute(std::string("dirLights[" + std::to_string(directionalLightIndex) + std::string("].diffuse")), glm::vec3(0.4f, 0.4f, 0.4f));
+	addLightShaderAttribute(std::string("dirLights[" + std::to_string(directionalLightIndex) + std::string("].specular")), glm::vec3(0.5f, 0.5f, 0.5f));
+
+	//spotlight
+	spotLightIndex = addSpotLight();
+	addLightShaderAttribute("spotLights[" + std::to_string(spotLightIndex) + std::string("].position"), GameConstants::camera->cameraPosition);
+	addLightShaderAttribute("spotLights[" + std::to_string(spotLightIndex) + std::string("].direction"), GameConstants::camera->cameraFront);
+	addLightShaderAttribute("spotLights[" + std::to_string(spotLightIndex) + std::string("].ambient"), glm::vec3(0.0f, 0.0f, 0.0f));
+	addLightShaderAttribute("spotLights[" + std::to_string(spotLightIndex) + std::string("].diffuse"), glm::vec3(1.0f, 1.0f, 1.0f));
+	addLightShaderAttribute("spotLights[" + std::to_string(spotLightIndex) + std::string("].specular"), glm::vec3(1.0f, 1.0f, 1.0f));
+	addLightShaderAttribute("spotLights[" + std::to_string(spotLightIndex) + std::string("].constant"), 1.0f);
+	addLightShaderAttribute("spotLights[" + std::to_string(spotLightIndex) + std::string("].linear"), 0.09f);
+	addLightShaderAttribute("spotLights[" + std::to_string(spotLightIndex) + std::string("].quadratic"), 0.032f);
+	addLightShaderAttribute("spotLights[" + std::to_string(spotLightIndex) + std::string("].cutOff"), glm::cos(glm::radians(12.5f)));
+	addLightShaderAttribute("spotLights[" + std::to_string(spotLightIndex) + std::string("].outerCutOff"), glm::cos(glm::radians(15.0f)));
 }
 
 void MyPlayer::onUpdate(f32 deltaTime)
