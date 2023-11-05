@@ -14,9 +14,4 @@ namespace GameConstants
 	extern int screenCenterY; //center of the screen in terms of the whole monitor
 	extern int relativeScreenCenterX; //center of the screen rectangle
 	extern int relativeScreenCenterY; //center of the screen rectangle
-
-	extern glm::vec3 lightPos;
-	extern glm::vec3 lightPos2;
-	extern glm::vec3 lightPos3;
-	extern glm::vec3 lightPos4;
 }

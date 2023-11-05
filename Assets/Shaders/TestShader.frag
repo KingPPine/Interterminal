@@ -42,16 +42,23 @@ struct SpotLight {
     vec3 specular;       
 };
 
-#define NR_POINT_LIGHTS 4
+#define MAX_DIRECTIONAL_LIGHTS 1
+uniform int total_directional_lights;
+
+#define MAX_POINT_LIGHTS 4
+uniform int total_point_lights;
+
+#define MAX_SPOT_LIGHTS 1
+uniform int total_spot_lights;
 
 in vec3 FragPos;
 in vec3 Normal;
 in vec2 TexCoords;
 
 uniform vec3 viewPos;
-uniform DirLight dirLight;
-uniform PointLight pointLights[NR_POINT_LIGHTS];
-uniform SpotLight spotLight;
+uniform DirLight dirLights[MAX_DIRECTIONAL_LIGHTS]; //initialize an array of the maximum size of directional lights allowed
+uniform PointLight pointLights[MAX_POINT_LIGHTS]; //initialize an array of the maximum size of point lights allowed
+uniform SpotLight spotLights[MAX_SPOT_LIGHTS]; //initialize an array of the maximum size of spot lights allowed
 uniform Material material;
 
 // function prototypes
@@ -72,12 +79,15 @@ void main()
     // this fragment's final color.
     // == =====================================================
     // phase 1: directional lighting
-    vec3 result = CalcDirLight(dirLight, norm, viewDir);
+    vec3 result;
+    for (int i = 0; i < total_directional_lights; i++) //only process as many point lights as exist in the entity system
+        result = CalcDirLight(dirLights[i], norm, viewDir);
     // phase 2: point lights
-    for(int i = 0; i < NR_POINT_LIGHTS; i++)
+    for(int i = 0; i < total_point_lights; i++) //only process as many point lights as exist in the entity system
         result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);    
     // phase 3: spot light
-    result += CalcSpotLight(spotLight, norm, FragPos, viewDir);    
+    for (int i = 0; i < total_spot_lights; i++) //only process as many point lights as exist in the entity system
+        result += CalcSpotLight(spotLights[i], norm, FragPos, viewDir);    
     
     FragColor = vec4(result, 1.0);
 }

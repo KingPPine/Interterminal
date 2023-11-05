@@ -127,13 +127,48 @@ void OEntity::onDraw()
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
+void OEntity::addShaderAttribute(std::string attribName, std::any data)
+{
+	shaderAttribList.push_back(new OShaderAttribute(attribName, data));
+}
+
+short OEntity::addDirectionalLight()
+{
+	return m_entitySystem->addDirectionalLight();
+}
+
+short OEntity::addPointLight()
+{
+	return m_entitySystem->addPointLight();
+}
+
+short OEntity::addSpotLight()
+{
+	return m_entitySystem->addSpotLight();
+}
+
+void OEntity::addLightShaderAttribute(std::string attribName, std::any data)
+{
+	m_entitySystem->addLightShaderAttribute(attribName, data);
+}
+
+void OEntity::updateLightShaderAttribute(std::string attribName, std::any data)
+{
+	m_entitySystem->updateLightShaderAttribute(attribName, data);
+}
+
+void OEntity::passLightShaderAtrributes()
+{
+	m_entitySystem->passLightShaderAtrributes(&shaderAttribList);
+}
+
 void OEntity::processShaderAttributes()
 {
 	for (auto const& attrib : shaderAttribList) {
-		if (attrib != nullptr && attrib->attribName != nullptr)
+		if (attrib != nullptr && !attrib->attribName.empty())
 		{
 			std::string type = attrib->data.type().name();
-			int location = glGetUniformLocation(m_shader->getId(), attrib->attribName);
+			int location = glGetUniformLocation(m_shader->getId(), attrib->attribName.c_str());
 
 			if (type == std::string("struct glm::vec<3,float,0>")) //if the shader attribute data we stored is a Vector3, pass it to the shader this way
 			{
@@ -151,7 +186,7 @@ void OEntity::processShaderAttributes()
 
 			else if (type == std::string("int"))
 			{
-				float value = std::any_cast<int>(attrib->data);
+				int value = std::any_cast<int>(attrib->data);
 				//pass the uniform data to the fragment shader
 				glUniform1i(location, value);
 			}
@@ -159,11 +194,11 @@ void OEntity::processShaderAttributes()
 	}
 }
 
-void OEntity::updateShaderAttribute(const char* attribName, std::any data)
+void OEntity::updateShaderAttribute(std::string attribName, std::any data)
 {
 	for (OShaderAttribute* shaderAttribute : shaderAttribList)
 	{
-		if (strcmp(shaderAttribute->attribName, attribName) == 0) //compares the strings of the char pointers
+		if (shaderAttribute->attribName == attribName) //compares the strings of the char pointers
 		{
 			shaderAttribute->data = data;
 			return; //break out of the function since there should only be one attribute of each name

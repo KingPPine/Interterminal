@@ -1,12 +1,16 @@
 #pragma once
 #include <OGL3D/OPrerequisites.h>
+#include <list>
 #include <map>
 #include <set>
+#include <any>
+#include <string>
 
 class OEntity; //forward declaration for Entity
 class OGame;
 class OGraphicsEngine;
 class OWindow;
+class OShaderAttribute;
 class OEntitySystem
 {
 public:
@@ -36,6 +40,17 @@ public:
 	OGraphicsEngine* getGraphicsEngine();
 	OWindow* getWindowDisplay();
 
+	short addDirectionalLight();
+	short addPointLight();
+	short addSpotLight();
+	short getDirectionalLightCount();
+	short getPointLightCount();
+	short getSpotLightCount();
+
+	void addLightShaderAttribute(std::string attribName, std::any data);
+	void updateLightShaderAttribute(std::string attribName, std::any data);
+	void passLightShaderAtrributes(std::list<OShaderAttribute*>* p_entityAttribList);
+
 private:
 	bool createEntityInternal(OEntity* entity, size_t id); //place this entity inside our map of entities
 	void removeEntity(OEntity* entity); //remove the entity from our map of entities
@@ -46,6 +61,13 @@ private:
 private:
 	std::map < size_t, std::map< OEntity*, std::unique_ptr<OEntity>>> m_entities; //map of entities. I barely understand how this works
 	std::set<OEntity*> m_entitiesToDestroy; //set of entities to destroy in the next frame
+	std::list<OShaderAttribute*> lightShaderAttribList;
+
+	short directionalLightCount = 0;
+	short pointLightCount = 0;
+	short spotLightCount = 0;
+
+	bool firstFrame = true;
 
 private:
 	OGame* m_game = nullptr;

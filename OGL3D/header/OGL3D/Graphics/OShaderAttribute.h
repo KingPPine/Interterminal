@@ -1,10 +1,11 @@
 #pragma once
 #include <any>
+#include <string>
 
 class OShaderAttribute
 {
 public:
-	OShaderAttribute(const char* _attribName, std::any _data)
+	OShaderAttribute(std::string _attribName, std::any _data)
 	{
 		attribName = _attribName;
 		data = _data;
@@ -15,6 +16,6 @@ public:
 	}
 
 public:
-	const char* attribName;
+	std::string attribName;
 	std::any data;
 };

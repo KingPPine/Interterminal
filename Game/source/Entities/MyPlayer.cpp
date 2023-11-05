@@ -1,4 +1,5 @@
 #include <Entities/MyPlayer.h>
+#include <OGL3D/Graphics/OShaderAttribute.h>
 
 MyPlayer::MyPlayer()
 {
@@ -11,7 +12,8 @@ MyPlayer::~MyPlayer()
 
 void MyPlayer::onCreate()
 {
-
+	//global shader values
+	addLightShaderAttribute(std::string("viewPos"), GameConstants::camera->cameraPosition);
 }
 
 void MyPlayer::onUpdate(f32 deltaTime)
@@ -69,11 +71,21 @@ void MyPlayer::onUpdate(f32 deltaTime)
 		firstFrame = false;
 	
 #pragma endregion
+
+	//update light related shader attributes
+	updateLightShaderAttribute((std::string("spotLights[") + std::to_string(spotLightIndex) + std::string("].position")), GameConstants::camera->cameraPosition);
+	updateLightShaderAttribute((std::string("spotLights[") + std::to_string(spotLightIndex) + std::string("].direction")), GameConstants::camera->cameraFront);
+	updateLightShaderAttribute(std::string("viewPos"), GameConstants::camera->cameraPosition);
 }
 
 void MyPlayer::onDraw()
 {
 	//OEntity::onDraw();
+}
+
+void MyPlayer::passLightShaderAtrributes()
+{
+	//do nothing here, since I don't need to inherit the light shader attributes
 }
 
 void MyPlayer::setPosition(glm::vec3 newPosition)

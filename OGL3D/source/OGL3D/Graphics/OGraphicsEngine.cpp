@@ -54,7 +54,7 @@ void OGraphicsEngine::loadTexture(const char* filePath, GLuint* p_texture)
 	unsigned char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
 	if (data)
 	{
-		GLenum type;
+		GLenum type = GL_RGBA;
 		if (nrChannels == 1)
 			type = GL_RED;
 		else if (nrChannels == 3)

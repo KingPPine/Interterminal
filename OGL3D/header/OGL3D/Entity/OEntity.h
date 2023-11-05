@@ -22,14 +22,21 @@ public:
 	virtual void setPosition(glm::vec3 newPosition);
 	virtual void setRotation(glm::vec3 newRotation);
 	virtual void setScale(glm::vec3 newScale);
+	virtual void passLightShaderAtrributes(); //called by the entity manager to pass light shader attributes to the entity
 
 protected:
 	virtual void onCreate(); //create the entity
 	virtual void onUpdate(f32 deltaTime); //update the entity
 	virtual void onDraw(); //draw the entity (OpenGL calls)
 
+	void addShaderAttribute(std::string attribName, std::any data);
+	short addDirectionalLight();
+	short addPointLight();
+	short addSpotLight();
+	void addLightShaderAttribute(std::string attribName, std::any data);
+	void updateLightShaderAttribute(std::string attribName, std::any data);
 	void processShaderAttributes();
-	void updateShaderAttribute(const char* attribName, std::any data);
+	void updateShaderAttribute(std::string attribName, std::any data);
 
 	OGraphicsEngine* graphicsEngine(); //helps shorten calls to the graphics engine
 	OWindow* display(); //helps shorten calls to the display

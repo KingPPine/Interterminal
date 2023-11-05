@@ -1,6 +1,8 @@
 #include <Entities/Cube2.h>
 #include <OGL3D/Graphics/OGraphicsEngine.h>
 #include <OGL3D/Graphics/OShaderAttribute.h>
+#include <string>
+#include <sstream>
 
 Cube2::Cube2()
 {
@@ -67,6 +69,16 @@ void Cube2::onCreate()
 	//texturePath1 = "Assets/Textures/container.jpg";
 	//texturePath2 = "Assets/Textures/awesomeface.png";
 
+	//light shader attributes
+	lightIndex = addPointLight(); //adds a new light to the entity system, and retrieves the index that should be used for all the shader attributes
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].position")), position);
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].ambient")), glm::vec3(0.05f, 0.05f, 0.05f));
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].diffuse")), glm::vec3(0.8f, 0.8f, 0.8f));
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].specular")), glm::vec3(1.0f, 1.0f, 1.0f));
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].constant")), 1.0f);
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].linear")), 0.09f);
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].quadratic")), 0.032f);
+
 	OEntity::onCreate();
 }
 
@@ -78,10 +90,15 @@ void Cube2::onUpdate(f32 deltaTime)
 	rotation.y = 1.0f * timeValue;
 	rotation.z = 0.0f;
 
-	//position = GameConstants::lightPos;
+	updateLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].position")), position);
 }
 
 void Cube2::onDraw()
 {
 	OEntity::onDraw();
+}
+
+void Cube2::passLightShaderAtrributes()
+{
+	//do nothing here, since I don't need to inherit the light shader attributes
 }
