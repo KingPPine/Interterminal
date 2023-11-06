@@ -36,11 +36,11 @@ void MyGame::onCreate()
 	for (int i = 0; i < 10; i++)
 	{
 		float range = 15.0f;
-		m_cube1 = getEntitySystem()->createEntity<Cube1>();
+		m_testEntity = getEntitySystem()->createEntity<TestEntity>();
 		float randX = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / range)) - (range/2.0f);
 		float randY = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / range)) - (range / 2.0f);
 		float randZ = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / range)) - (range / 2.0f);
-		m_cube1->setPosition(glm::vec3(randX, randY, randZ));
+		m_testEntity->setPosition(glm::vec3(randX, randY, randZ));
 	}
 	
 }

@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>OGL3D/header;OGL3D/source;OGL3D/vendor/glad/include/;OGL3D/glm/;OGL3D/random;Game/header;$(IncludePath)</IncludePath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -108,13 +109,15 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)/OGL3D/assimp/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
+      <AdditionalLibraryDirectories>$(SolutionDir)/OGL3D/assimp/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -146,6 +149,7 @@
     <ClCompile Include="OGL3D\source\OGL3D\Entity\OEntitySystem.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Game\Win32\CWin32Game.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Game\OGame.cpp" />
+    <ClCompile Include="OGL3D\source\OGL3D\Graphics\Mesh.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Graphics\OShaderProgram.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Graphics\Win32\CWin32GraphicsEngine.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Window\CWin32Window.cpp" />
@@ -168,6 +172,7 @@
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntity.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntitySystem.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Game\OGame.h" />
+    <ClInclude Include="OGL3D\header\OGL3D\Graphics\Mesh.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OShaderAttribute.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OShaderProgram.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\OMat4.h" />
