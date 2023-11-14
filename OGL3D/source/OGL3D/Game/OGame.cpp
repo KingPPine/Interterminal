@@ -4,7 +4,6 @@
 #include <OGL3D/Graphics/OShaderProgram.h>
 #include <OGL3D/Graphics/OUniformBuffer.h>
 #include <OGL3D/Graphics/OGraphicsEngine.h>
-#include <OGL3D/Math/OMathStructs.h>
 #include <OGL3D/Entity/OEntitySystem.h>
 #include <GameConstants.h>
 
@@ -20,7 +19,7 @@ OGame::OGame() //constructor
 
 	m_graphicsEngine->setViewport(m_display->getInnerSize()); //sets the viewport to the size defined in m_display within its constructor
 	m_graphicsEngine->EnableDepthTest();
-	m_graphicsEngine->setTextureVerticallyFlip(true);//makes sure that textures are loaded in with the correct vertical orientation.
+	//m_graphicsEngine->setTextureVerticallyFlip(false); //don't need anymore now that I load objects through assimp. In fact it messes up the loading
 }
 
 OGame::~OGame() //destructor
@@ -47,8 +46,8 @@ void OGame::onUpdateInternal()
 	auto deltaTime = (f32)elapsedSeconds.count(); //I think this turns it from a time point to a float of seconds
 
 
-	//m_graphicsEngine->clear(OVec4(0.26f, 0.75f, 0.58f, 1)); //clears the screen with a specified colour
-	m_graphicsEngine->clear(OVec4(0.0f, 0.0f, 0.0f, 1)); //clears the screen with a specified colour
+	m_graphicsEngine->clear(OVec4(0.26f, 0.75f, 0.58f, 1)); //clears the screen with a specified colour
+	//m_graphicsEngine->clear(OVec4(0.0f, 0, 0.0f, 1)); //clears the screen with a specified colour
 
 	//calling the General Update, and Entity System Update
 	onUpdate(deltaTime); //in OGame and MyGame to help separate regular update instructions from the matrix stuff in here

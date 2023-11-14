@@ -3,7 +3,6 @@
 #include <OGL3D/Entity/OEntitySystem.h>
 #include <OGL3D/Graphics/OGraphicsEngine.h>
 #include <OGL3D/Graphics/OUniformBuffer.h>
-#include <OGL3D/Math/OMathStructs.h>
 #include <OGL3D/Graphics/OShaderProgram.h>
 #include <OGL3D/Window/OWindow.h>
 #include <OGL3D/Graphics/OShaderAttribute.h>

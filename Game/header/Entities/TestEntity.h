@@ -1,5 +1,7 @@
 #pragma once
 #include <OGL3D/Entity/OEntity.h>
+#include <OGL3D/Graphics/Model.h>
+
 class TestEntity : public OEntity
 {
 public:
@@ -12,4 +14,7 @@ public:
 
 private:
 	float timeValue = 0;
+	Model model = Model(std::string("Assets/Models/TestCube/testCube.obj"));
+	//Model model = Model(std::string("Assets/Models/TestModel/dougie.obj"));
+	//Model model = Model(std::string("Assets/Models/Backpack/backpack.obj"));
 };

@@ -150,6 +150,7 @@
     <ClCompile Include="OGL3D\source\OGL3D\Game\Win32\CWin32Game.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Game\OGame.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Graphics\Mesh.cpp" />
+    <ClCompile Include="OGL3D\source\OGL3D\Graphics\Model.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Graphics\OShaderProgram.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Graphics\Win32\CWin32GraphicsEngine.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Window\CWin32Window.cpp" />
@@ -173,10 +174,10 @@
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntitySystem.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Game\OGame.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\Mesh.h" />
+    <ClInclude Include="OGL3D\header\OGL3D\Graphics\Model.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OShaderAttribute.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OShaderProgram.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\OMat4.h" />
-    <ClInclude Include="OGL3D\header\OGL3D\Math\OMathStructs.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\ORect.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\OVec2.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\OVec3.h" />
@@ -192,6 +193,8 @@
     <None Include="Assets\Shaders\BasicShader.frag" />
     <None Include="Assets\Shaders\BasicShader.vert" />
     <None Include="Assets\Shaders\LightSourceShader.frag" />
+    <None Include="Assets\Shaders\model_loading.frag" />
+    <None Include="Assets\Shaders\model_loading.vert" />
     <None Include="Assets\Shaders\TestShader.frag" />
     <None Include="Assets\Shaders\TestShader.vert" />
   </ItemGroup>
