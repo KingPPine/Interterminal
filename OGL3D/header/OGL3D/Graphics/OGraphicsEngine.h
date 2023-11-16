@@ -19,7 +19,6 @@ public:
 
 public:
 	void clear(const OVec4& color); //clears the screen with whatever colour is passed
-	void clearDepthBuffer();
 
 	void setTextureVerticallyFlip(bool flip);
 	void loadTexture(const char* filePath, GLuint* p_texture);

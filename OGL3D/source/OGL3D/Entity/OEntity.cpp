@@ -3,10 +3,10 @@
 #include <OGL3D/Entity/OEntitySystem.h>
 #include <OGL3D/Graphics/OGraphicsEngine.h>
 #include <OGL3D/Graphics/OUniformBuffer.h>
-#include <OGL3D/Math/OMathStructs.h>
 #include <OGL3D/Graphics/OShaderProgram.h>
-#include <OGL3D/Window/OWindow.h>
 #include <OGL3D/Graphics/OShaderAttribute.h>
+#include <OGL3D/Graphics/Model.h>
+#include <OGL3D/Window/OWindow.h>
 #include <glm.hpp>
 #include <string>
 #include <any>
@@ -23,10 +23,6 @@ OEntity::~OEntity() //destructor
 
 void OEntity::onCreate()
 {
-	//unsigned int EBO;
-	graphicsEngine()->generateVertexArrayObject(&VAO);
-	graphicsEngine()->bindVertexArrayObject(VAO);
-	//graphicsEngine()->createArrayBuffer(&EBO, ...);
 
 	//create the shader program
 	m_shader = graphicsEngine()->createShaderProgram(
@@ -35,34 +31,6 @@ void OEntity::onCreate()
 			fragmentShaderPath //basic fragmentation shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
 		});
 	m_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
-
-	short index = 0;
-	// position attribute
-	if (vertexRowSize > 0)
-	{
-		graphicsEngine()->setVertexAttributeArray(index, vertexRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)0);
-		index++;
-	}
-	// normal attribute
-	if (normalsRowSize > 0)
-	{
-		graphicsEngine()->setVertexAttributeArray(index, normalsRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)(vertexRowSize * sizeof(float)));
-		index++;
-	}
-	// texcoord attribute
-	if (texCoordRowSize > 0)
-	{
-		graphicsEngine()->setVertexAttributeArray(index, texCoordRowSize, (vertexRowSize + texCoordRowSize + normalsRowSize) * sizeof(float), (void*)((vertexRowSize + normalsRowSize)* sizeof(float)));
-		index++;
-	}
-	
-	if (baseTexturePath != nullptr)
-		graphicsEngine()->loadTexture(baseTexturePath, &baseTexture);
-	if (overlayTexturePath != nullptr)
-		graphicsEngine()->loadTexture(overlayTexturePath, &overlayTexture);
-	if (specularMapPath != nullptr)
-		graphicsEngine()->loadTexture(specularMapPath, &specularMap);
-
 	graphicsEngine()->setShaderProgram(m_shader);
 
 	//if (baseTexturePath != nullptr)
@@ -80,51 +48,27 @@ void OEntity::onDraw()
 {
 	m_shader->use();
 
-	int index = 0;
-	if (baseTexture != 0)
-	{
-		graphicsEngine()->activate2DTexture(index, baseTexture);
-		index++;
-	}
-	if (overlayTexture != 0)
-	{
-		graphicsEngine()->activate2DTexture(index, overlayTexture);
-		index++;
-	}
-	if (specularMap != 0)
-	{
-		graphicsEngine()->activate2DTexture(index, specularMap);
-		index++;
-	}
-
 	//process any shader attributes that were set up on the entity
 	processShaderAttributes();
 
 	//MATRIX OPERATIONS
-	//model operations
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, position);
-	model = glm::scale(model, scale);
-	model = glm::rotate(model, glm::length(rotation) * glm::radians(50.0f), rotation);
-
-
 	//camera view
 	glm::mat4 view = glm::lookAt(camera->cameraPosition, camera->cameraPosition + camera->cameraFront, camera->cameraUp);
-
 	//projection
-	glm::mat4 projection = glm::mat4(1.0f);
-	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f); //45.0f can be replaced with a camera zoom, 800f with the screen width, 600f with the screen height
+	//render the loaded model
+	glm::mat4 modelMat = glm::mat4(1.0f);
+	modelMat = glm::translate(modelMat, position);
+	modelMat = glm::scale(modelMat, scale);
 
 	int modelLoc = glGetUniformLocation(m_shader->getId(), "model");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
 	int viewLoc = glGetUniformLocation(m_shader->getId(), "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 	int projectionLoc = glGetUniformLocation(m_shader->getId(), "projection");
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-	glBindVertexArray(VAO);
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
+	model->Draw(m_shader->getId());
 }
 
 void OEntity::addShaderAttribute(std::string attribName, std::any data)

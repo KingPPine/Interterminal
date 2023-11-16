@@ -31,12 +31,7 @@ OShaderProgramPtr OGraphicsEngine::createShaderProgram(const OShaderProgramDesc&
 void OGraphicsEngine::clear(const OVec4& color) //clears the screen with whatever colour is passed
 {
 	glClearColor(color.x, color.y, color.z, color.w); //specify clear values for the color buffers
-	glClear(GL_COLOR_BUFFER_BIT); //clear buffers. GL_COLOR_BUFFER_BIT = Indicates the buffers currently enabled for color writing.
-}
-
-void OGraphicsEngine::clearDepthBuffer()
-{
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //clear buffers. GL_COLOR_BUFFER_BIT = Indicates the buffers currently enabled for color writing. GL_DEPTH_BUFFER_BIT = depth buffers
 }
 
 void OGraphicsEngine::setTextureVerticallyFlip(bool flip)

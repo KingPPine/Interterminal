@@ -1,5 +1,6 @@
 #pragma once
 #include <OGL3D/Entity/OEntity.h>
+
 class TestEntity : public OEntity
 {
 public:
