@@ -9,6 +9,7 @@ class OEntitySystem; //forward declaration of the entity system
 class OGraphicsEngine;
 class OWindow;
 class OShaderAttribute;
+class Model;
 class OEntity
 {
 public:
@@ -58,6 +59,7 @@ protected:
 	const char* specularMapPath = nullptr;
 	std::list<OShaderAttribute*> shaderAttribList;
 
+	Model* model = nullptr;
 	size_t m_id = 0; //entity id. used by the entity system
 	OEntitySystem* m_entitySystem = nullptr; //pointer to the entity system.
 	OEntity* m_entity = nullptr; //pointer to the entity in the entity manager

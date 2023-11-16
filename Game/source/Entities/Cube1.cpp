@@ -72,7 +72,7 @@ void Cube1::onCreate()
 	//material shader attributes
 	shaderAttribList.push_back(new OShaderAttribute("material.diffuse", 0));
 	shaderAttribList.push_back(new OShaderAttribute("material.specular", 1));
-	shaderAttribList.push_back(new OShaderAttribute("material.shininess", 32.0f));
+	shaderAttribList.push_back(new OShaderAttribute("material.shininess", 31.0f));
 
 	OEntity::onCreate();
 }

@@ -46,8 +46,8 @@ void OGame::onUpdateInternal()
 	auto deltaTime = (f32)elapsedSeconds.count(); //I think this turns it from a time point to a float of seconds
 
 
-	m_graphicsEngine->clear(OVec4(0.26f, 0.75f, 0.58f, 1)); //clears the screen with a specified colour
-	//m_graphicsEngine->clear(OVec4(0.0f, 0, 0.0f, 1)); //clears the screen with a specified colour
+	//m_graphicsEngine->clear(OVec4(0.26f, 0.75f, 0.58f, 1)); //clears the screen with a specified colour
+	m_graphicsEngine->clear(OVec4(0.0f, 0, 0.0f, 1)); //clears the screen with a specified colour
 
 	//calling the General Update, and Entity System Update
 	onUpdate(deltaTime); //in OGame and MyGame to help separate regular update instructions from the matrix stuff in here
