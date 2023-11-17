@@ -1,8 +1,6 @@
 #include <OGL3D/Game/OGame.h>
 #include <OGL3D/Window/OWindow.h>
-#include <OGL3D/Graphics/OVertexArrayObject.h>
 #include <OGL3D/Graphics/OShaderProgram.h>
-#include <OGL3D/Graphics/OUniformBuffer.h>
 #include <OGL3D/Graphics/OGraphicsEngine.h>
 #include <OGL3D/Entity/OEntitySystem.h>
 #include <GameConstants.h>
@@ -43,7 +41,7 @@ void OGame::onUpdateInternal()
 		elapsedSeconds = currentTime - m_previousTime; //difference in time between frames
 	m_previousTime = currentTime; //setting the previous time for the next frame
 
-	auto deltaTime = (f32)elapsedSeconds.count(); //I think this turns it from a time point to a float of seconds
+	auto deltaTime = (float)elapsedSeconds.count(); //I think this turns it from a time point to a float of seconds
 
 
 	//m_graphicsEngine->clear(OVec4(0.26f, 0.75f, 0.58f, 1)); //clears the screen with a specified colour

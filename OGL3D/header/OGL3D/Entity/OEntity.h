@@ -27,7 +27,7 @@ public:
 
 protected:
 	virtual void onCreate(); //create the entity
-	virtual void onUpdate(f32 deltaTime); //update the entity
+	virtual void onUpdate(float deltaTime); //update the entity
 	virtual void onDraw(); //draw the entity (OpenGL calls)
 
 	void addShaderAttribute(std::string attribName, std::any data);
@@ -44,19 +44,8 @@ protected:
 
 protected:
 	//shader stuff
-	int vertexRowSize = 0;
-	int normalsRowSize = 0;
-	int texCoordRowSize = 0;
-	unsigned int VAO = 0;
-	unsigned int VBO = 0;
-	unsigned int baseTexture = 0;
-	unsigned int overlayTexture = 0;
-	unsigned int specularMap = 0;
 	const wchar_t* vertexShaderPath = nullptr;
 	const wchar_t* fragmentShaderPath = nullptr;
-	const char* baseTexturePath = nullptr;
-	const char* overlayTexturePath = nullptr;
-	const char* specularMapPath = nullptr;
 	std::list<OShaderAttribute*> shaderAttribList;
 
 	Model* model = nullptr;
@@ -69,8 +58,6 @@ protected:
 	glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f); //the rotation of the entity
 	glm::vec3 scale = glm::vec3(1.0f,1.0f,1.0f); //the scale of the entity
 
-	OVertexArrayObjectPtr m_polygonVAO; //The Pointer to the vertex array object. This stuff should probably be in an entity class
-	OUniformBufferPtr m_uniform; //The Pointer to the uniform buffer.
 	OShaderProgramPtr m_shader; //The pointer to the Shader Program, which calls both basic shaders
 
 	//allows protected / private values to be accessed by OEntitySystem

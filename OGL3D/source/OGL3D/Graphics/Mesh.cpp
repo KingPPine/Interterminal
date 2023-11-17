@@ -1,11 +1,12 @@
+#include <OGL3D/Graphics/OGraphicsEngine.h>
 #include <OGL3D/Graphics/Mesh.h>
-#include <glad/glad.h>
 
-Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
+Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures, OGraphicsEngine* graphicsEngine)
 {
 	this->vertices = vertices;
 	this->indices = indices;
 	this->textures = textures;
+    this->graphicsEngine = graphicsEngine;
 
 	setupMesh();
 }
@@ -13,45 +14,32 @@ Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std:
 void Mesh::setupMesh()
 {
     // create buffers/arrays
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
+    graphicsEngine->generateVertexArrayObject(&VAO);
+    graphicsEngine->bindVertexArrayObject(VAO);
     // load data into vertex buffers
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // A great thing about structs is that their memory layout is sequential for all its items.
     // The effect is that we can simply pass a pointer to the struct and it translates perfectly to a glm::vec3/2 array which
     // again translates to 3/2 floats which translates to a byte array.
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
-
+    graphicsEngine->createArrayBuffer(&VBO, vertices.size() * sizeof(Vertex), &vertices[0]);
+    graphicsEngine->createElementArrayBuffer(&EBO, indices.size() * sizeof(unsigned int), &indices[0]);
+    
     // set the vertex attribute pointers
     // vertex Positions
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    graphicsEngine->setVertexAttributeArray(0, 3, sizeof(Vertex), (void*)0);
     // vertex normals
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+    graphicsEngine->setVertexAttributeArray(1, 3, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
     // vertex texture coords
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+    graphicsEngine->setVertexAttributeArray(2, 2, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
     // vertex tangent
-    glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+    graphicsEngine->setVertexAttributeArray(3, 3, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
     // vertex bitangent
-    glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+    graphicsEngine->setVertexAttributeArray(4, 3, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
     // ids
-    glEnableVertexAttribArray(5);
-    glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
-
+    graphicsEngine->setVertexAttributeArrayInt(5, 4, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
     // weights
-    glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
-    glBindVertexArray(0);
+    graphicsEngine->setVertexAttributeArray(6, 4, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
+    graphicsEngine->bindVertexArrayObject(0);
+    
 }
 
 void Mesh::Draw(int shader_id)
@@ -62,7 +50,6 @@ void Mesh::Draw(int shader_id)
     unsigned int heightNr = 1;
     for (unsigned int i = 0; i < textures.size(); i++)
     {
-        glActiveTexture(GL_TEXTURE0 + i); // activate proper texture unit before binding
         // retrieve texture number (the N in diffuse_textureN)
         std::string number;
         std::string name = textures[i].type;
@@ -74,20 +61,20 @@ void Mesh::Draw(int shader_id)
             number = std::to_string(normalNr++); // transfer unsigned int to string
         else if (name == "texture_height")
             number = std::to_string(heightNr++); // transfer unsigned int to string
+        
+
+        graphicsEngine->activate2DTexture(i, textures[i].id);
 
         // now set the sampler to the correct texture unit
         //this logic will build it as something like "material.texture_diffuse1".
-        glUniform1i(glGetUniformLocation(shader_id, ("material." + name + number).c_str()), i);
-        
-        // and finally bind the texture
-        glBindTexture(GL_TEXTURE_2D, textures[i].id);
+        graphicsEngine->setUniformInt(shader_id, ("material." + name + number).c_str(), i);
     }
 
     // draw mesh
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    graphicsEngine->bindVertexArrayObject(VAO);
+    graphicsEngine->drawIndexedTriangles(OTriangleType::TriangleList, static_cast<unsigned int>(indices.size()));
+    graphicsEngine->bindVertexArrayObject(0);
 
     // always good practice to set everything back to defaults once configured.
-    glActiveTexture(GL_TEXTURE0);
+    graphicsEngine->reset2DTexture();
 }

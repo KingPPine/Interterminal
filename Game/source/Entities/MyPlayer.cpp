@@ -36,7 +36,7 @@ void MyPlayer::onCreate()
 	addLightShaderAttribute("spotLights[" + std::to_string(spotLightIndex) + std::string("].outerCutOff"), glm::cos(glm::radians(15.0f)));
 }
 
-void MyPlayer::onUpdate(f32 deltaTime)
+void MyPlayer::onUpdate(float deltaTime)
 {
 	//OEntity::onUpdate(deltaTime);
 #pragma region process camera input

@@ -2,7 +2,6 @@
 #include <OGL3D/Entity/OEntity.h>
 #include <OGL3D/Entity/OEntitySystem.h>
 #include <OGL3D/Graphics/OGraphicsEngine.h>
-#include <OGL3D/Graphics/OUniformBuffer.h>
 #include <OGL3D/Graphics/OShaderProgram.h>
 #include <OGL3D/Graphics/OShaderAttribute.h>
 #include <OGL3D/Graphics/Model.h>
@@ -39,7 +38,7 @@ void OEntity::onCreate()
 	//	graphicsEngine()->setTextureUniform(m_shader->getId(), "texture2", 1); //setting the uniform textures for the shaders
 }
 
-void OEntity::onUpdate(f32 deltaTime)
+void OEntity::onUpdate(float deltaTime)
 {
 
 }
@@ -61,12 +60,9 @@ void OEntity::onDraw()
 	modelMat = glm::translate(modelMat, position);
 	modelMat = glm::scale(modelMat, scale);
 
-	int modelLoc = glGetUniformLocation(m_shader->getId(), "model");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMat));
-	int viewLoc = glGetUniformLocation(m_shader->getId(), "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-	int projectionLoc = glGetUniformLocation(m_shader->getId(), "projection");
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	graphicsEngine()->setUniformMat4(m_shader->getId(), "model", &modelMat);
+	graphicsEngine()->setUniformMat4(m_shader->getId(), "view", &view);
+	graphicsEngine()->setUniformMat4(m_shader->getId(), "projection", &projection);
 
 	model->Draw(m_shader->getId());
 }
@@ -112,27 +108,26 @@ void OEntity::processShaderAttributes()
 		if (attrib != nullptr && !attrib->attribName.empty())
 		{
 			std::string type = attrib->data.type().name();
-			int location = glGetUniformLocation(m_shader->getId(), attrib->attribName.c_str());
 
 			if (type == std::string("struct glm::vec<3,float,0>")) //if the shader attribute data we stored is a Vector3, pass it to the shader this way
 			{
 				glm::vec3 vector = std::any_cast<glm::vec3>(attrib->data);
 				//pass the uniform data to the fragment shader
-				glUniform3f(location, vector.x, vector.y, vector.z);
+				graphicsEngine()->setUniformVec3(m_shader->getId(), attrib->attribName.c_str(), &vector);
 			}
 
 			else if (type == std::string("float"))
 			{
 				float value = std::any_cast<float>(attrib->data);
 				//pass the uniform data to the fragment shader
-				glUniform1f(location, value);
+				graphicsEngine()->setUniformFloat(m_shader->getId(), attrib->attribName.c_str(), value);
 			}
 
 			else if (type == std::string("int"))
 			{
 				int value = std::any_cast<int>(attrib->data);
 				//pass the uniform data to the fragment shader
-				glUniform1i(location, value);
+				graphicsEngine()->setUniformInt(m_shader->getId(), attrib->attribName.c_str(), value);
 			}
 		}
 	}

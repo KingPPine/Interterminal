@@ -51,7 +51,7 @@ void OShaderProgram::attach(const wchar_t* shaderFilePath, const OShaderType& ty
 	glCompileShader(shaderId); //compiles the source code placed at the shaderID location
 
 	//get compile errors
-	i32 logLength = 0;
+	int logLength = 0;
 	glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &logLength); //queries the shader for a certain parameter, and puts it into the third argument. GL_INFO_LOG_LENGTH is the number of characters in the information log.
 	if (logLength > 0) //if there are characters in the info log (GL_INFO_LOG_LENGTH), then an issue happened
 	{
@@ -72,7 +72,7 @@ void OShaderProgram::link() //link the program to OpenGL
 	glLinkProgram(m_programId); //links the shader program
 
 	//get compile errors
-	i32 logLength = 0;
+	int logLength = 0;
 	glGetShaderiv(m_programId, GL_INFO_LOG_LENGTH, &logLength); //queries the program for a certain parameter, and puts it into the third argument. GL_INFO_LOG_LENGTH is the number of characters in the information log. 
 	if (logLength > 0) //if there are characters in the info log (GL_INFO_LOG_LENGTH), then an issue happened
 	{

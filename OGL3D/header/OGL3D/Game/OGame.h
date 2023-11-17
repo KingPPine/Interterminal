@@ -25,7 +25,7 @@ public:
 
 protected:
 	virtual void onCreate(); //currently initializing everything for the spinning cube (vertices, texcoords, shaders, uniform data being put into the buffer)
-	virtual void onUpdate(f32 deltaTime) {} //does nothing right now
+	virtual void onUpdate(float deltaTime) {} //does nothing right now
 	virtual void onQuit(); //does nothing right now
 
 private:

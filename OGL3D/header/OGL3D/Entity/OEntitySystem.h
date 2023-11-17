@@ -55,7 +55,7 @@ private:
 	bool createEntityInternal(OEntity* entity, size_t id); //place this entity inside our map of entities
 	void removeEntity(OEntity* entity); //remove the entity from our map of entities
 
-	void update(f32 deltaTime); //update method which deletes unwanted entities and calls the onUpdate of the remaining entities
+	void update(float deltaTime); //update method which deletes unwanted entities and calls the onUpdate of the remaining entities
 	void draw();
 
 private:

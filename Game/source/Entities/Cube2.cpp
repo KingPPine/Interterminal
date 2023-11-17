@@ -16,18 +16,25 @@ Cube2::~Cube2()
 
 void Cube2::onCreate()
 {
-	model = new Model(std::string("Assets/Models/TestCube/testCube.obj"));
+	model = new Model(std::string("Assets/Models/TestCube/testCube.obj"), graphicsEngine());
 
 	vertexShaderPath = L"Assets/Shaders/BasicShader.vert";
 	fragmentShaderPath = L"Assets/Shaders/LightSourceShader.frag";
 
 	//material shader attributes
-	shaderAttribList.push_back(new OShaderAttribute("material.shininess", 31.0f));
+	lightIndex = addPointLight(); //adds a new light to the entity system, and retrieves the index that should be used for all the shader attributes
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].position")), position);
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].ambient")), glm::vec3(0.05f, 0.05f, 0.05f));
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].diffuse")), glm::vec3(0.8f, 0.8f, 0.8f));
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].specular")), glm::vec3(1.0f, 1.0f, 1.0f));
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].constant")), 1.0f);
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].linear")), 0.09f);
+	addLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].quadratic")), 0.032f);
 
 	OEntity::onCreate();
 }
 
-void Cube2::onUpdate(f32 deltaTime)
+void Cube2::onUpdate(float deltaTime)
 {
 	timeValue += deltaTime;
 

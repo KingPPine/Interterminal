@@ -1,4 +1,5 @@
 #include <MyGame.h>
+#include <OGL3D/Entity/OEntitySystem.h>
 
 MyGame::MyGame()
 {
@@ -50,7 +51,7 @@ void MyGame::onCreate()
 	
 }
 
-void MyGame::onUpdate(f32 deltaTime)
+void MyGame::onUpdate(float deltaTime)
 {
 	
 }

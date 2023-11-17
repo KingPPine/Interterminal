@@ -14,7 +14,7 @@ TestEntity::~TestEntity()
 
 void TestEntity::onCreate()
 {
-	model = new Model(std::string("Assets/Models/TestModel/dougie.obj"));
+	model = new Model(std::string("Assets/Models/TestModel/dougie.obj"), graphicsEngine());
 
 	vertexShaderPath = L"Assets/Shaders/model_loading.vert";
 	fragmentShaderPath = L"Assets/Shaders/model_loading.frag";
@@ -25,7 +25,7 @@ void TestEntity::onCreate()
 	OEntity::onCreate();
 }
 
-void TestEntity::onUpdate(f32 deltaTime)
+void TestEntity::onUpdate(float deltaTime)
 {
 	//timeValue += deltaTime;
 

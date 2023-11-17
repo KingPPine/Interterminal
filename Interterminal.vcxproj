@@ -157,8 +157,6 @@
     <ClCompile Include="OGL3D\source\OGL3D\Graphics\OGraphicsEngine.cpp" />
     <ClCompile Include="OGL3D\vendor\glad\src\glad.c" />
     <ClCompile Include="OGL3D\vendor\glad\src\glad_wgl.c" />
-    <ClCompile Include="OGL3D\source\OGL3D\Graphics\OVertexArrayObject.cpp" />
-    <ClCompile Include="OGL3D\source\OGL3D\Graphics\OUniformBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\header\Camera.h" />
@@ -169,7 +167,6 @@
     <ClInclude Include="Game\header\InputManager.h" />
     <ClInclude Include="Game\header\MyGame.h" />
     <ClInclude Include="Game\header\Entities\MyPlayer.h" />
-    <ClInclude Include="OGL3D\header\OGL3D\All.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntity.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntitySystem.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Game\OGame.h" />
@@ -177,7 +174,6 @@
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\Model.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OShaderAttribute.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OShaderProgram.h" />
-    <ClInclude Include="OGL3D\header\OGL3D\Math\OMat4.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\ORect.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\OVec2.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Math\OVec3.h" />
@@ -185,8 +181,6 @@
     <ClInclude Include="OGL3D\header\OGL3D\OPrerequisites.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Window\OWindow.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OGraphicsEngine.h" />
-    <ClInclude Include="OGL3D\header\OGL3D\Graphics\OVertexArrayObject.h" />
-    <ClInclude Include="OGL3D\header\OGL3D\Graphics\OUniformBuffer.h" />
     <ClInclude Include="OGL3D\random\stb_image_compiler.h" />
   </ItemGroup>
   <ItemGroup>

@@ -7,11 +7,11 @@ public:
 	OVec3() //empty constructor. leaves all the values as 0
 	{
 	}
-	OVec3(f32 x, f32 y, f32 z) : x(x), y(y), z(z) //regular constructor, assigns each value
+	OVec3(float x, float y, float z) : x(x), y(y), z(z) //regular constructor, assigns each value
 	{
 	}
 
 
 public:
-	f32 x = 0, y = 0, z = 0;
+	float x = 0, y = 0, z = 0;
 };

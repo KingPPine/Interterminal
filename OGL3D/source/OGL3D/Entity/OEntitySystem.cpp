@@ -119,7 +119,7 @@ void OEntitySystem::removeEntity(OEntity* entity) //add to the set of entities t
 	m_entitiesToDestroy.emplace(entity);
 }
 
-void OEntitySystem::update(f32 deltaTime) //update method
+void OEntitySystem::update(float deltaTime) //update method
 {
 	for (auto e : m_entitiesToDestroy) // for each entity to destroy
 	{

@@ -1,6 +1,7 @@
 #include <Entities/Cube1.h>
 #include <OGL3D/Graphics/OGraphicsEngine.h>
 #include <OGL3D/Graphics/OShaderAttribute.h>
+#include <OGL3D/Graphics/Model.h>
 
 Cube1::Cube1()
 {
@@ -13,71 +14,18 @@ Cube1::~Cube1()
 
 void Cube1::onCreate()
 {
-	vertexRowSize = 3;
-	normalsRowSize = 3;
-	texCoordRowSize = 2;
+	model = new Model(std::string("Assets/Models/TestCube/testCube.obj"), graphicsEngine());
 
-	float vertices[] = {
-		// positions				// normals				// texture coords
-		-0.5f, -0.5f, -0.5f,	0.0f,  0.0f, -1.0f,		0.0f, 0.0f,
-		 0.5f, -0.5f, -0.5f,	0.0f,  0.0f, -1.0f,		1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,	0.0f,  0.0f, -1.0f,		1.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,	0.0f,  0.0f, -1.0f,		1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,	0.0f,  0.0f, -1.0f,		0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,	0.0f,  0.0f, -1.0f,		0.0f, 0.0f,
-
-		-0.5f, -0.5f,  0.5f,	0.0f,  0.0f, 1.0f,		0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,	0.0f,  0.0f, 1.0f,		1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,	0.0f,  0.0f, 1.0f,		1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,	0.0f,  0.0f, 1.0f,		1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,	0.0f,  0.0f, 1.0f,		0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,	0.0f,  0.0f, 1.0f,		0.0f, 0.0f,
-
-		-0.5f,  0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,		1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,   -1.0f,  0.0f,  0.0f,		1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,   -1.0f,  0.0f,  0.0f,		0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,   -1.0f,  0.0f,  0.0f,		0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,		0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,   -1.0f,  0.0f,  0.0f,		1.0f, 0.0f,
-
-		 0.5f,  0.5f,  0.5f,	1.0f,  0.0f,  0.0f,		1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,	1.0f,  0.0f,  0.0f,		1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,	1.0f,  0.0f,  0.0f,		0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,	1.0f,  0.0f,  0.0f,		0.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,	1.0f,  0.0f,  0.0f,		0.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,	1.0f,  0.0f,  0.0f,		1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f,	0.0f, -1.0f,  0.0f,		0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,	0.0f, -1.0f,  0.0f,		1.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,	0.0f, -1.0f,  0.0f,		1.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,	0.0f, -1.0f,  0.0f,		1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,	0.0f, -1.0f,  0.0f,		0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,	0.0f, -1.0f,  0.0f,		0.0f, 1.0f,
-
-		-0.5f,  0.5f, -0.5f,	0.0f,  1.0f,  0.0f,		0.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,	0.0f,  1.0f,  0.0f,		1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,	0.0f,  1.0f,  0.0f,		1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,	0.0f,  1.0f,  0.0f,		1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,	0.0f,  1.0f,  0.0f,		0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,	0.0f,  1.0f,  0.0f,		0.0f, 1.0f
-	};
-
-	graphicsEngine()->createArrayBuffer(&VBO, sizeof(vertices), vertices);
-
-	vertexShaderPath = L"Assets/Shaders/BasicShader.vert";
-	fragmentShaderPath = L"Assets/Shaders/BasicShader.frag";
-	baseTexturePath = "Assets/Textures/container2.png";
-	specularMapPath = "Assets/Textures/container2_specular.png";
+	vertexShaderPath = L"Assets/Shaders/model_loading.vert";
+	fragmentShaderPath = L"Assets/Shaders/model_loading.frag";
 
 	//material shader attributes
-	shaderAttribList.push_back(new OShaderAttribute("material.diffuse", 0));
-	shaderAttribList.push_back(new OShaderAttribute("material.specular", 1));
 	shaderAttribList.push_back(new OShaderAttribute("material.shininess", 31.0f));
 
 	OEntity::onCreate();
 }
 
-void Cube1::onUpdate(f32 deltaTime)
+void Cube1::onUpdate(float deltaTime)
 {
 	timeValue += deltaTime;
 

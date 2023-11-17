@@ -12,28 +12,9 @@ class OVertexArrayObject;
 class OUniformBuffer;
 class OShaderProgram;
 
-typedef std::shared_ptr<OVertexArrayObject> OVertexArrayObjectPtr; //type definition for a shared pointer to the Vertex Array Object. Used in OGame.h
-typedef std::shared_ptr<OUniformBuffer> OUniformBufferPtr; //type definition for a shared pointer to the Uniform Buffer. Used in OGame.h
 typedef std::shared_ptr<OShaderProgram> OShaderProgramPtr; //type definition for a shared pointer to the Shader Program. Used in OGame.h
 
-typedef float f32; //type definition for a float, written as f32. Really seems pointless to me but whatever
-typedef int i32; //type definition for an int, written at i32. Also seems super useless
 typedef unsigned int ui32; //type definition an unsigned int, written as ui32. This is nice shorthand.
-
-struct OVertexAttribute //Vertex Attribute. Only houses the number of elements
-{
-	ui32 numElements = 0; //Number of elements. In this code, it's used to represent the number of vertices and texcoords
-};
-
-struct OVertexBufferDesc //Description for the Vertex Buffer
-{
-	void* verticesList = nullptr; //pointer to the list of vertices
-	ui32 vertexSize = 0; //size of each vertex
-	ui32 listSize = 0; //amount of vertices
-
-	OVertexAttribute* attributesList = nullptr; //pointer to the list of attributes (position + texcoord)
-	ui32 attributesListSize = 0; //amount of attributes
-};
 
 struct OIndexBufferDesc //Description for the Index Buffer
 {
@@ -45,11 +26,6 @@ struct OShaderProgramDesc //Description for the Shader Program
 {
 	const wchar_t* vertexShaderFilePath; //path to the vertex shader
 	const wchar_t* fragmentShaderFilePath; //path to the fragment shader
-};
-
-struct OUniformBufferDesc //Description for the Uniform Buffer
-{
-	ui32 size = 0; //only contains a size for the information
 };
 
 enum class OTriangleType //enum of triangle type for OpenGL

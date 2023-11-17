@@ -1,27 +1,10 @@
 #include <OGL3D/Graphics/OGraphicsEngine.h>
-#include <OGL3D/Graphics/OVertexArrayObject.h>
-#include <OGL3D/Graphics/OUniformBuffer.h>
 #include <OGL3D/Graphics/OShaderProgram.h>
 #include <glad/glad.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 #include <Camera.h>
 
-
-OVertexArrayObjectPtr OGraphicsEngine::createVertexArrayObject(const OVertexBufferDesc& vbDesc)
-{
-	return std::make_shared<OVertexArrayObject>(vbDesc); //creates a shared pointer for the vertex array object, based on the vertex buffer description
-}
-
-OVertexArrayObjectPtr OGraphicsEngine::createVertexArrayObject(const OVertexBufferDesc& vbDesc, const OIndexBufferDesc& ibDesc)
-{
-	return std::make_shared<OVertexArrayObject>(vbDesc, ibDesc); //creates a shared pointer for the vertex array object, based on the vertex buffer description and a list of indices
-}
-
-OUniformBufferPtr OGraphicsEngine::createUniformBuffer(const OUniformBufferDesc& desc)
-{
-	return std::make_shared<OUniformBuffer>(desc); //creates a shared pointer for the uniform buffer object, based on the uniform buffer description
-}
 
 OShaderProgramPtr OGraphicsEngine::createShaderProgram(const OShaderProgramDesc& desc)
 {
@@ -45,16 +28,16 @@ void OGraphicsEngine::loadTexture(const char* filePath, GLuint* p_texture)
 	glGenTextures(1, p_texture);
 
 	//load in the data for the texture
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load(filePath, &width, &height, &nrChannels, 0);
+	int width, height, nrComponents;
+	unsigned char* data = stbi_load(filePath, &width, &height, &nrComponents, 0);
 	if (data)
 	{
 		GLenum type = GL_RGBA;
-		if (nrChannels == 1)
+		if (nrComponents == 1)
 			type = GL_RED;
-		else if (nrChannels == 3)
+		else if (nrComponents == 3)
 			type = GL_RGB;
-		else if (nrChannels == 4)
+		else if (nrComponents == 4)
 			type = GL_RGBA;
 
 		glBindTexture(GL_TEXTURE_2D, *p_texture);
@@ -84,6 +67,11 @@ void OGraphicsEngine::activate2DTexture(int uniformIndex, GLuint texture)
 
 	glActiveTexture(gl_texture_index); // activate the texture unit first before binding texture
 	glBindTexture(GL_TEXTURE_2D, texture);
+}
+
+void OGraphicsEngine::reset2DTexture()
+{
+	glActiveTexture(GL_TEXTURE0);
 }
 
 Camera* OGraphicsEngine::getCamera()
@@ -130,10 +118,23 @@ void OGraphicsEngine::createArrayBuffer(GLuint* p_buffer, GLsizeiptr size, const
 	glBufferData(GL_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
 }
 
+void OGraphicsEngine::createElementArrayBuffer(GLuint* p_buffer, GLsizeiptr size, const void* data)
+{
+	glGenBuffers(1, p_buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *p_buffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, GL_STATIC_DRAW);
+}
+
 void OGraphicsEngine::setVertexAttributeArray(GLuint index, GLint size, GLsizei stride, const void* offset)
 {
-	glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, (void*)offset);
 	glEnableVertexAttribArray(index);
+	glVertexAttribPointer(index, size, GL_FLOAT, GL_FALSE, stride, (void*)offset);
+}
+
+void OGraphicsEngine::setVertexAttributeArrayInt(GLuint index, GLint size, GLsizei stride, const void* offset)
+{
+	glEnableVertexAttribArray(index);
+	glVertexAttribIPointer(index, size, GL_INT, stride, (void*)offset);
 }
 
 void OGraphicsEngine::generateVertexArrayObject(GLuint* p_VAO)
@@ -145,11 +146,6 @@ void OGraphicsEngine::bindVertexArrayObject(GLuint p_VAO) //binds the vertex arr
 {
 	glBindVertexArray(p_VAO); //bind a vertex array object.
 	//array is the name of a vertex array object previously returned from a call to glGenVertexArrays, or zero to break the existing vertex array object binding.
-}
-
-void OGraphicsEngine::setUniformBuffer(const OUniformBufferPtr& buffer, ui32 slot) //sets the uniform buffer and the slot in OpenGL with glBindBufferBase
-{
-	glBindBufferBase(GL_UNIFORM_BUFFER, slot, buffer->getId()); //bind a buffer object to an indexed buffer target. GL_UNIFORM_BUFFER is the target
 }
 
 void OGraphicsEngine::setShaderProgram(const OShaderProgramPtr& program) //sets the shader program in OpenGL with glUseProgram()
@@ -184,4 +180,28 @@ void OGraphicsEngine::drawIndexedTriangles(const OTriangleType& triangleType, ui
 
 	glDrawElements(glTriType, indicesCount, GL_UNSIGNED_INT, nullptr); //render primitives from array data using a mode, count, type (of the values in indices), and a pointer to where the indices are stored
 	//I'm not actually sure why a null pointer works here. I THINK because glBindVertexArray binds the vertex array earlier in the code (which contains the indices), it doesn't need a further pointer to it (??)
+}
+
+void OGraphicsEngine::setUniformMat4(int shaderID, const char* attributeName, glm::mat4* value)
+{
+	int location = glGetUniformLocation(shaderID, attributeName);
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(*value));
+}
+
+void OGraphicsEngine::setUniformVec3(int shaderID, const char* attributeName, glm::vec3* value)
+{
+	int location = glGetUniformLocation(shaderID, attributeName);
+	glUniform3f(location, value->x, value->y, value->z);
+}
+
+void OGraphicsEngine::setUniformFloat(int shaderID, const char* attributeName, float value)
+{
+	int location = glGetUniformLocation(shaderID, attributeName);
+	glUniform1f(location, value);
+}
+
+void OGraphicsEngine::setUniformInt(int shaderID, const char* attributeName, int value)
+{
+	int location = glGetUniformLocation(shaderID, attributeName);
+	glUniform1i(location, value);
 }
