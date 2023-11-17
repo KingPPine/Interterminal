@@ -30,7 +30,6 @@ void OEntity::onCreate()
 			fragmentShaderPath //basic fragmentation shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
 		});
 	m_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
-	graphicsEngine()->setShaderProgram(m_shader);
 
 	//if (baseTexturePath != nullptr)
 	//	graphicsEngine()->setTextureUniform(m_shader->getId(), "texture1", 0); //setting the uniform textures for the shaders

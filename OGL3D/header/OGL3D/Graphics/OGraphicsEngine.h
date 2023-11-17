@@ -4,6 +4,21 @@
 #include <OGL3D/Math/ORect.h>
 #include <glad/glad.h>
 #include <glm.hpp>
+#include <list>
+
+struct Text
+{
+	std::string text;
+	float x;
+	float y;
+	float scale;
+	glm::vec3 color;
+
+	Text(std::string text, float x, float y, float scale, glm::vec3 color) : text(text), x(x), y(y), scale(scale), color(color)
+	{
+
+	}
+};
 
 class Camera;
 class OGraphicsEngine
@@ -46,7 +61,18 @@ public:
 	void setUniformFloat(int shaderID, const char* attributeName, float value);
 	void setUniformInt(int shaderID, const char* attributeName, int value);
 
+	void initializeFreeType();
+	void RenderText(Text* text);
+	void PushText(Text* text);
+	void RenderAllText();
+
 private:
 	Camera* camera;
+
+	glm::mat4 transform;
+	unsigned int text_VAO, text_VBO;
+	OShaderProgramPtr text_shader; //The pointer to the Shader Program, which calls both basic shaders
+
+	std::list<Text*> textList;
 };
 

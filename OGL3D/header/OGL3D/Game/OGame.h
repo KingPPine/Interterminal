@@ -39,5 +39,7 @@ protected:
 	std::unique_ptr<OEntitySystem> m_entitySystem; //this declares m_entitySystem as a unique pointer. Gets assigned in the constructor with std::make_unique
 
 	std::chrono::system_clock::time_point m_previousTime; //declaration of the previous time. Gets updated in "onUpdateInternal()"
+	int maxFPS = 0;
+	double framerateTimer = 0.0;
 };
 

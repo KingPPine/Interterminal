@@ -4,6 +4,10 @@
 #include <OGL3D/Graphics/OShaderProgram.h>
 #include <OGL3D/Graphics/Model.h>
 
+
+
+
+
 TestEntity::TestEntity()
 {
 }
@@ -36,5 +40,5 @@ void TestEntity::onUpdate(float deltaTime)
 
 void TestEntity::onDraw()
 {
-	OEntity::onDraw();
+    OEntity::onDraw();
 }

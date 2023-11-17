@@ -17,7 +17,9 @@ OGame::OGame() //constructor
 
 	m_graphicsEngine->setViewport(m_display->getInnerSize()); //sets the viewport to the size defined in m_display within its constructor
 	m_graphicsEngine->EnableDepthTest();
-	//m_graphicsEngine->setTextureVerticallyFlip(false); //don't need anymore now that I load objects through assimp. In fact it messes up the loading
+	m_graphicsEngine->initializeFreeType();
+
+	maxFPS = 0; //0 means the framerate isn't capped
 }
 
 OGame::~OGame() //destructor
@@ -42,18 +44,32 @@ void OGame::onUpdateInternal()
 	m_previousTime = currentTime; //setting the previous time for the next frame
 
 	auto deltaTime = (float)elapsedSeconds.count(); //I think this turns it from a time point to a float of seconds
+	framerateTimer += elapsedSeconds.count();
 
-
-	//m_graphicsEngine->clear(OVec4(0.26f, 0.75f, 0.58f, 1)); //clears the screen with a specified colour
-	m_graphicsEngine->clear(OVec4(0.0f, 0, 0.0f, 1)); //clears the screen with a specified colour
 
 	//calling the General Update, and Entity System Update
 	onUpdate(deltaTime); //in OGame and MyGame to help separate regular update instructions from the matrix stuff in here
 	m_entitySystem->update(deltaTime); //in OEntitySystem, which calls the update method of every entity in the game
-	m_entitySystem->draw(); //in OEntitySystem, which calls the draw method of every entity in the game
-
 	m_display->update(); //in CWin32Window.cpp, perform any updates needed for the window
-	m_display->present(false); //this puts everything on our display. false means no vsync.
+
+	if (maxFPS <= 0 || framerateTimer > 1.0f / maxFPS)
+	{
+		//m_graphicsEngine->clear(OVec4(0.26f, 0.75f, 0.58f, 1)); //clears the screen with a specified colour
+		m_graphicsEngine->clear(OVec4(0.0f, 0, 0.0f, 1)); //clears the screen with a specified colour
+		m_entitySystem->draw(); //in OEntitySystem, which calls the draw method of every entity in the game
+
+		Text* sampleText1 = new Text("This is sample text.\nThis is a second line.", 25.0f, 50.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+		Text* sampleText2 = new Text("FPS: " + std::to_string((int)(1.0f / framerateTimer)), 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+
+		m_graphicsEngine->PushText(sampleText1); //quick test - I need to abstract this so that any entity can call it
+		m_graphicsEngine->PushText(sampleText2);
+
+		m_graphicsEngine->RenderAllText();
+
+		m_display->present(false); //this puts everything on our display. false means no vsync.
+
+		framerateTimer = 0;
+	}
 
 	//Calling the input manager update at the end of the frame, as it prepares updates for the next frame
 	GameConstants::inputManager->update();
