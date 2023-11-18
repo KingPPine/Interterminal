@@ -4,6 +4,8 @@ namespace GameConstants
 {
 	InputManager* inputManager = new InputManager();
 	Camera* camera = new Camera();
+	irrklang::ISoundEngine* soundEngine = irrklang::createIrrKlangDevice();
+
 	bool isGamePaused = false;
 	int screenWidth = 1920;
 	int screenHeight = 1080;

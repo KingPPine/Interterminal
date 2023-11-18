@@ -1,6 +1,7 @@
 #include <Entities/MyPlayer.h>
 #include <OGL3D/Graphics/OShaderAttribute.h>
 #include <OGL3D/Graphics/OGraphicsEngine.h>
+#include <irrKlang.h>
 
 MyPlayer::MyPlayer()
 {
@@ -13,6 +14,9 @@ MyPlayer::~MyPlayer()
 
 void MyPlayer::onCreate()
 {
+	//playing background music
+	GameConstants::soundEngine->play2D("Assets/Music/THIS IS MY CASTLE!.mp3", true);
+
 	//global shader values
 	addLightShaderAttribute(std::string("viewPos"), GameConstants::camera->cameraPosition);
 
