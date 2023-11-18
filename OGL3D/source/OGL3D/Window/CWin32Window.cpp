@@ -97,19 +97,24 @@ OWindow::OWindow() //constructor
 	auto classId = RegisterClassEx(&wc); //registers a window class for subsequent use in calls to the CreateWindow or CreateWindowEx function
 	assert(classId); //asserts the window class was created successfully
 
-	rc = { 0,0,1024,768 }; //rectangle of the window. This should be pulled from a static preferences file or something
+	rc = { 0, 0, GameConstants::screenWidth, GameConstants::screenHeight }; //rectangle of the window. This should be pulled from a static preferences file or something
 	AdjustWindowRect(&rc, WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, false); //Calculates the required size of the window rectangle, based on the desired client-rectangle size.
+
+	//getting the screen resolution to properly position the window in the center
+	RECT desktop;
+	const HWND hDesktop = GetDesktopWindow();
+	GetWindowRect(hDesktop, &desktop);
 
 	m_handle = CreateWindowEx( //this function creates the window with an extended style (otherwise it's identical to CreateWindow)
 		WS_EX_LEFT, //the extended style. Technically this is just an unsigned integer. WS_EX_LEFT = 0, creates a window that has generic left-aligned properties. This is the default
 		MAKEINTATOM(classId), //Long pointer to a null-terminated string or an integer atom. If this parameter is an atom, it must be a global atom created by a previous call to the RegisterClass function.
 		L"Inter-Terminal", //Long pointer to a null-terminated string that specifies the window name.
 		WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU, //the style of window. Technically this is just an unsigned integer. WS_OVERLAPPED = 0, Creates an overlapped window. An overlapped window has a title bar and a border
-		CW_USEDEFAULT, //initial horizontal position of the window (upper left in screen coordinates). CW_USEDEFAULT the system selects the default position
-		CW_USEDEFAULT, //initial vertical position of the window (upper left in screen coordinates). CW_USEDEFAULT the system selects the default position.
+		(desktop.right / 2) - (GameConstants::screenWidth / 2), //initial horizontal position of the window (upper left in screen coordinates). CW_USEDEFAULT the system selects the default position
+		(desktop.bottom / 2) - (GameConstants::screenHeight / 2), //initial vertical position of the window (upper left in screen coordinates). CW_USEDEFAULT the system selects the default position.
 		rc.right - rc.left, //specifies the width of the window.
 		rc.bottom - rc.top, //specifies the height of the window
-		NULL, //handle to the parent of orner window. Only matters for child or owned windows
+		NULL, //handle to the parent of owner window. Only matters for child or owned windows
 		NULL, //handle to the menu, or a child-window identifier. Doesn't matter here either
 		NULL, //handle to the instance of the module to be associated with the window. Not sure why it doesn't matter here.
 		0); //Long pointer to a value to be passed to the window through the CREATESTRUCT structure passed in the lParam parameter the WM_CREATE message.

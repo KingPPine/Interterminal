@@ -4,6 +4,7 @@
 #include <assert.h>
 #include <OGL3D/Window/OWindow.h>
 #include <stdexcept>
+#include <GameConstants.h>
 
 OGraphicsEngine::OGraphicsEngine()
 {
@@ -20,7 +21,7 @@ OGraphicsEngine::OGraphicsEngine()
 	auto classId = RegisterClassEx(&wc); //registers a window class for subsequent use in calls to the CreateWindow or CreateWindowEx function
 	assert(classId); //asserts the window class was created successfully
 
-	RECT rc = { 0,0,1024,768 }; //rectangle of the window. This should be pulled from a static preferences file or something (same as the window's viewport)
+	RECT rc = { 0, 0, GameConstants::screenWidth, GameConstants::screenHeight }; //rectangle of the window. This should be pulled from a static preferences file or something (same as the window's viewport)
 
 	auto dummyWindow = CreateWindowEx( //this function creates the window with an extended style (otherwise it's idetical to CreateWindow)
 		WS_EX_LEFT, //the extended style. Technically this is just an unsigned integer. WS_EX_LEFT = 0, creates a window that has generic left-aligned properties. This is the default

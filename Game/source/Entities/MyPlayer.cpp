@@ -1,5 +1,6 @@
 #include <Entities/MyPlayer.h>
 #include <OGL3D/Graphics/OShaderAttribute.h>
+#include <OGL3D/Graphics/OGraphicsEngine.h>
 
 MyPlayer::MyPlayer()
 {
@@ -100,6 +101,7 @@ void MyPlayer::onUpdate(float deltaTime)
 
 void MyPlayer::onDraw()
 {
+	//graphicsEngine()->PushText(new Text("This is sample text.\nThis is a second line.", 25.0f, 50.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f)));
 	//OEntity::onDraw();
 }
 

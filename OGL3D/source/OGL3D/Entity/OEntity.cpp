@@ -53,7 +53,7 @@ void OEntity::onDraw()
 	//camera view
 	glm::mat4 view = glm::lookAt(camera->cameraPosition, camera->cameraPosition + camera->cameraFront, camera->cameraUp);
 	//projection
-	glm::mat4 projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f); //45.0f can be replaced with a camera zoom, 800f with the screen width, 600f with the screen height
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)GameConstants::screenWidth / (float)GameConstants::screenHeight, 0.1f, 100.0f); //45.0f can be replaced with a camera zoom
 	//render the loaded model
 	glm::mat4 modelMat = glm::mat4(1.0f);
 	modelMat = glm::translate(modelMat, position);

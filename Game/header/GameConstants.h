@@ -10,6 +10,8 @@ namespace GameConstants
 	extern Camera* camera;
 
 	extern bool isGamePaused;
+	extern int screenWidth; //width of the screen, used to draw the window and for the perspective matrix
+	extern int screenHeight; //height of the screen, used to draw the window and for the perspective matrix
 	extern int screenCenterX; //center of the screen in terms of the whole monitor
 	extern int screenCenterY; //center of the screen in terms of the whole monitor
 	extern int relativeScreenCenterX; //center of the screen rectangle

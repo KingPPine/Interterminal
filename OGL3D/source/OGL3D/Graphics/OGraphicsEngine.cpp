@@ -1,5 +1,6 @@
 #include <OGL3D/Graphics/OGraphicsEngine.h>
 #include <OGL3D/Graphics/OShaderProgram.h>
+#include <GameConstants.h>
 #include <glad/glad.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
@@ -232,7 +233,7 @@ void OGraphicsEngine::initializeFreeType()
 		});
 	text_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
 	text_shader->use();
-	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(1024), 0.0f, static_cast<float>(768));
+	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(GameConstants::screenWidth), 0.0f, static_cast<float>(GameConstants::screenHeight));
 	glUniformMatrix4fv(glGetUniformLocation(text_shader->getId(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 	// FreeType

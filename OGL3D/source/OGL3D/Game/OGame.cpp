@@ -58,11 +58,8 @@ void OGame::onUpdateInternal()
 		m_graphicsEngine->clear(OVec4(0.0f, 0, 0.0f, 1)); //clears the screen with a specified colour
 		m_entitySystem->draw(); //in OEntitySystem, which calls the draw method of every entity in the game
 
-		Text* sampleText1 = new Text("This is sample text.\nThis is a second line.", 25.0f, 50.0f, 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
-		Text* sampleText2 = new Text("FPS: " + std::to_string((int)(1.0f / framerateTimer)), 540.0f, 570.0f, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
-
-		m_graphicsEngine->PushText(sampleText1); //quick test - I need to abstract this so that any entity can call it
-		m_graphicsEngine->PushText(sampleText2);
+		Text* sampleText = new Text("FPS: " + std::to_string((int)(1.0f / framerateTimer)), GameConstants::screenWidth - 120, 10, 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
+		m_graphicsEngine->PushText(sampleText);
 
 		m_graphicsEngine->RenderAllText();
 
