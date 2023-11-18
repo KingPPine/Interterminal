@@ -2,12 +2,14 @@
 #include <InputManager.h>
 #include <Camera.h>
 #include <glm.hpp>
+#include <irrKlang.h>
 
 class InputManager;
 namespace GameConstants
 {
 	extern InputManager* inputManager;
 	extern Camera* camera;
+	extern irrklang::ISoundEngine* soundEngine;
 
 	extern bool isGamePaused;
 	extern int screenWidth; //width of the screen, used to draw the window and for the perspective matrix
