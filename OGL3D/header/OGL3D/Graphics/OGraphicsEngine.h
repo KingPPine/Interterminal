@@ -6,15 +6,14 @@
 #include <glm.hpp>
 #include <list>
 
-struct Text
+struct Text2D
 {
 	std::string text;
-	float x;
-	float y;
+	glm::vec3 position;
 	float scale;
 	glm::vec3 color;
 
-	Text(std::string text, float x, float y, float scale, glm::vec3 color) : text(text), x(x), y(y), scale(scale), color(color)
+	Text2D(std::string text, glm::vec3 position, float scale, glm::vec3 color) : text(text), position(position), scale(scale), color(color)
 	{
 
 	}
@@ -62,17 +61,17 @@ public:
 	void setUniformInt(int shaderID, const char* attributeName, int value);
 
 	void initializeFreeType();
-	void RenderText(Text* text);
-	void PushText(Text* text);
+	void RenderText(Text2D* text);
+	void PushText(Text2D* text);
 	void RenderAllText();
 
 private:
 	Camera* camera;
 
-	glm::mat4 transform;
+	glm::mat4 text2DTransform;
 	unsigned int text_VAO, text_VBO;
 	OShaderProgramPtr text_shader; //The pointer to the Shader Program, which calls both basic shaders
 
-	std::list<Text*> textList;
+	std::list<Text2D*> textList;
 };
 

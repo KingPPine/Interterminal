@@ -35,6 +35,8 @@ void Terminal::onUpdate(float deltaTime)
 	resetRotation();
 	rotate(-timeValue * 0.5f, glm::vec3(0, 1, 0)); //y rotation
 	//rotate(-timeValue * 0.2f, glm::vec3(1, 0, 0)); //x rotation
+
+	graphicsEngine()->PushText(new Text2D("This is sample text.\nThis is a second line.", position, 1.0f, glm::vec3(0.5, 0.8f, 0.2f))); //the graphics manager needs to transform it to 3d space
 }
 
 void Terminal::onDraw()

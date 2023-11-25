@@ -331,10 +331,10 @@ void OGraphicsEngine::initializeFreeType()
 	glBindVertexArray(0);
 }
 
-void OGraphicsEngine::RenderText(Text* text)
+void OGraphicsEngine::RenderText(Text2D* text)
 {
 	// activate corresponding render state
-	float copyX = text->x; //copies the starting x position for when we need to star a new line
+	float copyX = text->position.x; //copies the starting x position for when we need to star a new line
 	text_shader->use();
 	glUniform3f(glGetUniformLocation(text_shader->getId(), "textColor"), text->color.x, text->color.y, text->color.z);
 	glActiveTexture(GL_TEXTURE0);
@@ -348,20 +348,22 @@ void OGraphicsEngine::RenderText(Text* text)
 
 		if (*c == '\n') //if the character is a new line, shift the y position down and reset the x position.
 		{
-			text->y -= (ch.Size.y) * 1.3 * text->scale;
-			text->x = copyX;
+			text->position.y -= (ch.Size.y) * 1.3 * text->scale;
+			text->position.x = copyX;
 		}
 		else if (*c == ' ') //if the character is a space, don't render. Just move the cursor forward.
 		{
-			text->x += (ch.Advance >> 6) * text->scale;
+			text->position.x += (ch.Advance >> 6) * text->scale;
 		}
 		else
 		{
-			float xpos = text->x + ch.Bearing.x * text->scale;
-			float ypos = text->y - (ch.Size.y - ch.Bearing.y) * text->scale;
+			float xpos = text->position.x + ch.Bearing.x * text->scale;
+			float ypos = text->position.y - (ch.Size.y - ch.Bearing.y) * text->scale;
 
-			transform = glm::translate(glm::mat4(1.0f), glm::vec3(xpos, ypos, 0)) * glm::scale(glm::mat4(1.0f), glm::vec3(ch.Size.x * text->scale, ch.Size.y * text->scale, 0));
-			glUniformMatrix4fv(glGetUniformLocation(text_shader->getId(), "transform"), 1, GL_FALSE, glm::value_ptr(transform));
+			text2DTransform = glm::translate(glm::mat4(1.0f), glm::vec3(xpos, ypos, 0)) //move the text
+				* glm::scale(glm::mat4(1.0f), glm::vec3(ch.Size.x * text->scale, ch.Size.y * text->scale, 0))  //scale the text
+				* glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1)); //rotate the text
+			glUniformMatrix4fv(glGetUniformLocation(text_shader->getId(), "transform"), 1, GL_FALSE, glm::value_ptr(text2DTransform));
 			
 			// render glyph texture over quad
 			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
@@ -371,7 +373,7 @@ void OGraphicsEngine::RenderText(Text* text)
 			// render quad
 			glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
 			// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-			text->x += (ch.Advance >> 6) * text->scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+			text->position.x += (ch.Advance >> 6) * text->scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 		}
 	}
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -379,14 +381,14 @@ void OGraphicsEngine::RenderText(Text* text)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void OGraphicsEngine::PushText(Text* text)
+void OGraphicsEngine::PushText(Text2D* text)
 {
 	textList.push_back(text);
 }
 
 void OGraphicsEngine::RenderAllText()
 {
-	for (Text* text : textList)
+	for (Text2D* text : textList)
 	{
 		RenderText(text);
 		delete(text);//free the memory of the text
