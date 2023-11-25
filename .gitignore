@@ -5,7 +5,9 @@
 *.slo
 *.lo
 *.o
-*.obj
+Assets/*.obj
+Game/*.obj
+OGL3D/*.obj
 
 # Precompiled Headers
 *.gch
