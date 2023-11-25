@@ -59,6 +59,8 @@ void OEntity::onDraw()
 	modelMat = glm::translate(modelMat, position);
 	modelMat = glm::scale(modelMat, scale);
 
+	modelMat = modelMat * rotationMatrix;
+
 	graphicsEngine()->setUniformMat4(m_shader->getId(), "model", &modelMat);
 	graphicsEngine()->setUniformMat4(m_shader->getId(), "view", &view);
 	graphicsEngine()->setUniformMat4(m_shader->getId(), "projection", &projection);
@@ -159,14 +161,24 @@ void OEntity::setPosition(glm::vec3 newPosition)
 	position = newPosition;
 }
 
-void OEntity::setRotation(glm::vec3 newRotation)
-{
-	rotation = newRotation;
-}
-
 void OEntity::setScale(glm::vec3 newScale)
 {
 	scale = newScale;
+}
+
+void OEntity::rotate(float angle, glm::vec3 axis)
+{
+	rotationMatrix = glm::rotate(rotationMatrix, angle, axis); //attempt at rotating on the z axis
+}
+
+void OEntity::lookAt(glm::vec3* eye, glm::vec3* center, glm::vec3* top)
+{
+	rotationMatrix = glm::lookAt(*eye, *center, *top);
+}
+
+void OEntity::resetRotation()
+{
+	rotationMatrix = glm::mat3(1.0f);
 }
 
 OGraphicsEngine* OEntity::graphicsEngine()

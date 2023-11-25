@@ -27,11 +27,11 @@ void Cube1::onCreate()
 
 void Cube1::onUpdate(float deltaTime)
 {
-	timeValue += deltaTime;
+	//timeValue += deltaTime;
 
-	rotation.x = 0.3f * timeValue;
-	rotation.y = 1.0f * timeValue;
-	rotation.z = 0.7f * timeValue;
+	//rotation.x = 0.3f * timeValue;
+	//rotation.y = 1.0f * timeValue;
+	//rotation.z = 0.7f * timeValue;
 }
 
 void Cube1::onDraw()

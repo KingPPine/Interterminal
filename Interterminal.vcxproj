@@ -138,9 +138,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game\main.cpp" />
+    <ClCompile Include="Game\source\Entities\Bed.cpp" />
+    <ClCompile Include="Game\source\Entities\Chain.cpp" />
     <ClCompile Include="Game\source\Entities\Cube1.cpp" />
     <ClCompile Include="Game\source\Entities\Cube2.cpp" />
+    <ClCompile Include="Game\source\Entities\Floor.cpp" />
+    <ClCompile Include="Game\source\Entities\Terminal.cpp" />
     <ClCompile Include="Game\source\Entities\TestEntity.cpp" />
+    <ClCompile Include="Game\source\Entities\Wall.cpp" />
     <ClCompile Include="Game\source\GameConstants.cpp" />
     <ClCompile Include="Game\source\InputManager.cpp" />
     <ClCompile Include="Game\source\MyGame.cpp" />
@@ -160,9 +165,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\header\Camera.h" />
+    <ClInclude Include="Game\header\Entities\Bed.h" />
+    <ClInclude Include="Game\header\Entities\Chain.h" />
     <ClInclude Include="Game\header\Entities\Cube1.h" />
     <ClInclude Include="Game\header\Entities\Cube2.h" />
+    <ClInclude Include="Game\header\Entities\Floor.h" />
+    <ClInclude Include="Game\header\Entities\Terminal.h" />
     <ClInclude Include="Game\header\Entities\TestEntity.h" />
+    <ClInclude Include="Game\header\Entities\Wall.h" />
     <ClInclude Include="Game\header\GameConstants.h" />
     <ClInclude Include="Game\header\InputManager.h" />
     <ClInclude Include="Game\header\MyGame.h" />
@@ -187,10 +197,10 @@
     <None Include="Assets\Shaders\BasicShader.frag" />
     <None Include="Assets\Shaders\BasicShader.vert" />
     <None Include="Assets\Shaders\LightSourceShader.frag" />
-    <None Include="Assets\Shaders\model_loading.frag" />
-    <None Include="Assets\Shaders\model_loading.vert" />
     <None Include="Assets\Shaders\TestShader.frag" />
     <None Include="Assets\Shaders\TestShader.vert" />
+    <None Include="Assets\Shaders\TestShader2.frag" />
+    <None Include="Assets\Shaders\TestShader2.vert" />
     <None Include="Assets\Shaders\TextShader.frag" />
     <None Include="Assets\Shaders\TextShader.vert" />
   </ItemGroup>

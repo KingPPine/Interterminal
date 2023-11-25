@@ -6,6 +6,7 @@
 MyPlayer::MyPlayer()
 {
 	mouseSensitivity = 15.0f;
+	movementSpeed = 5.0f;
 }
 
 MyPlayer::~MyPlayer()
@@ -14,18 +15,17 @@ MyPlayer::~MyPlayer()
 
 void MyPlayer::onCreate()
 {
-	//playing background music
-	GameConstants::soundEngine->play2D("Assets/Music/THIS IS MY CASTLE!.mp3", true);
-
 	//global shader values
 	addLightShaderAttribute(std::string("viewPos"), GameConstants::camera->cameraPosition);
 
-	//directional light
+	//directional world light
+	/*
 	directionalLightIndex = addDirectionalLight();
 	addLightShaderAttribute(std::string("dirLights[" + std::to_string(directionalLightIndex) + std::string("].direction")), glm::vec3(-0.2f, -1.0f, -0.3f));
 	addLightShaderAttribute(std::string("dirLights[" + std::to_string(directionalLightIndex) + std::string("].ambient")), glm::vec3(0.05f, 0.05f, 0.05f));
 	addLightShaderAttribute(std::string("dirLights[" + std::to_string(directionalLightIndex) + std::string("].diffuse")), glm::vec3(0.4f, 0.4f, 0.4f));
 	addLightShaderAttribute(std::string("dirLights[" + std::to_string(directionalLightIndex) + std::string("].specular")), glm::vec3(0.5f, 0.5f, 0.5f));
+	*/
 
 	//spotlight
 	spotLightIndex = addSpotLight();
@@ -50,7 +50,7 @@ void MyPlayer::onUpdate(float deltaTime)
 	if (!firstFrame)
 	{
 		//key movement
-		const float cameraSpeed = 4.0f * deltaTime;
+		const float moveSpeed = movementSpeed * deltaTime;
 		glm::vec3 moveDirection = glm::vec3();
 
 		if (GameConstants::inputManager->keyDown(KeyCode::W) || GameConstants::inputManager->keyHeld(KeyCode::W))
@@ -87,10 +87,11 @@ void MyPlayer::onUpdate(float deltaTime)
 		
 
 		float cameraY = camera->cameraPosition.y;
-		camera->cameraPosition += camera->cameraFront * moveDirection.z * cameraSpeed;
-		camera->cameraPosition += glm::normalize(glm::cross(camera->cameraFront, camera->cameraUp)) * moveDirection.x * cameraSpeed;
+		glm::vec3 cameraWithoutY = glm::normalize(camera->cameraFront * glm::vec3(1, 0, 1));
+		camera->cameraPosition += cameraWithoutY * moveDirection.z * moveSpeed;
+		camera->cameraPosition += glm::normalize(glm::cross(camera->cameraFront, camera->cameraUp)) * moveDirection.x * moveSpeed;
 		//camera->cameraPosition.y = 0.0f; //keeps the user on ground level
-		camera->cameraPosition.y = cameraY + (moveDirection.y * cameraSpeed);
+		camera->cameraPosition.y = cameraY + (moveDirection.y * moveSpeed);
 	}
 	else 
 		firstFrame = false;

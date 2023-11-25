@@ -18,7 +18,7 @@ TestEntity::~TestEntity()
 
 void TestEntity::onCreate()
 {
-	model = new Model(std::string("Assets/Models/TestModel/dougie.obj"), graphicsEngine());
+	model = new Model(std::string("Assets/Models/Terminal/terminal.obj"), graphicsEngine());
 
 	vertexShaderPath = L"Assets/Shaders/model_loading.vert";
 	fragmentShaderPath = L"Assets/Shaders/model_loading.frag";

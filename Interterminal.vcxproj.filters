@@ -39,13 +39,7 @@
     <ClCompile Include="OGL3D\source\OGL3D\Graphics\Win32\CWin32GraphicsEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OGL3D\source\OGL3D\Graphics\OVertexArrayObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OGL3D\source\OGL3D\Graphics\OShaderProgram.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OGL3D\source\OGL3D\Graphics\OUniformBuffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="OGL3D\source\OGL3D\Entity\OEntitySystem.cpp">
@@ -81,6 +75,21 @@
     <ClCompile Include="OGL3D\source\OGL3D\Graphics\Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game\source\Entities\Terminal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\source\Entities\Floor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\source\Entities\Wall.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\source\Entities\Bed.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Game\source\Entities\Chain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGL3D\header\OGL3D\Window\OWindow.h">
@@ -101,16 +110,7 @@
     <ClInclude Include="OGL3D\header\OGL3D\Math\ORect.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OGL3D\header\OGL3D\Graphics\OVertexArrayObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\OShaderProgram.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OGL3D\header\OGL3D\Graphics\OUniformBuffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OGL3D\header\OGL3D\Math\OMat4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OGL3D\header\OGL3D\Math\OVec3.h">
@@ -123,9 +123,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\header\MyGame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OGL3D\header\OGL3D\All.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Game\header\Entities\MyPlayer.h">
@@ -164,6 +161,21 @@
     <ClInclude Include="OGL3D\header\OGL3D\Graphics\Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Game\header\Entities\Terminal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\header\Entities\Floor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\header\Entities\Wall.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\header\Entities\Bed.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game\header\Entities\Chain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\BasicShader.vert" />
@@ -171,7 +183,9 @@
     <None Include="Assets\Shaders\TestShader.vert" />
     <None Include="Assets\Shaders\TestShader.frag" />
     <None Include="Assets\Shaders\LightSourceShader.frag" />
-    <None Include="Assets\Shaders\model_loading.vert" />
-    <None Include="Assets\Shaders\model_loading.frag" />
+    <None Include="Assets\Shaders\TextShader.frag" />
+    <None Include="Assets\Shaders\TextShader.vert" />
+    <None Include="Assets\Shaders\TestShader2.vert" />
+    <None Include="Assets\Shaders\TestShader2.frag" />
   </ItemGroup>
 </Project>

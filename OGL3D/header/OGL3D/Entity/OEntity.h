@@ -21,8 +21,10 @@ public:
 	OEntitySystem* getEntitySystem(); //returns the entity system
 	
 	virtual void setPosition(glm::vec3 newPosition);
-	virtual void setRotation(glm::vec3 newRotation);
 	virtual void setScale(glm::vec3 newScale);
+	void rotate(float angle, glm::vec3 axis);
+	void lookAt(glm::vec3* eye, glm::vec3* center, glm::vec3* top);
+	void resetRotation();
 	virtual void passLightShaderAtrributes(); //called by the entity manager to pass light shader attributes to the entity
 
 protected:
@@ -55,7 +57,7 @@ protected:
 	Camera* camera = nullptr; //set in the constructor to point to the global camera. This is tied to every entity to be able to properly draw perspective
 
 	glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f); //the position of the entity
-	glm::vec3 rotation = glm::vec3(0.0f, 0.0f, 0.0f); //the rotation of the entity
+	glm::mat4 rotationMatrix = glm::mat4(1.0f);
 	glm::vec3 scale = glm::vec3(1.0f,1.0f,1.0f); //the scale of the entity
 
 	OShaderProgramPtr m_shader; //The pointer to the Shader Program, which calls both basic shaders

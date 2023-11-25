@@ -19,6 +19,7 @@ private:
 private:
 	float m_elapsedSeconds = 0.0f; //elapsed seconds since creation
 	float mouseSensitivity;
+	float movementSpeed;
 	bool firstFrame = true; //used to skip the camera input on first frame
 
 	int directionalLightIndex = 0;

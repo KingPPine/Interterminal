@@ -36,11 +36,11 @@ void Cube2::onCreate()
 
 void Cube2::onUpdate(float deltaTime)
 {
-	timeValue += deltaTime;
+	/*timeValue += deltaTime;
 
 	rotation.x = 0.0f;
 	rotation.y = 1.0f * timeValue;
-	rotation.z = 0.0f;
+	rotation.z = 0.0f;*/
 
 	updateLightShaderAttribute((std::string("pointLights[") + std::to_string(lightIndex) + std::string("].position")), position);
 }

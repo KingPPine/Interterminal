@@ -1,5 +1,12 @@
 #include <MyGame.h>
 #include <OGL3D/Entity/OEntitySystem.h>
+#include <Entities/Terminal.h>
+#include <Entities/Cube2.h>
+#include <Entities/MyPlayer.h>
+#include <Entities/Floor.h>
+#include <Entities/Wall.h>
+#include <Entities/Bed.h>
+#include <Entities/Chain.h>
 
 MyGame::MyGame()
 {
@@ -13,42 +20,52 @@ void MyGame::onCreate()
 {
 	OGame::onCreate(); //calls OGame's onCreate
 
-	m_player = getEntitySystem()->createEntity<MyPlayer>();
-	m_player->setPosition(glm::vec3(0.0f, 0.0f, 10.0f));
+	//playing background music
+	//GameConstants::soundEngine->play2D("Assets/Music/THIS IS MY CASTLE!.mp3", true);
 
-	//the light cube, drawing 4 of them now
-	m_cube2 = getEntitySystem()->createEntity<Cube2>();
-	m_cube2->setPosition(glm::vec3(0.0f, 0.2f, 2.0f));
-	m_cube2->setScale(glm::vec3(0.2f));
+	player = getEntitySystem()->createEntity<MyPlayer>();
+	player->setPosition(glm::vec3(0.0f, 0.0f, 8.0f));
 
-	m_cube2 = getEntitySystem()->createEntity<Cube2>();
-	m_cube2->setPosition(glm::vec3(2.3f, -3.3f, -4.0f));
-	m_cube2->setScale(glm::vec3(0.2f));
+	//the light cube
+	Cube2* cube2 = getEntitySystem()->createEntity<Cube2>();
+	cube2->setPosition(glm::vec3(0.0f, 3.0f, 0.0f));
+	cube2->setScale(glm::vec3(0.2f));
 
-	m_cube2 = getEntitySystem()->createEntity<Cube2>();
-	m_cube2->setPosition(glm::vec3(-4.0f, 2.0f, -12.0f));
-	m_cube2->setScale(glm::vec3(0.2f));
+	//floor
+	Floor* floor = getEntitySystem()->createEntity<Floor>();
+	floor->setPosition(glm::vec3(0.0f, -1.8f, 0.0f));
 
-	m_cube2 = getEntitySystem()->createEntity<Cube2>();
-	m_cube2->setPosition(glm::vec3(0.0f, 0.0f, -3.0f));
-	m_cube2->setScale(glm::vec3(0.2f));
+	//walls
+	Wall* wall = getEntitySystem()->createEntity<Wall>(); //wall in front
+	wall->setPosition(glm::vec3(0.0f, 1.2f, -10.0f)); // height of the floor + 3 (-1.8 + 3 = 1.2)
+	wall->rotate(1.5708f, glm::vec3(1, 0, 0));
 
-	m_testEntity = getEntitySystem()->createEntity<TestEntity>();
-	m_testEntity->setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-	m_testEntity->setPosition(glm::vec3(- 1.0f, 0.0f, 0.0f));
+	wall = getEntitySystem()->createEntity<Wall>(); //wall behind
+	wall->setPosition(glm::vec3(0.0f, 1.2f, 10.0f)); // height of the floor + 3 (-1.8 + 3 = 1.2)
+	wall->rotate(1.5708f, glm::vec3(1, 0, 0));
+	wall->rotate(3.14159f, glm::vec3(0, 0, 1));
 
-	//srand(time(0));	
-	//for (int i = 0; i < 10; i++)
-	//{
-	//	m_testEntity = getEntitySystem()->createEntity<TestEntity>();
-	//	float range = 15.0f;
-	//	
-	//	float randX = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / range)) - (range/2.0f);
-	//	float randY = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / range)) - (range / 2.0f);
-	//	float randZ = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / range)) - (range / 2.0f);
-	//	m_testEntity->setPosition(glm::vec3(randX, randY, randZ));
-	//}
-	
+	wall = getEntitySystem()->createEntity<Wall>(); //wall to the right
+	wall->setPosition(glm::vec3(10.0f, 1.2f, 0.0f)); // height of the floor + 3 (-1.8 + 3 = 1.2)
+	wall->rotate(1.5708f, glm::vec3(1, 0, 0));
+	wall->rotate(1.5708f, glm::vec3(0, 0, 1));
+
+	wall = getEntitySystem()->createEntity<Wall>(); //wall to the left
+	wall->setPosition(glm::vec3(-10.0f, 1.2f, 0.0f)); // height of the floor + 3 (-1.8 + 3 = 1.2)
+	wall->rotate(1.5708f, glm::vec3(1, 0, 0));
+	wall->rotate(-1.5708f, glm::vec3(0, 0, 1));
+
+	Bed* bed = getEntitySystem()->createEntity<Bed>();
+	bed->setPosition(glm::vec3(-7.5f, -1.25f, 8.0f));
+	bed->rotate(1.5708f, glm::vec3(0,1,0));
+
+	Chain* chain = getEntitySystem()->createEntity<Chain>();
+	chain->setPosition(glm::vec3(-3.0f, 0.0f, 0.0f));
+
+
+	//terminal
+	terminal = getEntitySystem()->createEntity<Terminal>();
+	terminal->setScale(glm::vec3(0.7f));
 }
 
 void MyGame::onUpdate(float deltaTime)
