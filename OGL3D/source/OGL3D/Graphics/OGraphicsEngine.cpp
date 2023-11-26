@@ -394,6 +394,63 @@ void OGraphicsEngine::RenderText(Text2D* text)
 	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 }
 
+void OGraphicsEngine::RenderText2(std::string text, float x, float y, float scale, glm::vec3 color)
+{
+	// activate corresponding render state
+	scale = scale * 48.0f / 256.0f;
+	float copyX = x; //copies the starting x position for when we need to star a new line
+	text_shader->use();
+	glUniform3f(glGetUniformLocation(text_shader->getId(), "textColor"), color.x, color.y, color.z);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, text2DTextureArray);
+	glBindVertexArray(text_VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, text_VBO);
+
+	int workingIndex = 0;
+	// iterate through all characters
+	std::string::const_iterator c;
+	for (c = text.begin(); c != text.end(); c++)
+	{
+
+		Character ch = Characters[*c];
+
+		if (*c == '\n') //if the character is a new line, shift the y position down and reset the x position.
+		{
+			y -= ((ch.Size.y)) * 1.3 * scale;
+			x = copyX;
+		}
+		else if (*c == ' ') //if the character is a space, don't render. Just move the cursor forward.
+		{
+			x += (ch.Advance >> 6) * scale;
+		}
+		else
+		{
+			float xpos = x + ch.Bearing.x * scale;
+			float ypos = y - (256 - ch.Bearing.y) * scale;
+
+			text2DTransforms[workingIndex] = glm::translate(glm::mat4(1.0f), glm::vec3(xpos, ypos, 0)) //move the text
+				* glm::scale(glm::mat4(1.0f), glm::vec3(256 * scale, 256 * scale, 0));  //scale the text
+			//* glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1)); //rotate the text
+			letterMap[workingIndex] = ch.CharacterIndex;
+
+			// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+			x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+			workingIndex++;
+
+			if (workingIndex == GameConstants::TEXT_ARRAY_LIMIT - 1)
+			{
+				CallRenderText(workingIndex);
+				workingIndex = 0;
+			}
+		}
+	}
+	CallRenderText(workingIndex);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+}
+
 void OGraphicsEngine::CallRenderText(int length)
 {
 	if (length != 0)

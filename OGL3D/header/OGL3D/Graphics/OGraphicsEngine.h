@@ -63,6 +63,7 @@ public:
 
 	void initializeFreeType();
 	void RenderText(Text2D* text);
+	void RenderText2(std::string text, float x, float y, float scale, glm::vec3 color);
 	void CallRenderText(int length);
 	void PushText(Text2D* text);
 	void RenderAllText();

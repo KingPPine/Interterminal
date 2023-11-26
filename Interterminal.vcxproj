@@ -150,6 +150,7 @@
     <ClCompile Include="Game\source\InputManager.cpp" />
     <ClCompile Include="Game\source\MyGame.cpp" />
     <ClCompile Include="Game\source\Entities\MyPlayer.cpp" />
+    <ClCompile Include="Game\TextRenderingTest.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Entity\OEntity.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Entity\OEntitySystem.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Game\Win32\CWin32Game.cpp" />

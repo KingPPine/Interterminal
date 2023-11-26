@@ -56,7 +56,7 @@ void OGame::onUpdateInternal()
 	{
 		//m_graphicsEngine->clear(OVec4(0.26f, 0.75f, 0.58f, 1)); //clears the screen with a specified colour
 		m_graphicsEngine->clear(OVec4(0.0f, 0, 0.0f, 1)); //clears the screen with a specified colour
-		m_entitySystem->draw(); //in OEntitySystem, which calls the draw method of every entity in the game
+		//m_entitySystem->draw(); //in OEntitySystem, which calls the draw method of every entity in the game
 
 		Text2D* sampleText = new Text2D("FPS: " + std::to_string((int)(1.0f / framerateTimer)), glm::vec3(GameConstants::screenWidth - 300,GameConstants::screenHeight - 40, 0), 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
 		//Text2D* sampleText = new Text2D("FPS: " + std::to_string((int)(1.0f / framerateTimer)), glm::vec3(200, 200, 0), 0.5f, glm::vec3(0.3, 0.7f, 0.9f));

@@ -7,8 +7,8 @@ namespace GameConstants
 	irrklang::ISoundEngine* soundEngine = irrklang::createIrrKlangDevice();
 
 	bool isGamePaused = false;
-	int screenWidth = 1920;
-	int screenHeight = 1080;
+	int screenWidth = 1280;
+	int screenHeight = 720;
 	int screenCenterX = 0;
 	int screenCenterY = 0;
 	int relativeScreenCenterX = 0;

@@ -90,6 +90,9 @@
     <ClCompile Include="Game\source\Entities\Chain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Game\TextRenderingTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="OGL3D\header\OGL3D\Window\OWindow.h">
