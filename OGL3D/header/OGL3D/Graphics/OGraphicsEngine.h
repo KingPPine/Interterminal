@@ -63,6 +63,7 @@ public:
 
 	void initializeFreeType();
 	void RenderText(Text2D* text);
+	void CallRenderText(int length);
 	void PushText(Text2D* text);
 	void RenderAllText();
 

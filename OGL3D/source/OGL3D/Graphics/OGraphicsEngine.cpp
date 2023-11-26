@@ -232,8 +232,8 @@ void OGraphicsEngine::initializeFreeType()
 			L"Assets/Shaders/TextShader.frag" //basic fragmentation shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
 		});
 	text_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
-	text_shader->use();
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(GameConstants::screenWidth), 0.0f, static_cast<float>(GameConstants::screenHeight));
+	text_shader->use();
 	glUniformMatrix4fv(glGetUniformLocation(text_shader->getId(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 	// FreeType
@@ -247,7 +247,7 @@ void OGraphicsEngine::initializeFreeType()
 	}
 
 	// find path to font
-	std::string font_name = "Assets/Fonts/arial.ttf";
+	std::string font_name = "Assets/Fonts/Antonio-Bold.ttf";
 	if (font_name.empty())
 	{
 		std::cout << "ERROR::FREETYPE: Failed to load font_name" << std::endl;
@@ -292,8 +292,8 @@ void OGraphicsEngine::initializeFreeType()
 			);
 
 			// set texture options
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			// now store character for later use
@@ -354,16 +354,12 @@ void OGraphicsEngine::RenderText(Text2D* text)
 	std::string::const_iterator c;
 	for (c = text->text.begin(); c != text->text.end(); c++)
 	{
-		if (workingIndex == GameConstants::TEXT_ARRAY_LIMIT - 1)
-		{
-			break;
-		}
 
 		Character ch = Characters[*c];
 
 		if (*c == '\n') //if the character is a new line, shift the y position down and reset the x position.
 		{
-			text->position.y -= (ch.Size.y) * 1.3 * text->scale;
+			text->position.y -= ((ch.Size.y)) * 1.3 * text->scale;
 			text->position.x = copyX;
 		}
 		else if (*c == ' ') //if the character is a space, don't render. Just move the cursor forward.
@@ -373,7 +369,7 @@ void OGraphicsEngine::RenderText(Text2D* text)
 		else
 		{
 			float xpos = text->position.x + ch.Bearing.x * text->scale;
-			float ypos = text->position.y - (ch.Size.y - ch.Bearing.y) * text->scale;
+			float ypos = text->position.y - (256 - ch.Bearing.y) * text->scale;
 
 			text2DTransforms[workingIndex] = glm::translate(glm::mat4(1.0f), glm::vec3(xpos, ypos, 0)) //move the text
 				* glm::scale(glm::mat4(1.0f), glm::vec3(256 * text->scale, 256 * text->scale, 0));  //scale the text
@@ -383,16 +379,29 @@ void OGraphicsEngine::RenderText(Text2D* text)
 			// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 			text->position.x += (ch.Advance >> 6) * text->scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 			workingIndex++;
+
+			if (workingIndex == GameConstants::TEXT_ARRAY_LIMIT - 1)
+			{
+				CallRenderText(workingIndex);
+				workingIndex = 0;
+			}
 		}
 	}
-
-	glUniformMatrix4fv(glGetUniformLocation(text_shader->getId(), "transforms"), workingIndex, GL_FALSE, &text2DTransforms[0][0][0]);
-	glUniform1iv(glGetUniformLocation(text_shader->getId(), "letterMap"), workingIndex, &letterMap[0]);
-	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, workingIndex);
+	CallRenderText(workingIndex);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+}
+
+void OGraphicsEngine::CallRenderText(int length)
+{
+	if (length != 0)
+	{
+		glUniformMatrix4fv(glGetUniformLocation(text_shader->getId(), "transforms"), length, GL_FALSE, &text2DTransforms[0][0][0]);
+		glUniform1iv(glGetUniformLocation(text_shader->getId(), "letterMap"), length, &letterMap[0]);
+		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, length);
+	}
 }
 
 void OGraphicsEngine::PushText(Text2D* text)
