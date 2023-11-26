@@ -13,4 +13,5 @@ namespace GameConstants
 	int screenCenterY = 0;
 	int relativeScreenCenterX = 0;
 	int relativeScreenCenterY = 0;
+	unsigned int TEXT_ARRAY_LIMIT = 400;
 }

@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 #include <glm.hpp>
 #include <list>
+#include <vector>
 
 struct Text2D
 {
@@ -68,7 +69,9 @@ public:
 private:
 	Camera* camera;
 
-	glm::mat4 text2DTransform;
+	std::vector<glm::mat4> text2DTransforms;
+	std::vector<int> letterMap;
+	GLuint text2DTextureArray;
 	unsigned int text_VAO, text_VBO;
 	OShaderProgramPtr text_shader; //The pointer to the Shader Program, which calls both basic shaders
 

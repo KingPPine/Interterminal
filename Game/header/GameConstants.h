@@ -18,4 +18,5 @@ namespace GameConstants
 	extern int screenCenterY; //center of the screen in terms of the whole monitor
 	extern int relativeScreenCenterX; //center of the screen rectangle
 	extern int relativeScreenCenterY; //center of the screen rectangle
+	extern unsigned int TEXT_ARRAY_LIMIT; //the limit of characters that can be drawn in one call
 }

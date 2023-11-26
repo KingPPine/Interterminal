@@ -11,7 +11,7 @@
 #include <map>
 
 struct Character { //character struct for text rendering
-	unsigned int TextureID;  // ID handle of the glyph texture
+	int CharacterIndex;		// index of which character in the text is being drawn
 	glm::ivec2   Size;       // Size of glyph
 	glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
 	unsigned int Advance;    // Offset to advance to next glyph
@@ -262,10 +262,15 @@ void OGraphicsEngine::initializeFreeType()
 	}
 	else {
 		// set size to load glyphs as
-		FT_Set_Pixel_Sizes(face, 0, 48);
+		FT_Set_Pixel_Sizes(face, 256, 256);
 
 		// disable byte-alignment restriction
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		glGenTextures(1, &text2DTextureArray);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, text2DTextureArray);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_R8, 256, 256, 128, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
 
 		// load first 128 characters of ASCII set
 		for (unsigned char c = 0; c < 128; c++)
@@ -276,40 +281,41 @@ void OGraphicsEngine::initializeFreeType()
 				std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
 				continue;
 			}
-			// generate texture
-			unsigned int texture;
-			glGenTextures(1, &texture);
-			glBindTexture(GL_TEXTURE_2D, texture);
-			glTexImage2D(
-				GL_TEXTURE_2D,
-				0,
-				GL_RED,
+			glTexSubImage3D(
+				GL_TEXTURE_2D_ARRAY,
+				0, 0, 0, int(c),
 				face->glyph->bitmap.width,
-				face->glyph->bitmap.rows,
-				0,
+				face->glyph->bitmap.rows, 1,
 				GL_RED,
 				GL_UNSIGNED_BYTE,
 				face->glyph->bitmap.buffer
 			);
+
 			// set texture options
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			// now store character for later use
 			Character character = {
-				texture,
+				int(c),
 				glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
 				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 				static_cast<unsigned int>(face->glyph->advance.x)
 			};
 			Characters.insert(std::pair<char, Character>(c, character));
 		}
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 	}
 	// destroy FreeType once we're finished
 	FT_Done_Face(face);
 	FT_Done_FreeType(ft);
+
+	for (int i = 0; i < GameConstants::TEXT_ARRAY_LIMIT; i++)
+	{
+		letterMap.push_back(0);
+		text2DTransforms.push_back(glm::mat4(1.0f));
+	}
 
 	GLfloat vertex_data[] = {
 		0.0f, 1.0f,
@@ -334,16 +340,25 @@ void OGraphicsEngine::initializeFreeType()
 void OGraphicsEngine::RenderText(Text2D* text)
 {
 	// activate corresponding render state
+	text->scale = text->scale * 48.0f / 256.0f;
 	float copyX = text->position.x; //copies the starting x position for when we need to star a new line
 	text_shader->use();
 	glUniform3f(glGetUniformLocation(text_shader->getId(), "textColor"), text->color.x, text->color.y, text->color.z);
 	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, text2DTextureArray);
 	glBindVertexArray(text_VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, text_VBO);
 
+	int workingIndex = 0;
 	// iterate through all characters
 	std::string::const_iterator c;
 	for (c = text->text.begin(); c != text->text.end(); c++)
 	{
+		if (workingIndex == GameConstants::TEXT_ARRAY_LIMIT - 1)
+		{
+			break;
+		}
+
 		Character ch = Characters[*c];
 
 		if (*c == '\n') //if the character is a new line, shift the y position down and reset the x position.
@@ -360,25 +375,24 @@ void OGraphicsEngine::RenderText(Text2D* text)
 			float xpos = text->position.x + ch.Bearing.x * text->scale;
 			float ypos = text->position.y - (ch.Size.y - ch.Bearing.y) * text->scale;
 
-			text2DTransform = glm::translate(glm::mat4(1.0f), glm::vec3(xpos, ypos, 0)) //move the text
-				* glm::scale(glm::mat4(1.0f), glm::vec3(ch.Size.x * text->scale, ch.Size.y * text->scale, 0))  //scale the text
-				* glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1)); //rotate the text
-			glUniformMatrix4fv(glGetUniformLocation(text_shader->getId(), "transform"), 1, GL_FALSE, glm::value_ptr(text2DTransform));
+			text2DTransforms[workingIndex] = glm::translate(glm::mat4(1.0f), glm::vec3(xpos, ypos, 0)) //move the text
+				* glm::scale(glm::mat4(1.0f), glm::vec3(256 * text->scale, 256 * text->scale, 0));  //scale the text
+				//* glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1)); //rotate the text
+			letterMap[workingIndex] = ch.CharacterIndex;
 			
-			// render glyph texture over quad
-			glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-			// update content of VBO memory
-			glBindBuffer(GL_ARRAY_BUFFER, text_VBO);
-
-			// render quad
-			glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, 1);
 			// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 			text->position.x += (ch.Advance >> 6) * text->scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+			workingIndex++;
 		}
 	}
+
+	glUniformMatrix4fv(glGetUniformLocation(text_shader->getId(), "transforms"), workingIndex, GL_FALSE, &text2DTransforms[0][0][0]);
+	glUniform1iv(glGetUniformLocation(text_shader->getId(), "letterMap"), workingIndex, &letterMap[0]);
+	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, workingIndex);
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 }
 
 void OGraphicsEngine::PushText(Text2D* text)
