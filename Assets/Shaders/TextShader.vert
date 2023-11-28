@@ -6,7 +6,7 @@ out VS_OUT{
     flat int index;
 }vs_out;
 
-uniform mat4 transforms[400];
+uniform mat4 transforms[128];
 uniform mat4 projection;
 
 void main()
