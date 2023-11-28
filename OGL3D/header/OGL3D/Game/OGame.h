@@ -9,7 +9,7 @@
 //then the compiler must know about their existence beforehand.
 class OGraphicsEngine; 
 class OEntitySystem;
-class OWindow;
+class GLFWwindow;
 class OGame
 {
 public:
@@ -21,7 +21,7 @@ public:
 
 	OEntitySystem* getEntitySystem(); //returns m_entitySystem.get(). "get()" extracts characters from the stream, as unformatted input
 	OGraphicsEngine* getGraphicsEngine(); //returns m_graphicsEngine.get(). "get()" extracts characters from the stream, as unformatted input
-	OWindow* getWindowDisplay(); //returns m_display.get(). "get()" extracts characters from the stream, as unformatted input
+	//OWindow* getWindowDisplay(); //returns m_display.get(). "get()" extracts characters from the stream, as unformatted input
 
 protected:
 	virtual void onCreate(); //currently initializing everything for the spinning cube (vertices, texcoords, shaders, uniform data being put into the buffer)
@@ -32,10 +32,12 @@ private:
 	void onUpdateInternal(); //computing time, calling the Entity System Update, doing all the matrix operations + graphics engine calls to display the cube
 
 protected:
+	GLFWwindow* window = nullptr;
+
 	bool m_isRunning = true; //variable that determines if the game should keep running or not. Gets set to false through a call to "quit()"
 
 	std::unique_ptr<OGraphicsEngine> m_graphicsEngine; //this declares m_graphicsEngine as a unique pointer. Gets assigned in the constructor with std::make_unique
-	std::unique_ptr<OWindow> m_display; //this declares m_display as a unique pointer. Gets assigned in the constructor with std::make_unique
+	//std::unique_ptr<OWindow> m_display; //this declares m_display as a unique pointer. Gets assigned in the constructor with std::make_unique
 	std::unique_ptr<OEntitySystem> m_entitySystem; //this declares m_entitySystem as a unique pointer. Gets assigned in the constructor with std::make_unique
 
 	std::chrono::system_clock::time_point m_previousTime; //declaration of the previous time. Gets updated in "onUpdateInternal()"

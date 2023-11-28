@@ -3,7 +3,7 @@
 #include <OGL3D/Graphics/OGraphicsEngine.h>
 #include <Windows.h>
 
-void OGame::run() //runs an instance of the game on Windows
+/*void OGame::run() //runs an instance of the game on Windows
 {
 	onCreate(); //calls onCreate from OGame
 	while (m_isRunning) //while the game is running
@@ -28,4 +28,4 @@ void OGame::run() //runs an instance of the game on Windows
 	}
 
 	onQuit(); //calls onQuit from OGame.cpp. Does nothing right now
-}
+}*/

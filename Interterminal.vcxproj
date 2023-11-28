@@ -109,15 +109,15 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)/OGL3D/assimp/include;$(SolutionDir)/OGL3D/freetype/include;$(SolutionDir)/OGL3D/irrKlang/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/OGL3D/assimp/include;$(SolutionDir)/OGL3D/freetype/include;$(SolutionDir)/OGL3D/irrKlang/include;$(SolutionDir)/OGL3D/glfw/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>NotSet</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;freetype.lib;irrKlang.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;assimp-vc143-mtd.lib;freetype.lib;irrKlang.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <EntryPointSymbol>
       </EntryPointSymbol>
-      <AdditionalLibraryDirectories>$(SolutionDir)/OGL3D/assimp/lib;$(SolutionDir)/OGL3D/freetype/lib;$(SolutionDir)/OGL3D/irrKlang/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)/OGL3D/assimp/lib;$(SolutionDir)/OGL3D/freetype/lib;$(SolutionDir)/OGL3D/irrKlang/lib;$(SolutionDir)/OGL3D/glfw/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -178,6 +178,7 @@
     <ClInclude Include="Game\header\InputManager.h" />
     <ClInclude Include="Game\header\MyGame.h" />
     <ClInclude Include="Game\header\Entities\MyPlayer.h" />
+    <ClInclude Include="Game\shader.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntity.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntitySystem.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Game\OGame.h" />

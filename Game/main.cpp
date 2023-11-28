@@ -3,8 +3,9 @@
 
 int main()
 {
-	main2();
-	/*
+	//main2();
+	
+	
 	//OpenGL Documentation: https://registry.khronos.org/OpenGL-Refpages/gl4/
 	//another good resource: https://docs.gl/
 	try
@@ -17,7 +18,7 @@ int main()
 		std::wclog << e.what() << std::endl; //wclog, w = wide, c = character, log = it uses the logging stream (I think? Documentation is so bad for c++ wow)
 		return -1;
 	}
-	*/
 	
 	return 0;
+	
 }

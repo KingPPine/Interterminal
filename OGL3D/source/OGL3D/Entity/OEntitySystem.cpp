@@ -23,10 +23,10 @@ OGraphicsEngine* OEntitySystem::getGraphicsEngine()
 	return m_game->getGraphicsEngine();
 }
 
-OWindow* OEntitySystem::getWindowDisplay()
+/*OWindow* OEntitySystem::getWindowDisplay()
 {
 	return m_game->getWindowDisplay();
-}
+}*/
 
 short OEntitySystem::addDirectionalLight()
 {

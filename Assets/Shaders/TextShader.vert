@@ -6,13 +6,13 @@ out VS_OUT{
     flat int index;
 }vs_out;
 
-uniform mat4 transforms[400];
+uniform mat4 transforms[128];
 uniform mat4 projection;
 
 void main()
 {
-    gl_Position = projection * transforms[gl_InstanceID] * vec4(vertex.xy, 0.0, 1.0); //gl_InstanceID points to which instance of this shader call we're on
-    vs_out.index = gl_InstanceID; //passing the instanceID to the fragment shader
+    gl_Position = projection *transforms[gl_InstanceID]* vec4(vertex.xy, 0.0, 1.0);
+    vs_out.index=gl_InstanceID;
     vs_out.TexCoords = vertex.xy;
-    vs_out.TexCoords.y = 1.0f - vs_out.TexCoords.y;
+    vs_out.TexCoords.y=1.0f-vs_out.TexCoords.y;
 }

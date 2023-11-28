@@ -7,11 +7,11 @@ in VS_OUT{
 }fs_in;
 
 uniform sampler2DArray text;
-uniform int letterMap[400];
+uniform int letterMap[128];
 uniform vec3 textColor;
 
 void main()
 {    
     vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, vec3(fs_in.TexCoords.xy,letterMap[fs_in.index])).r);
     color = vec4(textColor, 1.0) * sampled;
-}  
+}
