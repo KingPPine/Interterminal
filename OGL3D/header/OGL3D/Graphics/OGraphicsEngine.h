@@ -5,6 +5,7 @@
 #include <glad/glad.h>
 #include <glm.hpp>
 #include <list>
+#include <vector>
 
 struct Text2D
 {
@@ -41,6 +42,7 @@ public:
 	Camera* getCamera();
 
 	void EnableDepthTest();
+	void DisableDepthTest();
 	void setFaceCulling(const OCullType& type); //sets the culling type to whatever we pass (FrontFace, BackFace, or Both)
 	void setWindingOrder(const OWindingOrder& order); //sets the order in which the triangles get drawn, which influences what is facing front / back
 	void setViewport(const ORect& size); //sets the viewport for where things draw within the screen. 0,0 is the bottom left, and width/height is as expected (up and to the right)
@@ -62,13 +64,16 @@ public:
 
 	void initializeFreeType();
 	void RenderText(Text2D* text);
+	void CallRenderText(int length);
 	void PushText(Text2D* text);
 	void RenderAllText();
 
 private:
 	Camera* camera;
 
-	glm::mat4 text2DTransform;
+	std::vector<glm::mat4> text2DTransforms;
+	std::vector<int> letterMap;
+	GLuint text2DTextureArray;
 	unsigned int text_VAO, text_VBO;
 	OShaderProgramPtr text_shader; //The pointer to the Shader Program, which calls both basic shaders
 

@@ -16,7 +16,6 @@ OGame::OGame() //constructor
 	m_display->makeCurrentContext(); //calls makeCurrentContext() in CWin32Window.cpp
 
 	m_graphicsEngine->setViewport(m_display->getInnerSize()); //sets the viewport to the size defined in m_display within its constructor
-	m_graphicsEngine->EnableDepthTest();
 	m_graphicsEngine->initializeFreeType();
 
 	maxFPS = 0; //0 means the framerate isn't capped
@@ -54,13 +53,15 @@ void OGame::onUpdateInternal()
 
 	if (maxFPS <= 0 || framerateTimer > 1.0f / maxFPS)
 	{
+		m_graphicsEngine->EnableDepthTest();
 		//m_graphicsEngine->clear(OVec4(0.26f, 0.75f, 0.58f, 1)); //clears the screen with a specified colour
 		m_graphicsEngine->clear(OVec4(0.0f, 0, 0.0f, 1)); //clears the screen with a specified colour
 		m_entitySystem->draw(); //in OEntitySystem, which calls the draw method of every entity in the game
 
-		Text2D* sampleText = new Text2D("FPS: " + std::to_string((int)(1.0f / framerateTimer)), glm::vec3(GameConstants::screenWidth - 120,10, 0), 0.5f, glm::vec3(0.3, 0.7f, 0.9f));
-		m_graphicsEngine->PushText(sampleText);
 
+		m_graphicsEngine->DisableDepthTest(); //need to disable for blending, which this text uses
+		Text2D* sampleText = new Text2D("FPS: " + std::to_string((int)(1.0f / framerateTimer)), glm::vec3(GameConstants::screenWidth - 300,GameConstants::screenHeight - 40, 0), 1.0f, glm::vec3(0.5, 0.8f, 0.2f));
+		m_graphicsEngine->PushText(sampleText);
 		m_graphicsEngine->RenderAllText();
 
 		m_display->present(false); //this puts everything on our display. false means no vsync.
