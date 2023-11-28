@@ -38,7 +38,7 @@ public:
 
 public:
 	OGraphicsEngine* getGraphicsEngine();
-	OWindow* getWindowDisplay();
+	//OWindow* getWindowDisplay();
 
 	short addDirectionalLight();
 	short addPointLight();

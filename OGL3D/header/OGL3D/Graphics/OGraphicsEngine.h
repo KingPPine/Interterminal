@@ -42,6 +42,7 @@ public:
 	Camera* getCamera();
 
 	void EnableDepthTest();
+	void DisableDepthTest();
 	void setFaceCulling(const OCullType& type); //sets the culling type to whatever we pass (FrontFace, BackFace, or Both)
 	void setWindingOrder(const OWindingOrder& order); //sets the order in which the triangles get drawn, which influences what is facing front / back
 	void setViewport(const ORect& size); //sets the viewport for where things draw within the screen. 0,0 is the bottom left, and width/height is as expected (up and to the right)

@@ -42,7 +42,7 @@ protected:
 	void updateShaderAttribute(std::string attribName, std::any data);
 
 	OGraphicsEngine* graphicsEngine(); //helps shorten calls to the graphics engine
-	OWindow* display(); //helps shorten calls to the display
+	//OWindow* display(); //helps shorten calls to the display
 
 protected:
 	//shader stuff

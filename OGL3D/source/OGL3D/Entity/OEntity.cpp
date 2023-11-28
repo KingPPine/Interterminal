@@ -186,7 +186,7 @@ OGraphicsEngine* OEntity::graphicsEngine()
 	return m_entitySystem->getGraphicsEngine();
 }
 
-OWindow* OEntity::display()
+/*OWindow* OEntity::display()
 {
 	return m_entitySystem->getWindowDisplay();
-}
+}*/

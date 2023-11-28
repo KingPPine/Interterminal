@@ -97,6 +97,11 @@ void OGraphicsEngine::EnableDepthTest()
 	glEnable(GL_DEPTH_TEST);
 }
 
+void OGraphicsEngine::DisableDepthTest()
+{
+	glDisable(GL_DEPTH_TEST);
+}
+
 void OGraphicsEngine::setFaceCulling(const OCullType& type) //sets the culling type to whatever we pass (FrontFace, BackFace, or Both)
 {
 	auto cullType = GL_BACK; //GL_BACK is an int. we're just using this as a default value for instantiation.

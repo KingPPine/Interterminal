@@ -8,6 +8,7 @@
 
 OGraphicsEngine::OGraphicsEngine()
 {
+	/*
 	//TODO: CHECK WHY THIS CODE MATTERS. It seems like CWin32Window.cpp makes this code irrelevant, because it overwrites values like the viewport rectangle
 
 	//this is the process to register a local window and use it to create a main window
@@ -82,6 +83,7 @@ OGraphicsEngine::OGraphicsEngine()
 	wglDeleteContext(dummyContext);
 	ReleaseDC(dummyWindow, dummyDC);
 	DestroyWindow(dummyWindow);
+	*/
 }
 
 OGraphicsEngine::~OGraphicsEngine()
