@@ -83,7 +83,7 @@ void MyPlayer::onUpdate(float deltaTime)
 		lookDirection.y = sin(glm::radians(camera->pitch));
 		lookDirection.z = sin(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
 		glm::vec3 goalFront = glm::normalize(lookDirection);
-		camera->cameraFront = glm::normalize(camera->cameraFront + (goalFront * 0.015f));
+		camera->cameraFront = glm::normalize(camera->cameraFront + (goalFront * deltaTime * 15.0f)); // * 0.015f
 		
 
 		float cameraY = camera->cameraPosition.y;

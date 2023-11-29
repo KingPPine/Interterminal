@@ -87,11 +87,6 @@ void OGraphicsEngine::reset2DTexture()
 	glActiveTexture(GL_TEXTURE0);
 }
 
-Camera* OGraphicsEngine::getCamera()
-{
-	return camera;
-}
-
 void OGraphicsEngine::EnableDepthTest()
 {
 	glEnable(GL_DEPTH_TEST);
@@ -224,22 +219,22 @@ void OGraphicsEngine::setUniformInt(int shaderID, const char* attributeName, int
 	glUniform1i(location, value);
 }
 
-void OGraphicsEngine::initializeFreeType()
+void OGraphicsEngine::initializeFreeType2D()
 {
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//create the shader program
-	text_shader = createShaderProgram(
+	//create the 2D shader program
+	text2D_shader = createShaderProgram(
 		{
 			L"Assets/Shaders/TextShader.vert", //basic vertex shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
 			L"Assets/Shaders/TextShader.frag" //basic fragmentation shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
 		});
-	text_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
+	text2D_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
 	glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(GameConstants::screenWidth), 0.0f, static_cast<float>(GameConstants::screenHeight));
-	text_shader->use();
-	glUniformMatrix4fv(glGetUniformLocation(text_shader->getId(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+	text2D_shader->use();
+	glUniformMatrix4fv(glGetUniformLocation(text2D_shader->getId(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 	// FreeType
 	// --------
@@ -318,7 +313,7 @@ void OGraphicsEngine::initializeFreeType()
 
 	for (int i = 0; i < GameConstants::TEXT_ARRAY_LIMIT; i++)
 	{
-		letterMap.push_back(0);
+		text2DLetterMap.push_back(0);
 		text2DTransforms.push_back(glm::mat4(1.0f));
 	}
 
@@ -331,28 +326,29 @@ void OGraphicsEngine::initializeFreeType()
 
 	// configure VAO/VBO for texture quads
 	// -----------------------------------
-	glGenVertexArrays(1, &text_VAO);
-	glGenBuffers(1, &text_VBO);
-	glBindVertexArray(text_VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, text_VBO);
+	glGenVertexArrays(1, &text2D_VAO);
+	glGenBuffers(1, &text2D_VBO);
+	glBindVertexArray(text2D_VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, text2D_VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0); //if the stride is set to 0, it assumes it fills our whole length
+
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }
 
-void OGraphicsEngine::RenderText(Text2D* text)
+void OGraphicsEngine::RenderText2D(Text2D* text)
 {
 	// activate corresponding render state
 	text->scale = text->scale * 48.0f / 256.0f;
 	float copyX = text->position.x; //copies the starting x position for when we need to star a new line
-	text_shader->use();
-	glUniform3f(glGetUniformLocation(text_shader->getId(), "textColor"), text->color.x, text->color.y, text->color.z);
+	text2D_shader->use();
+	glUniform3f(glGetUniformLocation(text2D_shader->getId(), "textColor"), text->color.x, text->color.y, text->color.z);
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, text2DTextureArray);
-	glBindVertexArray(text_VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, text_VBO);
+	glBindVertexArray(text2D_VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, text2D_VBO);
 
 	int workingIndex = 0;
 	// iterate through all characters
@@ -379,7 +375,7 @@ void OGraphicsEngine::RenderText(Text2D* text)
 			text2DTransforms[workingIndex] = glm::translate(glm::mat4(1.0f), glm::vec3(xpos, ypos, 0)) //move the text
 				* glm::scale(glm::mat4(1.0f), glm::vec3(256 * text->scale, 256 * text->scale, 0));  //scale the text
 				//* glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1)); //rotate the text
-			letterMap[workingIndex] = ch.CharacterIndex;
+			text2DLetterMap[workingIndex] = ch.CharacterIndex;
 			
 			// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 			text->position.x += (ch.Advance >> 6) * text->scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
@@ -387,39 +383,243 @@ void OGraphicsEngine::RenderText(Text2D* text)
 
 			if (workingIndex == GameConstants::TEXT_ARRAY_LIMIT - 1)
 			{
-				CallRenderText(workingIndex);
+				CallRenderText2D(workingIndex);
 				workingIndex = 0;
 			}
 		}
 	}
-	CallRenderText(workingIndex);
+	CallRenderText2D(workingIndex);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
 }
 
-void OGraphicsEngine::CallRenderText(int length)
+void OGraphicsEngine::CallRenderText2D(int length)
 {
 	if (length != 0)
 	{
-		glUniformMatrix4fv(glGetUniformLocation(text_shader->getId(), "transforms"), length, GL_FALSE, &text2DTransforms[0][0][0]);
-		glUniform1iv(glGetUniformLocation(text_shader->getId(), "letterMap"), length, &letterMap[0]);
+		glUniformMatrix4fv(glGetUniformLocation(text2D_shader->getId(), "transforms"), length, GL_FALSE, &text2DTransforms[0][0][0]);
+		glUniform1iv(glGetUniformLocation(text2D_shader->getId(), "letterMap"), length, &text2DLetterMap[0]);
 		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, length);
 	}
 }
 
-void OGraphicsEngine::PushText(Text2D* text)
+void OGraphicsEngine::PushText2D(Text2D* text)
 {
-	textList.push_back(text);
+	tex2DList.push_back(text);
 }
 
-void OGraphicsEngine::RenderAllText()
+void OGraphicsEngine::RenderAllText2D()
 {
-	for (Text2D* text : textList)
+	for (Text2D* text : tex2DList)
 	{
-		RenderText(text);
+		RenderText2D(text);
 		delete(text);//free the memory of the text
 	}
-	textList.clear();
+	tex2DList.clear();
+}
+
+void OGraphicsEngine::initializeFreeType3D()
+{
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//create the 2D shader program
+	text3D_shader = createShaderProgram(
+		{
+			L"Assets/Shaders/TextShader3D.vert", //basic vertex shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
+			L"Assets/Shaders/TextShader3D.frag" //basic fragmentation shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
+		});
+	text3D_shader->setUniformBufferSlot("UniformData", 0); //idk I'm lost and afraid
+	glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)GameConstants::screenWidth / (float)GameConstants::screenHeight, 0.1f, 100.0f); //45.0f can be replaced with a camera zoom
+	text3D_shader->use();
+	glUniformMatrix4fv(glGetUniformLocation(text3D_shader->getId(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
+	// FreeType
+	// --------
+	FT_Library ft;
+	// All functions return a value different than 0 whenever an error occurred
+	if (FT_Init_FreeType(&ft))
+	{
+		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+		return;
+	}
+
+	// find path to font
+	std::string font_name = "Assets/Fonts/Antonio-Bold.ttf";
+	if (font_name.empty())
+	{
+		std::cout << "ERROR::FREETYPE: Failed to load font_name" << std::endl;
+		return;
+	}
+
+	// load font as face
+	FT_Face face;
+	if (FT_New_Face(ft, font_name.c_str(), 0, &face)) {
+		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+		return;
+	}
+	else {
+		// set size to load glyphs as
+		FT_Set_Pixel_Sizes(face, 256, 256);
+
+		// disable byte-alignment restriction
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+		glGenTextures(1, &text3DTextureArray);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D_ARRAY, text3DTextureArray);
+		glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_R8, 256, 256, 128, 0, GL_RED, GL_UNSIGNED_BYTE, 0);
+
+		// load first 128 characters of ASCII set
+		for (unsigned char c = 0; c < 128; c++)
+		{
+			// Load character glyph 
+			if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+			{
+				std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+				continue;
+			}
+			glTexSubImage3D(
+				GL_TEXTURE_2D_ARRAY,
+				0, 0, 0, int(c),
+				face->glyph->bitmap.width,
+				face->glyph->bitmap.rows, 1,
+				GL_RED,
+				GL_UNSIGNED_BYTE,
+				face->glyph->bitmap.buffer
+			);
+
+			// set texture options
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			// now store character for later use
+			Character character = {
+				int(c),
+				glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+				glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+				static_cast<unsigned int>(face->glyph->advance.x)
+			};
+			Characters.insert(std::pair<char, Character>(c, character));
+		}
+		glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+	}
+	// destroy FreeType once we're finished
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
+
+	for (int i = 0; i < GameConstants::TEXT_ARRAY_LIMIT; i++)
+	{
+		text3DLetterMap.push_back(0);
+		text3DTransforms.push_back(glm::mat4(1.0f));
+	}
+
+	GLfloat vertex_data[] = {
+		0.0f, 1.0f,
+		0.0f, 0.0f,
+		1.0f, 1.0f,
+		1.0f, 0.0f
+	};
+
+	// configure VAO/VBO for texture quads
+	// -----------------------------------
+	glGenVertexArrays(1, &text3D_VAO);
+	glGenBuffers(1, &text3D_VBO);
+	glBindVertexArray(text3D_VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, text3D_VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0); //if the stride is set to 0, it assumes it fills our whole length
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void OGraphicsEngine::RenderText3D(Text3D* text)
+{
+	// activate corresponding render state
+	text->scale = text->scale * 48.0f / 256.0f;
+	float copyX = text->position.x; //copies the starting x position for when we need to star a new line
+	text3D_shader->use();
+	glUniform3f(glGetUniformLocation(text3D_shader->getId(), "textColor"), text->color.x, text->color.y, text->color.z);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, text2DTextureArray);
+	glBindVertexArray(text3D_VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, text3D_VBO);
+
+	int workingIndex = 0;
+	// iterate through all characters
+	std::string::const_iterator c;
+	for (c = text->text.begin(); c != text->text.end(); c++)
+	{
+
+		Character ch = Characters[*c];
+
+		if (*c == '\n') //if the character is a new line, shift the y position down and reset the x position.
+		{
+			text->position.y -= ((ch.Size.y)) * 1.3 * text->scale;
+			text->position.x = copyX;
+		}
+		else if (*c == ' ') //if the character is a space, don't render. Just move the cursor forward.
+		{
+			text->position.x += (ch.Advance >> 6) * text->scale;
+		}
+		else
+		{
+			float xpos = text->position.x + ch.Bearing.x * text->scale;
+			float ypos = text->position.y - (256 - ch.Bearing.y) * text->scale;
+			float zpos = text->position.z * text->scale; //TODO: this might be wrong lol
+
+			text3DTransforms[workingIndex] = glm::translate(glm::mat4(1.0f), glm::vec3(xpos, ypos, zpos)); //move the text
+			text3DTransforms[workingIndex] = glm::scale(text3DTransforms[workingIndex], glm::vec3(256 * text->scale, 256 * text->scale, 0));  //scale the text
+			//* glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1)); //rotate the text
+			text3DLetterMap[workingIndex] = ch.CharacterIndex;
+
+			// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
+			text->position.x += (ch.Advance >> 6) * text->scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+			workingIndex++;
+
+			if (workingIndex == GameConstants::TEXT_ARRAY_LIMIT - 1)
+			{
+				CallRenderText3D(workingIndex);
+				workingIndex = 0;
+			}
+		}
+	}
+	CallRenderText3D(workingIndex);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+}
+
+void OGraphicsEngine::CallRenderText3D(int length)
+{
+	if (length != 0)
+	{
+		glm::mat4 view = glm::lookAt(GameConstants::camera->cameraPosition, GameConstants::camera->cameraPosition + GameConstants::camera->cameraFront, GameConstants::camera->cameraUp);
+		glUniformMatrix4fv(glGetUniformLocation(text3D_shader->getId(), "view"), 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(glGetUniformLocation(text3D_shader->getId(), "transforms"), length, GL_FALSE, &text3DTransforms[0][0][0]);
+		glUniform1iv(glGetUniformLocation(text3D_shader->getId(), "letterMap"), length, &text3DLetterMap[0]);
+		glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, length);
+	}
+}
+
+void OGraphicsEngine::PushText3D(Text3D* text)
+{
+	tex3DList.push_back(text);
+}
+
+void OGraphicsEngine::RenderAllText3D()
+{
+	for (Text3D* text : tex3DList)
+	{
+		RenderText3D(text);
+		delete(text);//free the memory of the text
+	}
+	tex3DList.clear();
 }

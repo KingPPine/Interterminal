@@ -20,6 +20,19 @@ struct Text2D
 	}
 };
 
+struct Text3D
+{
+	std::string text;
+	glm::vec3 position;
+	float scale;
+	glm::vec3 color;
+
+	Text3D(std::string text, glm::vec3 position, float scale, glm::vec3 color) : text(text), position(position), scale(scale), color(color)
+	{
+
+	}
+};
+
 class Camera;
 class OGraphicsEngine
 {
@@ -38,8 +51,6 @@ public:
 	void setTextureUniform(GLuint program, const GLchar* name, int index);
 	void activate2DTexture(int uniformIndex, GLuint texture);
 	void reset2DTexture();
-
-	Camera* getCamera();
 
 	void EnableDepthTest();
 	void DisableDepthTest();
@@ -62,21 +73,31 @@ public:
 	void setUniformFloat(int shaderID, const char* attributeName, float value);
 	void setUniformInt(int shaderID, const char* attributeName, int value);
 
-	void initializeFreeType();
-	void RenderText(Text2D* text);
-	void CallRenderText(int length);
-	void PushText(Text2D* text);
-	void RenderAllText();
+	void initializeFreeType2D();
+	void RenderText2D(Text2D* text);
+	void CallRenderText2D(int length);
+	void PushText2D(Text2D* text);
+	void RenderAllText2D();
+
+	void initializeFreeType3D();
+	void RenderText3D(Text3D* text);
+	void CallRenderText3D(int length);
+	void PushText3D(Text3D* text);
+	void RenderAllText3D();
 
 private:
-	Camera* camera;
-
 	std::vector<glm::mat4> text2DTransforms;
-	std::vector<int> letterMap;
+	std::vector<int> text2DLetterMap;
 	GLuint text2DTextureArray;
-	unsigned int text_VAO, text_VBO;
-	OShaderProgramPtr text_shader; //The pointer to the Shader Program, which calls both basic shaders
+	unsigned int text2D_VAO, text2D_VBO;
+	OShaderProgramPtr text2D_shader; //The pointer to the Shader Program, which calls both basic shaders
+	std::list<Text2D*> tex2DList;
 
-	std::list<Text2D*> textList;
+	std::vector<glm::mat4> text3DTransforms;
+	std::vector<int> text3DLetterMap;
+	GLuint text3DTextureArray;
+	unsigned int text3D_VAO, text3D_VBO;
+	OShaderProgramPtr text3D_shader; //The pointer to the Shader Program, which calls both basic shaders
+	std::list<Text3D*> tex3DList;
 };
 
