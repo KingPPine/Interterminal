@@ -519,10 +519,10 @@ void OGraphicsEngine::initializeFreeType3D()
 	}
 
 	GLfloat vertex_data[] = {
-		0.0f, 1.0f,
-		0.0f, 0.0f,
-		1.0f, 1.0f,
-		1.0f, 0.0f
+		0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f,
+		1.0f, 1.0f, 0.0f,
+		1.0f, 0.0f, 0.0f
 	};
 
 	// configure VAO/VBO for texture quads
@@ -533,7 +533,7 @@ void OGraphicsEngine::initializeFreeType3D()
 	glBindBuffer(GL_ARRAY_BUFFER, text3D_VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex_data), vertex_data, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, 0); //if the stride is set to 0, it assumes it fills our whole length
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0); //if the stride is set to 0, it assumes it fills our whole length
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -544,6 +544,7 @@ void OGraphicsEngine::RenderText3D(Text3D* text)
 	// activate corresponding render state
 	text->scale = text->scale * 48.0f / 256.0f;
 	float copyX = text->position.x; //copies the starting x position for when we need to star a new line
+	float copyZ = text->position.z;
 	text3D_shader->use();
 	glUniform3f(glGetUniformLocation(text3D_shader->getId(), "textColor"), text->color.x, text->color.y, text->color.z);
 	glActiveTexture(GL_TEXTURE0);
@@ -554,33 +555,40 @@ void OGraphicsEngine::RenderText3D(Text3D* text)
 	int workingIndex = 0;
 	// iterate through all characters
 	std::string::const_iterator c;
+	glm::vec3 rightVector = glm::vec3(text->rotationMatrix[0][0], text->rotationMatrix[1][0], text->rotationMatrix[2][0]);
+	rightVector.z *= -1.0f;
+
 	for (c = text->text.begin(); c != text->text.end(); c++)
 	{
 
 		Character ch = Characters[*c];
 
-		if (*c == '\n') //if the character is a new line, shift the y position down and reset the x position.
+		if (*c == '\n') //if the character is a new line, shift the y position down and reset the x and z position.
 		{
 			text->position.y -= ((ch.Size.y)) * 1.3 * text->scale;
 			text->position.x = copyX;
+			text->position.z = copyZ;
 		}
 		else if (*c == ' ') //if the character is a space, don't render. Just move the cursor forward.
 		{
-			text->position.x += (ch.Advance >> 6) * text->scale;
+			text->position += rightVector * static_cast<float>(ch.Advance >> 6) * text->scale;
+			//text->position += rightVector * static_cast<float>(ch.Advance >> 6) * text->scale;
 		}
 		else
 		{
-			float xpos = text->position.x + ch.Bearing.x * text->scale;
+
+			float xpos = text->position.x + (ch.Bearing.x * rightVector.x) * text->scale;
 			float ypos = text->position.y - (256 - ch.Bearing.y) * text->scale;
-			float zpos = text->position.z * text->scale; //TODO: this might be wrong lol
+			float zpos = text->position.z + (ch.Bearing.x * rightVector.z) * text->scale;
 
 			text3DTransforms[workingIndex] = glm::translate(glm::mat4(1.0f), glm::vec3(xpos, ypos, zpos)); //move the text
-			text3DTransforms[workingIndex] = glm::scale(text3DTransforms[workingIndex], glm::vec3(256 * text->scale, 256 * text->scale, 0));  //scale the text
-			//* glm::rotate(glm::mat4(1.0f), 0.0f, glm::vec3(0,0,1)); //rotate the text
+			text3DTransforms[workingIndex] = glm::scale(text3DTransforms[workingIndex], glm::vec3(256 * text->scale));  //scale the text
+			text3DTransforms[workingIndex] = text3DTransforms[workingIndex] * text->rotationMatrix; //rotate the text
 			text3DLetterMap[workingIndex] = ch.CharacterIndex;
 
 			// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-			text->position.x += (ch.Advance >> 6) * text->scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+			//text->position.x += (ch.Advance >> 6) * text->scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+			text->position += rightVector * static_cast<float>(ch.Advance >> 6) * text->scale; // bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 			workingIndex++;
 
 			if (workingIndex == GameConstants::TEXT_ARRAY_LIMIT - 1)
