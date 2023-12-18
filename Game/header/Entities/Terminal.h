@@ -1,6 +1,7 @@
 #pragma once
 #include <OGL3D/Entity/OEntity.h>
 
+class TextManager;
 class Terminal : public OEntity
 {
 public:
@@ -12,5 +13,6 @@ public:
 	virtual void onDraw();
 
 private:
+	TextManager* textManager;
 	float timeValue = 0;
 };

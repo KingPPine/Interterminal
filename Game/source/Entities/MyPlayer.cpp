@@ -61,10 +61,10 @@ void MyPlayer::onUpdate(float deltaTime)
 			moveDirection.x += 1;
 		if (GameConstants::inputManager->keyDown(KeyCode::A) || GameConstants::inputManager->keyHeld(KeyCode::A))
 			moveDirection.x -= 1;
-		if (GameConstants::inputManager->keyDown(KeyCode::Space) || GameConstants::inputManager->keyHeld(KeyCode::Space))
-			moveDirection.y += 1;
-		if (GameConstants::inputManager->keyDown(KeyCode::Ctrl) || GameConstants::inputManager->keyHeld(KeyCode::Ctrl))
-			moveDirection.y -= 1;
+		//if (GameConstants::inputManager->keyDown(KeyCode::Space) || GameConstants::inputManager->keyHeld(KeyCode::Space))
+		//	moveDirection.y += 1;
+		//if (GameConstants::inputManager->keyDown(KeyCode::Ctrl) || GameConstants::inputManager->keyHeld(KeyCode::Ctrl))
+		//	moveDirection.y -= 1;
 
 		if (glm::length(moveDirection) != 0) moveDirection = glm::normalize(moveDirection); //normalize the vector as long as it's not a zero vector
 

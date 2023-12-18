@@ -43,6 +43,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		GameConstants::inputManager->removeInput(wParam);
 		break;
 	}
+	case WM_CHAR: //separate from key inputs, this will capture typing (with uppercase, accents, etc.)
+	{
+		GameConstants::inputManager->sendCharacter(wParam);
+		break;
+	}
 
 	//mouse input
 	case WM_LBUTTONDOWN:

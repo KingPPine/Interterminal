@@ -247,7 +247,7 @@ void OGraphicsEngine::initializeFreeType2D()
 	}
 
 	// find path to font
-	std::string font_name = "Assets/Fonts/Antonio-Bold.ttf";
+	std::string font_name = "Assets/Fonts/DroidEdited.ttf";
 	if (font_name.empty())
 	{
 		std::cout << "ERROR::FREETYPE: Failed to load font_name" << std::endl;
@@ -426,7 +426,7 @@ void OGraphicsEngine::initializeFreeType3D()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	//create the 2D shader program
+	//create the 2D shader program+
 	text3D_shader = createShaderProgram(
 		{
 			L"Assets/Shaders/TextShader3D.vert", //basic vertex shader. the 'L' is a wchar_t literal - this requires 16 bits of storage as opposed to 8
@@ -448,7 +448,7 @@ void OGraphicsEngine::initializeFreeType3D()
 	}
 
 	// find path to font
-	std::string font_name = "Assets/Fonts/Antonio-Bold.ttf";
+	std::string font_name = "Assets/Fonts/DroidEdited.ttf";
 	if (font_name.empty())
 	{
 		std::cout << "ERROR::FREETYPE: Failed to load font_name" << std::endl;
@@ -558,7 +558,7 @@ void OGraphicsEngine::RenderText3D(Text3D* text)
 	glm::vec3 rightVector = glm::vec3(text->rotationMatrix[0][0], text->rotationMatrix[1][0], text->rotationMatrix[2][0]);
 	rightVector.z *= -1.0f;
 
-	for (c = text->text.begin(); c != text->text.end(); c++)
+	for (c = text->text->begin(); c != text->text->end(); c++)
 	{
 
 		Character ch = Characters[*c];

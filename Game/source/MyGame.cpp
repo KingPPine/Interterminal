@@ -24,7 +24,7 @@ void MyGame::onCreate()
 	//GameConstants::soundEngine->play2D("Assets/Music/THIS IS MY CASTLE!.mp3", true);
 
 	player = getEntitySystem()->createEntity<MyPlayer>();
-	player->setPosition(glm::vec3(0.0f, 0.0f, 8.0f));
+	player->setPosition(glm::vec3(0.0f, 0.0f, 2.0f));
 
 	//the light cube
 	Cube2* cube2 = getEntitySystem()->createEntity<Cube2>();
@@ -65,6 +65,7 @@ void MyGame::onCreate()
 
 	//terminal
 	terminal = getEntitySystem()->createEntity<Terminal>();
+	terminal->setPosition(glm::vec3(0, -0.175f, 0));
 	terminal->setScale(glm::vec3(0.7f));
 }
 

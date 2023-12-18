@@ -24,6 +24,7 @@ public:
 	virtual void setScale(glm::vec3 newScale);
 	void rotate(float angle, glm::vec3 axis);
 	void lookAt(glm::vec3* eye, glm::vec3* center, glm::vec3* top);
+	void lookAtFlat(glm::vec3* target);
 	void resetRotation();
 	virtual void passLightShaderAtrributes(); //called by the entity manager to pass light shader attributes to the entity
 
