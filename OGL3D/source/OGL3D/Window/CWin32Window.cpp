@@ -26,7 +26,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	//keyboard input
 	case WM_KEYDOWN:
 	{
-		if (wParam == VK_OEM_3) //detecting a tilde, closes the game
+		if (wParam == VK_OEM_3 && !GameConstants::isGameInMonitorView) //detecting a tilde, closes the game
 		{
 			PostQuitMessage(0);
 			break;
@@ -41,6 +41,11 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_KEYUP:
 	{
 		GameConstants::inputManager->removeInput(wParam);
+		break;
+	}
+	case WM_CHAR: //separate from key inputs, this will capture typing (with uppercase, accents, etc.)
+	{
+		GameConstants::inputManager->sendCharacter(wParam);
 		break;
 	}
 

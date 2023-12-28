@@ -176,6 +176,14 @@ void OEntity::lookAt(glm::vec3* eye, glm::vec3* center, glm::vec3* top)
 	rotationMatrix = glm::lookAt(*eye, *center, *top);
 }
 
+void OEntity::lookAtFlat(glm::vec3* target)
+{
+	glm::vec3 flatPos = glm::vec3(position.x, 0, position.z);
+	glm::vec3 flatTarget = glm::vec3(target->x, 0, -target->z);
+
+	rotationMatrix = glm::lookAt(flatPos, flatTarget, glm::vec3(0, 1, 0));
+}
+
 void OEntity::resetRotation()
 {
 	rotationMatrix = glm::mat3(1.0f);

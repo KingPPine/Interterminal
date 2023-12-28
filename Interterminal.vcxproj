@@ -144,7 +144,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\header\FileSystem\File.cpp" />
     <ClCompile Include="Game\main.cpp" />
+    <ClCompile Include="Game\source\CommandProcessor.cpp" />
+    <ClCompile Include="Game\source\Commands\Command.cpp" />
+    <ClCompile Include="Game\source\Commands\Whoami.cpp" />
     <ClCompile Include="Game\source\Entities\Bed.cpp" />
     <ClCompile Include="Game\source\Entities\Chain.cpp" />
     <ClCompile Include="Game\source\Entities\Cube1.cpp" />
@@ -153,10 +157,13 @@
     <ClCompile Include="Game\source\Entities\Terminal.cpp" />
     <ClCompile Include="Game\source\Entities\TestEntity.cpp" />
     <ClCompile Include="Game\source\Entities\Wall.cpp" />
+    <ClCompile Include="Game\source\FileSystem\Directory.cpp" />
+    <ClCompile Include="Game\source\FileSystem\FileSystem.cpp" />
     <ClCompile Include="Game\source\GameConstants.cpp" />
     <ClCompile Include="Game\source\InputManager.cpp" />
     <ClCompile Include="Game\source\MyGame.cpp" />
     <ClCompile Include="Game\source\Entities\MyPlayer.cpp" />
+    <ClCompile Include="Game\source\TextManager.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Entity\OEntity.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Entity\OEntitySystem.cpp" />
     <ClCompile Include="OGL3D\source\OGL3D\Game\Win32\CWin32Game.cpp" />
@@ -172,6 +179,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game\header\Camera.h" />
+    <ClInclude Include="Game\header\CommandProcessor.h" />
+    <ClInclude Include="Game\header\Commands\Command.h" />
+    <ClInclude Include="Game\header\Commands\File.h" />
+    <ClInclude Include="Game\header\FileSystem\Directory.h" />
+    <ClInclude Include="Game\header\Commands\Whoami.h" />
     <ClInclude Include="Game\header\Entities\Bed.h" />
     <ClInclude Include="Game\header\Entities\Chain.h" />
     <ClInclude Include="Game\header\Entities\Cube1.h" />
@@ -180,10 +192,12 @@
     <ClInclude Include="Game\header\Entities\Terminal.h" />
     <ClInclude Include="Game\header\Entities\TestEntity.h" />
     <ClInclude Include="Game\header\Entities\Wall.h" />
+    <ClInclude Include="Game\header\FileSystem\FileSystem.h" />
     <ClInclude Include="Game\header\GameConstants.h" />
     <ClInclude Include="Game\header\InputManager.h" />
     <ClInclude Include="Game\header\MyGame.h" />
     <ClInclude Include="Game\header\Entities\MyPlayer.h" />
+    <ClInclude Include="Game\header\TextManager.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntity.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Entity\OEntitySystem.h" />
     <ClInclude Include="OGL3D\header\OGL3D\Game\OGame.h" />

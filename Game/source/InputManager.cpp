@@ -32,6 +32,9 @@ void InputManager::update()
 	//send the current mouse position to the previous mouse position in preparation for the next frame
 	previousMousePos.x = mousePos.x;
 	previousMousePos.y = mousePos.y;
+
+	//reset the characters string for the next frame of inputs
+	characters = "";
 }
 
 void InputManager::sendInput(int inputCode, bool held)
@@ -73,6 +76,15 @@ bool InputManager::keyDown(KeyCode keyCode)
 		return false;
 }
 
+bool InputManager::keyDown(char keyCode)
+{
+	std::unordered_map<int, KeyStatus>::iterator it = keyMap.find((int)keyCode);
+	if (it != keyMap.end() && it->second == KeyStatus::Down) //if the key exists and it was pressed this frame
+		return true;
+	else
+		return false;
+}
+
 bool InputManager::keyHeld(KeyCode keyCode)
 {
 	std::unordered_map<int, KeyStatus>::iterator it = keyMap.find((int)keyCode);
@@ -88,6 +100,15 @@ void InputManager::sendMouseVelocity(float x, float y)
 	mouseVelocity.y = y;
 }
 
+void InputManager::sendCharacter(char character)
+{
+	//validate that this is a character that can be typed on the screen
+	if (validateChar(character))
+	{
+		characters += character;
+	}
+}
+
 bool InputManager::keyUp(KeyCode keyCode)
 {
 	std::unordered_map<int, KeyStatus>::iterator it = keyMap.find((int)keyCode);
@@ -95,6 +116,11 @@ bool InputManager::keyUp(KeyCode keyCode)
 		return true;
 	else
 		return false;
+}
+
+std::string InputManager::getCharacters()
+{
+	return characters;
 }
 
 OVec2 InputManager::getMousePos()
@@ -116,4 +142,12 @@ OVec2 InputManager::getMouseMovement()
 OVec2 InputManager::getMouseVelocity()
 {
 	return mouseVelocity;
+}
+
+bool InputManager::validateChar(char character)
+{
+	if (character >= 32 && character <= 126) //https://www.learncpp.com/cpp-tutorial/chars/, this includes every character that can be displayed (spaces as well)
+		return true;
+
+	return false;
 }

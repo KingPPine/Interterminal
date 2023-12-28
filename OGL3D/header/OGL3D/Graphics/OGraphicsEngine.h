@@ -22,13 +22,13 @@ struct Text2D
 
 struct Text3D
 {
-	std::string text;
+	std::string* text;
 	glm::vec3 position;
 	glm::mat4 rotationMatrix;
 	float scale;
 	glm::vec3 color;
 
-	Text3D(std::string text, glm::vec3 position, glm::mat4 rotationMatrix, float scale, glm::vec3 color) : text(text), position(position), rotationMatrix(rotationMatrix), scale(scale), color(color)
+	Text3D(std::string* text, glm::vec3 position, glm::mat4 rotationMatrix, float scale, glm::vec3 color) : text(text), position(position), rotationMatrix(rotationMatrix), scale(scale), color(color)
 	{
 
 	}

@@ -24,5 +24,8 @@ private:
 
 	int directionalLightIndex = 0;
 	int spotLightIndex = 0;
+
+	glm::vec3 goalMonitorViewPosition;
+	glm::vec3 goalMonitorViewFront;
 };
 

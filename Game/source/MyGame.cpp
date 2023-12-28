@@ -65,6 +65,7 @@ void MyGame::onCreate()
 
 	//terminal
 	terminal = getEntitySystem()->createEntity<Terminal>();
+	terminal->setPosition(glm::vec3(0, -0.175f, 0));
 	terminal->setScale(glm::vec3(0.7f));
 }
 
