@@ -26,7 +26,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	//keyboard input
 	case WM_KEYDOWN:
 	{
-		if (wParam == VK_OEM_3) //detecting a tilde, closes the game
+		if (wParam == VK_OEM_3 && !GameConstants::isGameInMonitorView) //detecting a tilde, closes the game
 		{
 			PostQuitMessage(0);
 			break;

@@ -49,49 +49,69 @@ void MyPlayer::onUpdate(float deltaTime)
 	//this check exists to prevent weird rotations when you boot up the game
 	if (!firstFrame)
 	{
-		//key movement
-		const float moveSpeed = movementSpeed * deltaTime;
-		glm::vec3 moveDirection = glm::vec3();
+		if (!GameConstants::isGameInMonitorView) //if the game is not in monitor view, allow movement
+		{
+			//key movement
+			const float moveSpeed = movementSpeed * deltaTime;
+			glm::vec3 moveDirection = glm::vec3();
 
-		if (GameConstants::inputManager->keyDown(KeyCode::W) || GameConstants::inputManager->keyHeld(KeyCode::W))
-			moveDirection.z += 1;
-		if (GameConstants::inputManager->keyDown(KeyCode::S) || GameConstants::inputManager->keyHeld(KeyCode::S))
-			moveDirection.z -= 1;
-		if (GameConstants::inputManager->keyDown(KeyCode::D) || GameConstants::inputManager->keyHeld(KeyCode::D))
-			moveDirection.x += 1;
-		if (GameConstants::inputManager->keyDown(KeyCode::A) || GameConstants::inputManager->keyHeld(KeyCode::A))
-			moveDirection.x -= 1;
-		//if (GameConstants::inputManager->keyDown(KeyCode::Space) || GameConstants::inputManager->keyHeld(KeyCode::Space))
-		//	moveDirection.y += 1;
-		//if (GameConstants::inputManager->keyDown(KeyCode::Ctrl) || GameConstants::inputManager->keyHeld(KeyCode::Ctrl))
-		//	moveDirection.y -= 1;
+			if (GameConstants::inputManager->keyDown(KeyCode::W) || GameConstants::inputManager->keyHeld(KeyCode::W))
+				moveDirection.z += 1;
+			if (GameConstants::inputManager->keyDown(KeyCode::S) || GameConstants::inputManager->keyHeld(KeyCode::S))
+				moveDirection.z -= 1;
+			if (GameConstants::inputManager->keyDown(KeyCode::D) || GameConstants::inputManager->keyHeld(KeyCode::D))
+				moveDirection.x += 1;
+			if (GameConstants::inputManager->keyDown(KeyCode::A) || GameConstants::inputManager->keyHeld(KeyCode::A))
+				moveDirection.x -= 1;
+			//if (GameConstants::inputManager->keyDown(KeyCode::Space) || GameConstants::inputManager->keyHeld(KeyCode::Space))
+			//	moveDirection.y += 1;
+			//if (GameConstants::inputManager->keyDown(KeyCode::Ctrl) || GameConstants::inputManager->keyHeld(KeyCode::Ctrl))
+			//	moveDirection.y -= 1;
 
-		if (glm::length(moveDirection) != 0) moveDirection = glm::normalize(moveDirection); //normalize the vector as long as it's not a zero vector
+			if (glm::length(moveDirection) != 0) moveDirection = glm::normalize(moveDirection); //normalize the vector as long as it's not a zero vector
 
-		//mouse movement
-		const float tiltSpeed = mouseSensitivity * deltaTime;
-		camera->yaw += (float)GameConstants::inputManager->getMouseVelocity().x * tiltSpeed;
-		camera->pitch += (float)-GameConstants::inputManager->getMouseVelocity().y * tiltSpeed;
+			//mouse movement
+			const float tiltSpeed = mouseSensitivity * deltaTime;
+			camera->yaw += (float)GameConstants::inputManager->getMouseVelocity().x * tiltSpeed;
+			camera->pitch += (float)-GameConstants::inputManager->getMouseVelocity().y * tiltSpeed;
 
-		if (camera->pitch > 89.0f)
-			camera->pitch = 89.0f;
-		else if (camera->pitch < -89.0f)
-			camera->pitch = -89.0f;
+			if (camera->pitch > 89.0f)
+				camera->pitch = 89.0f;
+			else if (camera->pitch < -89.0f)
+				camera->pitch = -89.0f;
 
-		glm::vec3 lookDirection;
-		lookDirection.x = cos(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
-		lookDirection.y = sin(glm::radians(camera->pitch));
-		lookDirection.z = sin(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
-		glm::vec3 goalFront = glm::normalize(lookDirection);
-		camera->cameraFront = glm::normalize(camera->cameraFront + (goalFront * deltaTime * 15.0f)); // * 0.015f
-		
+			glm::vec3 lookDirection;
+			lookDirection.x = cos(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
+			lookDirection.y = sin(glm::radians(camera->pitch));
+			lookDirection.z = sin(glm::radians(camera->yaw)) * cos(glm::radians(camera->pitch));
+			glm::vec3 goalFront = glm::normalize(lookDirection);
+			camera->cameraFront = glm::normalize(camera->cameraFront + (goalFront * deltaTime * 15.0f)); // * 0.015f
 
-		float cameraY = camera->cameraPosition.y;
-		glm::vec3 cameraWithoutY = glm::normalize(camera->cameraFront * glm::vec3(1, 0, 1));
-		camera->cameraPosition += cameraWithoutY * moveDirection.z * moveSpeed;
-		camera->cameraPosition += glm::normalize(glm::cross(camera->cameraFront, camera->cameraUp)) * moveDirection.x * moveSpeed;
-		//camera->cameraPosition.y = 0.0f; //keeps the user on ground level
-		camera->cameraPosition.y = cameraY + (moveDirection.y * moveSpeed);
+
+			float cameraY = camera->cameraPosition.y;
+			glm::vec3 cameraWithoutY = glm::normalize(camera->cameraFront * glm::vec3(1, 0, 1));
+			camera->cameraPosition += cameraWithoutY * moveDirection.z * moveSpeed;
+			camera->cameraPosition += glm::normalize(glm::cross(camera->cameraFront, camera->cameraUp)) * moveDirection.x * moveSpeed;
+			//camera->cameraPosition.y = 0.0f; //keeps the user on ground level
+			camera->cameraPosition.y = cameraY + (moveDirection.y * moveSpeed);
+
+			if (GameConstants::inputManager->keyDown(KeyCode::Space))
+			{
+				goalMonitorViewPosition = glm::vec3(0, 0, 2);
+				goalMonitorViewFront = glm::vec3(0, 0, -1);
+				GameConstants::isGameInMonitorView = true;
+			}
+		}
+		else //the game is in monitor view, so lock the player to the monitor
+		{
+			camera->cameraPosition = goalMonitorViewPosition;
+			camera->cameraFront = goalMonitorViewFront;
+
+			if (GameConstants::inputManager->keyDown(KeyCode::Escape))
+			{
+				GameConstants::isGameInMonitorView = false;
+			}
+		}
 	}
 	else 
 		firstFrame = false;

@@ -144,6 +144,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Game\header\FileSystem\File.cpp" />
     <ClCompile Include="Game\main.cpp" />
     <ClCompile Include="Game\source\CommandProcessor.cpp" />
     <ClCompile Include="Game\source\Commands\Command.cpp" />
@@ -156,6 +157,8 @@
     <ClCompile Include="Game\source\Entities\Terminal.cpp" />
     <ClCompile Include="Game\source\Entities\TestEntity.cpp" />
     <ClCompile Include="Game\source\Entities\Wall.cpp" />
+    <ClCompile Include="Game\source\FileSystem\Directory.cpp" />
+    <ClCompile Include="Game\source\FileSystem\FileSystem.cpp" />
     <ClCompile Include="Game\source\GameConstants.cpp" />
     <ClCompile Include="Game\source\InputManager.cpp" />
     <ClCompile Include="Game\source\MyGame.cpp" />
@@ -178,6 +181,8 @@
     <ClInclude Include="Game\header\Camera.h" />
     <ClInclude Include="Game\header\CommandProcessor.h" />
     <ClInclude Include="Game\header\Commands\Command.h" />
+    <ClInclude Include="Game\header\Commands\File.h" />
+    <ClInclude Include="Game\header\FileSystem\Directory.h" />
     <ClInclude Include="Game\header\Commands\Whoami.h" />
     <ClInclude Include="Game\header\Entities\Bed.h" />
     <ClInclude Include="Game\header\Entities\Chain.h" />
@@ -187,6 +192,7 @@
     <ClInclude Include="Game\header\Entities\Terminal.h" />
     <ClInclude Include="Game\header\Entities\TestEntity.h" />
     <ClInclude Include="Game\header\Entities\Wall.h" />
+    <ClInclude Include="Game\header\FileSystem\FileSystem.h" />
     <ClInclude Include="Game\header\GameConstants.h" />
     <ClInclude Include="Game\header\InputManager.h" />
     <ClInclude Include="Game\header\MyGame.h" />

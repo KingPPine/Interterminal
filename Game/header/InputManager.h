@@ -20,6 +20,7 @@ enum class KeyCode //enum of keycodes we'll process in the game so that it's mor
 	Ctrl = VK_CONTROL,
 	Enter = VK_RETURN,
 	Backspace = VK_BACK,
+	Escape = VK_ESCAPE,
 	W = 'W',
 	S = 'S',
 	A = 'A',

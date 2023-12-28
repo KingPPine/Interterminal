@@ -13,6 +13,7 @@ public:
 	void onUpdate();
 	std::string* getDisplayText();
 	std::string* getCommandLineText();
+	void resetTypingDelay();
 
 private:
 	void addCommandHistory(std::string command);
@@ -28,4 +29,6 @@ private:
 	std::vector<std::string> commandHistory;
 	int historyIndex = 0;
 	int maxHistorySize = 100;
+
+	short typingDelay;
 };
