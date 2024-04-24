@@ -144,7 +144,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Game\header\FileSystem\File.cpp" />
+    <ClCompile Include="Game\source\Commands\cd.cpp" />
+    <ClCompile Include="Game\source\Commands\ls.cpp" />
+    <ClCompile Include="Game\source\FileSystem\File.cpp" />
     <ClCompile Include="Game\main.cpp" />
     <ClCompile Include="Game\source\CommandProcessor.cpp" />
     <ClCompile Include="Game\source\Commands\Command.cpp" />
@@ -180,8 +182,10 @@
   <ItemGroup>
     <ClInclude Include="Game\header\Camera.h" />
     <ClInclude Include="Game\header\CommandProcessor.h" />
+    <ClInclude Include="Game\header\Commands\cd.h" />
     <ClInclude Include="Game\header\Commands\Command.h" />
-    <ClInclude Include="Game\header\Commands\File.h" />
+    <ClInclude Include="Game\header\Commands\ls.h" />
+    <ClInclude Include="Game\header\FileSystem\File.h" />
     <ClInclude Include="Game\header\FileSystem\Directory.h" />
     <ClInclude Include="Game\header\Commands\Whoami.h" />
     <ClInclude Include="Game\header\Entities\Bed.h" />

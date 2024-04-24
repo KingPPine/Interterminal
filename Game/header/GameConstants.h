@@ -3,6 +3,7 @@
 #include <Camera.h>
 #include <glm.hpp>
 #include <irrKlang.h>
+#include <FileSystem/FileSystem.h>
 
 class InputManager;
 namespace GameConstants
@@ -10,6 +11,7 @@ namespace GameConstants
 	extern InputManager* inputManager;
 	extern Camera* camera;
 	extern irrklang::ISoundEngine* soundEngine;
+	extern FileSystem* fileSystem;
 
 	extern bool isGamePaused;
 	extern bool isGameInMonitorView;

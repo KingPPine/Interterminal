@@ -3,7 +3,7 @@
 #include <OGL3D/Graphics/OShaderProgram.h>
 #include <OGL3D/Graphics/OGraphicsEngine.h>
 #include <OGL3D/Entity/OEntitySystem.h>
-#include <GameConstants.h>'
+#include <GameConstants.h>
 
 #include <glad/glad.h>
 

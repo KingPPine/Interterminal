@@ -5,6 +5,7 @@ namespace GameConstants
 	InputManager* inputManager = new InputManager();
 	Camera* camera = new Camera();
 	irrklang::ISoundEngine* soundEngine = irrklang::createIrrKlangDevice();
+	FileSystem* fileSystem = new FileSystem();
 
 	bool isGamePaused = false;
 	bool isGameInMonitorView = false;

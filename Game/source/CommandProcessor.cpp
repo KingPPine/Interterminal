@@ -1,11 +1,15 @@
 #include "CommandProcessor.h"
 #include <Commands/Command.h>
 #include <Commands/Whoami.h>
+#include <Commands/ls.h>
+#include <Commands/cd.h>
 
 CommandProcessor::CommandProcessor()
 {
 	//TODO: I hate that I'm creating individual objects for each command. Surely there's a better way
 	commandMap.insert({ "whoami", new Whoami()});
+	commandMap.insert({ "ls", new Ls() });
+	commandMap.insert({ "cd", new Cd() });
 }
 
 CommandProcessor::~CommandProcessor()

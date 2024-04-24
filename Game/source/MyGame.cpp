@@ -7,6 +7,7 @@
 #include <Entities/Wall.h>
 #include <Entities/Bed.h>
 #include <Entities/Chain.h>
+#include <string>
 
 MyGame::MyGame()
 {
@@ -23,6 +24,10 @@ void MyGame::onCreate()
 	//playing background music
 	//GameConstants::soundEngine->play2D("Assets/Music/THIS IS MY CASTLE!.mp3", true);
 
+	//setting up the File System
+	GameConstants::fileSystem->initialize();
+
+	//setting up the player
 	player = getEntitySystem()->createEntity<MyPlayer>();
 	player->setPosition(glm::vec3(0.0f, 0.0f, 8.0f));
 
